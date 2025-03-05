@@ -1,7 +1,7 @@
 -- Inserting into states table (these are correct)
-INSERT INTO states (name) VALUES ('New');
+INSERT INTO states (name) VALUES ('Backlog');
 INSERT INTO states (name) VALUES ('In Progress');
-INSERT INTO states (name) VALUES ('Review');
+INSERT INTO states (name) VALUES ('In Review');
 INSERT INTO states (name) VALUES ('Done');
 INSERT INTO states (name) VALUES ('Blocked');
 
@@ -9,8 +9,6 @@ INSERT INTO states (name) VALUES ('Blocked');
 INSERT INTO roles (name) VALUES ('Administrator');
 INSERT INTO roles (name) VALUES ('Project Manager');
 INSERT INTO roles (name) VALUES ('Developer');
-INSERT INTO roles (name) VALUES ('QA Engineer');
-INSERT INTO roles (name) VALUES ('Team Lead');
 
 -- Inserting into teams table (these are correct)
 INSERT INTO teams (name) VALUES ('Backend Team');
@@ -28,12 +26,12 @@ WHERE r.name = 'Project Manager' AND t.name = 'Backend Team';
 INSERT INTO users (phone_number, name, role_id, team_id) 
 SELECT '+52-555-002', 'Omar Sanchez', r.id, t.id
 FROM roles r, teams t 
-WHERE r.name = 'Team Lead' AND t.name = 'Frontend Team';
+WHERE r.name = 'Team Lead' AND t.name = 'DevOps Team';
 
 INSERT INTO users (phone_number, name, role_id, team_id) 
 SELECT '+52-555-003', 'Jimena Carmona', r.id, t.id
 FROM roles r, teams t 
-WHERE r.name = 'Developer' AND t.name = 'Backend Team';
+WHERE r.name = 'Developer' AND t.name = 'Frontend Team';
 
 INSERT INTO users (phone_number, name, role_id, team_id) 
 SELECT '+52-555-004', 'Edgar Villa', r.id, t.id
@@ -59,27 +57,27 @@ FROM states s WHERE s.name = 'Review';
 
 -- Sprints table inserts (these are correct)
 INSERT INTO sprints (name, due_date, state_id, project_id) 
-SELECT 'Sprint 1 - Base de Datos', TIMESTAMP '2025-03-31 23:59:59', s.id, p.id
+SELECT 'Sprint 1', TIMESTAMP '2025-03-31 23:59:59', s.id, p.id
 FROM states s, projects p 
 WHERE s.name = 'In Progress' AND p.name = 'Sistema de Inventario';
 
 INSERT INTO sprints (name, due_date, state_id, project_id) 
-SELECT 'Sprint 2 - Modulos Core', TIMESTAMP '2025-04-30 23:59:59', s.id, p.id
+SELECT 'Sprint 2', TIMESTAMP '2025-04-30 23:59:59', s.id, p.id
 FROM states s, projects p 
 WHERE s.name = 'New' AND p.name = 'Sistema de Inventario';
 
 INSERT INTO sprints (name, due_date, state_id, project_id) 
-SELECT 'Sprint Portal - Auth', TIMESTAMP '2025-03-15 23:59:59', s.id, p.id
+SELECT 'Sprint 3', TIMESTAMP '2025-03-15 23:59:59', s.id, p.id
 FROM states s, projects p 
 WHERE s.name = 'In Progress' AND p.name = 'Portal de Clientes';
 
 INSERT INTO sprints (name, due_date, state_id, project_id) 
-SELECT 'Sprint API - Integracion', TIMESTAMP '2025-04-15 23:59:59', s.id, p.id
+SELECT 'Sprint 4', TIMESTAMP '2025-04-15 23:59:59', s.id, p.id
 FROM states s, projects p 
 WHERE s.name = 'New' AND p.name = 'API de Pagos';
 
 INSERT INTO sprints (name, due_date, state_id, project_id) 
-SELECT 'Sprint Cloud - Setup', TIMESTAMP '2025-03-20 23:59:59', s.id, p.id
+SELECT 'Sprint 5', TIMESTAMP '2025-03-20 23:59:59', s.id, p.id
 FROM states s, projects p 
 WHERE s.name = 'Review' AND p.name = 'Migracion Cloud';
 
@@ -94,7 +92,7 @@ SELECT 'Diseno BD Inventario',
        5
 FROM states s, sprints sp, users u
 WHERE s.name = 'In Progress' 
-AND sp.name = 'Sprint 1 - Base de Datos'
+AND sp.name = 'Sprint 1'
 AND u.phone_number = '+52-555-001';
 
 INSERT INTO todo (title, description, due_date, state_id, sprint_id, user_id, story_points)
@@ -107,7 +105,7 @@ SELECT 'Sistema de Autenticacion',
        8
 FROM states s, sprints sp, users u
 WHERE s.name = 'New'
-AND sp.name = 'Sprint 1 - Base de Datos'
+AND sp.name = 'Sprint 1'
 AND u.phone_number = '+52-555-003';
 
 INSERT INTO todo (title, description, due_date, state_id, sprint_id, user_id, story_points)
@@ -120,7 +118,7 @@ SELECT 'Maquetacion Portal',
        3
 FROM states s, sprints sp, users u
 WHERE s.name = 'Review'
-AND sp.name = 'Sprint Portal - Auth'
+AND sp.name = 'Sprint 3'
 AND u.phone_number = '+52-555-002';
 
 INSERT INTO todo (title, description, due_date, state_id, sprint_id, user_id, story_points)
@@ -146,5 +144,5 @@ SELECT 'Configuracion AWS',
        13
 FROM states s, sprints sp, users u
 WHERE s.name = 'In Progress'
-AND sp.name = 'Sprint Cloud - Setup'
+AND sp.name = 'Sprint 5'
 AND u.phone_number = '+52-555-004';
