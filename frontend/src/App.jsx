@@ -1,8 +1,13 @@
 import React from 'react';
-import FullScreenLayout from './components/FullScreenLayout';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SideBar from './components/SideBar';
 
 function App() {
-  return <FullScreenLayout />;
+  return (
+    <Router>
+      <SideBar />
+    </Router>
+  );
 }
 
 export default App;
