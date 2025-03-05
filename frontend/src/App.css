@@ -9,6 +9,16 @@ html, body, #root {
   min-height: 100vh; /* Hace que el layout ocupe toda la pantalla */
   min-width: 120vh;
   position: absolute;
+  .ant-layout {
+    height: 100vh; /* Hace que el layout ocupe toda la pantalla */
+    width: 100vw; /* Ocupar toda la anchura */
+    position: fixed; /* Fijar el layout en la pantalla */
+    top: 0;
+    left: 0;
+    display: flex; /* Para manejar el contenido */
+    flex-direction: column; /* Organizar en columna */
+    background: #f0f2f5; /* Fondo similar a WhatsApp o Telegram */
+  }
 }
 
 .logo {
