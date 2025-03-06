@@ -10,8 +10,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import com.springboot.MyTodoList.model.ToDoItem;
+import com.springboot.MyTodoList.repository.ToDoItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class ToDoItemServiceImpl implements ToDoItemService{
+public class ToDoItemServiceImpl implements ToDoItemService {
 
     @Autowired
     private ToDoItemRepository toDoItemRepository;
@@ -39,43 +47,53 @@ public class ToDoItemServiceImpl implements ToDoItemService{
     }
 
     @Override
-    public Optional<ToDoItem> getToDoItemById(Long id) {
-        return toDoItemRepository.findById(id);
+    public ToDoItem getItemById(int id) {
+        Optional<ToDoItem> optionalToDoItem = toDoItemRepository.findById(id);
+        return optionalToDoItem.orElse(null);
     }
 
     @Override
-    public ResponseEntity<ToDoItem> updateToDoItem(
-            Long id,
-            String title,
-            String description,
-            int storyPoints,
-            float estimatedHours,
-            float realHours
-    ) {
-        Optional<ToDoItem> toDoItemData = toDoItemRepository.findById(id);
-
-        if (toDoItemData.isPresent()) {
-            ToDoItem _toDoItem = toDoItemData.get();
-            _toDoItem.setTitle(title);
-            _toDoItem.setDescription(description);
-            _toDoItem.setStoryPoints(storyPoints);
-            _toDoItem.setEstimatedHours(estimatedHours);
-            _toDoItem.setRealHours(realHours);
-            return new ResponseEntity<>(toDoItemRepository.save(_toDoItem), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ToDoItem addToDoItem(ToDoItem toDoItem) {
+        return toDoItemRepository.save(toDoItem);
     }
 
     @Override
-    public ResponseEntity<HttpStatus> deleteToDoItem(Long id) {
-        try {
-            toDoItemRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ToDoItem updateToDoItem(int id, ToDoItem toDoItem) {
+        if (toDoItemRepository.existsById(id)) {
+            toDoItem.setId(id);
+            return toDoItemRepository.save(toDoItem);
         }
+        return null;
     }
 
+    @Override
+    public Boolean deleteToDoItem(int id) {
+        toDoItemRepository.deleteById(id);
+        return !toDoItemRepository.existsById(id);
+    }
 
+    @Override
+    public List<ToDoItem> getToDoItemsByProjectId(int projectId) {
+        return toDoItemRepository.findByProjectId(projectId);
+    }
+
+    @Override
+    public List<ToDoItem> getToDoItemsByUserId(int userId) {
+        return toDoItemRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<ToDoItem> getToDoItemsBySprintId(int sprintId) {
+        return toDoItemRepository.findBySprintId(sprintId);
+    }
+
+    @Override
+    public List<ToDoItem> getToDoItemsByStateId(int stateId) {
+        return toDoItemRepository.findByStateId(stateId);
+    }
+
+    @Override
+    public List<ToDoItem> findAll() {
+        return toDoItemRepository.findAll();
+    }
 }

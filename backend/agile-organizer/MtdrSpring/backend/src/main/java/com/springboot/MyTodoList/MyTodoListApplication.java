@@ -23,15 +23,19 @@ public class MyTodoListApplication implements CommandLineRunner {
 	@Autowired
 	private ToDoItemService toDoItemService;
 
+	
 	@Value("${telegram.bot.token}")
-	private String telegramBotToken;
+	private String telegramBotToken = "none";
 
 	@Value("${telegram.bot.name}")
-	private String botName;
+	private String botName = "name";
+
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyTodoListApplication.class, args);
 	}
+
 
 	@Override
 	public void run(String... args) throws Exception {
