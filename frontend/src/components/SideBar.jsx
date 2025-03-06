@@ -25,14 +25,14 @@ const SideBar = () => {
         style={{ background: '#181818' }}
       >
         <Menu.Item
-          key="/ChatBot"
+          key="/"
           icon={<MessageOutlined />}
           style={{
-            background: location.pathname === "/ChatBot" ? "#b9503c" : "transparent", // Color de selección
-            color: location.pathname === "/ChatBot" ? "white" : "inherit",
+            background: location.pathname === "/" ? "#b9503c" : "transparent", // Color de selección
+            color: location.pathname === "/" ? "white" : "inherit",
           }}
         >
-          <Link to="/ChatBot" style={{ color: 'white' }}>ChatBot</Link>
+          <Link to="/" style={{ color: 'white' }}>ChatBot</Link>
         </Menu.Item>
 
         <Menu.Item

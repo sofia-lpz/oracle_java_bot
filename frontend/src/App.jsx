@@ -32,7 +32,7 @@ const App = () => {
             }}
           >
             <Routes>
-              <Route path="/ChatBot" element={<ChatBot />} />
+              <Route path="/" element={<ChatBot />} />
               <Route path="/Task" element={<Task />} />
               <Route path="/Users" element={<Users />} />
             </Routes>
