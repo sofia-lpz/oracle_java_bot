@@ -7,7 +7,7 @@ const { Meta } = Card;
 const TaskCard = ({ title, description, dueDate, avatarUrl, storyPoints }) => (
   <Card
     style={{
-        width: 450,
+        width: 270,
         borderRadius: '8px',
         marginTop: '16px',
         marginBottom: '16px',

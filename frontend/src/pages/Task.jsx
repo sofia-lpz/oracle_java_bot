@@ -8,19 +8,19 @@ const Task = () => {
       <h1>Tasks</h1>
       <div className="kanban">
         <div>
-          <h1>To Do</h1>
+          <h2>To Do</h2>
           <div className="kanban-column">
             <TaskCard/>
           </div>
         </div>
         <div>
-          <h1>In Progress</h1>
+          <h2>In Progress</h2>
           <div className="kanban-column">
             <TaskCard/>
           </div>
         </div>
         <div>
-          <h1>Completed</h1>
+          <h2>Completed</h2>
           <div className="kanban-column">
             <TaskCard/>
           </div>
