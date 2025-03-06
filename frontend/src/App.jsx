@@ -14,16 +14,11 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const siderWidth = 0; // Ancho fijo de ambas Sidebars
-
   return (
     <Router>
-      <Layout style={{ minHeight: '100vh', minWidth: '150vh', display: 'flex' }}>
+      <Layout style={{ minHeight: '100vh', minWidth: '100vw', display: 'flex' }}>
         
-        {/* Sidebar izquierda */}
         <SideBar />
-
-        {/* Contenido centrado entre ambas Sidebars */}
         <Content style={{ padding: '24px', flex: 1, background: '#1f1f1f'}}>
           <div
             style={{
@@ -40,7 +35,6 @@ const App = () => {
               <Route path="/ChatBot" element={<ChatBot />} />
               <Route path="/Task" element={<Task />} />
               <Route path="/Users" element={<Users />} />
-              <Route path="/" element={<h2>Bienvenido</h2>} />
             </Routes>
           </div>
         </Content>
