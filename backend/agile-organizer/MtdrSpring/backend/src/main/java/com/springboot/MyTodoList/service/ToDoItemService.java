@@ -13,5 +13,12 @@ import java.util.Optional;
 @Service
 public interface ToDoItemService {
 
+    ToDoItem createToDoItem(
+            String title,
+            String description,
+            int storyPoints,
+            float estimatedHours,
+            float realHours
+    );
 
 }
