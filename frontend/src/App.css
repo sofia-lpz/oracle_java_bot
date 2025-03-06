@@ -17,7 +17,7 @@ html, body, #root {
     left: 0;
     display: flex; /* Para manejar el contenido */
     flex-direction: column; /* Organizar en columna */
-    background: #f0f2f5; /* Fondo similar a WhatsApp o Telegram */
+    /* background: #f5bf4f; // AMARILLO */
   }
 }
 
