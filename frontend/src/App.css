@@ -6,47 +6,8 @@ html, body, #root {
 }
 
 .ant-layout {
-  min-height: 100vh; /* Hace que el layout ocupe toda la pantalla */
-  min-width: 120vh;
-  position: absolute;
-  .ant-layout {
-    height: 100vh; /* Hace que el layout ocupe toda la pantalla */
-    width: 100vw; /* Ocupar toda la anchura */
-    position: fixed; /* Fijar el layout en la pantalla */
-    top: 0;
-    left: 0;
-    display: flex; /* Para manejar el contenido */
-    flex-direction: column; /* Organizar en columna */
-    /* background: #f5bf4f; // AMARILLO */
-  }
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+  min-height: 100vh;
+  min-width: 100vw;
 }
 
 .card {
@@ -55,4 +16,21 @@ html, body, #root {
 
 .read-the-docs {
   color: #888;
+}
+
+.kanban {
+  margin-top: 32px;
+  display: flex;
+}
+
+.kanban-column {
+  background-color: rgb(39, 39, 39);
+  min-height: 70vh;
+  padding-inline: 16px;
+  margin-right: 16px;
+  border-radius: 16px;
+}
+
+h2 {
+  font-size: 24px;
 }
