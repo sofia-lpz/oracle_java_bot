@@ -49,16 +49,11 @@ public class ToDoItem {
     @Column(name = "story_points", nullable = true)
     private Integer storyPoints;  // Changed from int to Integer to allow nulls
 
-    @JsonGetter("storyPoints")
-    public Integer getStoryPoints() {
-        return storyPoints != null ? storyPoints : 0;
-    }
-
     @Column(name = "priority", nullable = true)
     private String priority;
 
     @Column(name = "deleted", nullable = true)
-    private Boolean deleted;  // Changed from boolean to Boolean to allow nulls
+    private Boolean deleted = false;  // Changed from boolean to Boolean to allow nulls
 
     @Column(name = "done", nullable = true)
     private Boolean done;  // Changed from boolean to Boolean to allow nulls
@@ -93,13 +88,33 @@ public class ToDoItem {
     public Sprint getSprint() { return sprint; }
     public User getUser() { return user; }
     public Project getProject() { return project; }
-    
-    public String getPriority() { return priority; }
-    public boolean isDeleted() { return deleted; }
-    public boolean isDone() { return done; }
     public void setDone(boolean done) { 
         this.done = done; 
     }
+
+    //emtpy json getters
+    @JsonGetter("storyPoints")
+    public Integer getStoryPoints() {
+        return storyPoints != null ? storyPoints : 0;
+    }
+
+    @JsonGetter("deleted")
+    public Boolean getDeleted() {
+        return deleted != null ? deleted : false;
+    }
+
+    @JsonGetter("done")
+    public Boolean isDone() {
+        return done != null ? done : false;
+    }
+
+    @JsonGetter("priority")
+    public String getPriority() {
+        return priority != null ? priority : "";
+    }
+
+
+
 
     // Setters
     public void setID(int id) { this.id = id; }
