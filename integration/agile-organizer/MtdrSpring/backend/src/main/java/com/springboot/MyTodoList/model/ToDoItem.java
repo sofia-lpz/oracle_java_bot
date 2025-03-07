@@ -3,11 +3,13 @@ package com.springboot.MyTodoList.model;
 import com.springboot.MyTodoList.model.State;
 import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.User;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.springboot.MyTodoList.model.BaseEntity;
 import com.springboot.MyTodoList.model.Project;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+
 
 @Entity
 @Table(name = "todo")
@@ -46,6 +48,11 @@ public class ToDoItem {
 
     @Column(name = "story_points", nullable = true)
     private Integer storyPoints;  // Changed from int to Integer to allow nulls
+
+    @JsonGetter("storyPoints")
+    public Integer getStoryPoints() {
+        return storyPoints != null ? storyPoints : 0;
+    }
 
     @Column(name = "priority", nullable = true)
     private String priority;
@@ -86,7 +93,7 @@ public class ToDoItem {
     public Sprint getSprint() { return sprint; }
     public User getUser() { return user; }
     public Project getProject() { return project; }
-    public int getStoryPoints() { return storyPoints; }
+    
     public String getPriority() { return priority; }
     public boolean isDeleted() { return deleted; }
     public boolean isDone() { return done; }
