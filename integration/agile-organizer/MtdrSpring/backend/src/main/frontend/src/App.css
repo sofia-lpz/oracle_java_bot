@@ -34,6 +34,7 @@ html, body, #root {
 .kanban-scroll {
   max-height: 300px;
   overflow-y: auto;
+  
 }
 
 h2 {
