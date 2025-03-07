@@ -8,19 +8,25 @@ const Task = () => {
       <h1>Tasks</h1>
       <div className="kanban">
         <div>
-          <h2>To Do</h2>
+          <div className="kanban-header">
+            <h2><span className="status-indicator" style={{ backgroundColor: '#3376cd' }}></span> To Do</h2>
+          </div>
           <div className="kanban-column kanban-scroll">
             <TaskCard/>
           </div>
         </div>
         <div>
-          <h2>In Progress</h2>
+          <div className="kanban-header">
+            <h2><span className="status-indicator" style={{ backgroundColor: '#ffbc05' }}></span> In Progress</h2>
+          </div>
           <div className="kanban-column kanban-scroll">
             <TaskCard/>
           </div>
         </div>
         <div>
-          <h2>Completed</h2>
+          <div className="kanban-header">
+            <h2><span className="status-indicator" style={{ backgroundColor: '#2ECC71' }}></span> Completed</h2>
+          </div>
           <div className="kanban-column kanban-scroll">
             <TaskCard/>
           </div>

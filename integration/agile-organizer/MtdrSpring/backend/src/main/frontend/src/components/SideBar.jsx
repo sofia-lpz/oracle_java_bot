@@ -12,7 +12,7 @@ const SideBar = () => {
     <Sider width={220} height={220} style={{ background: '#181818' }}>
       <div style={{ textAlign: 'center', padding: '20px' }}>
         <img 
-          src="/src/assets/logo.png" // Asegúrate de que la imagen esté en `/public/`
+          src="/logo.png" // Asegúrate de que la imagen esté en `/public/`
           alt="Oracle"
           style={{ width: '100px', height: 'auto' }} 
         />
