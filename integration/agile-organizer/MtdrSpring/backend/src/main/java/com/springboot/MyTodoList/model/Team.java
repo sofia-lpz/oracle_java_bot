@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "TEAM")
+@Table(name = "TEAMS")
 public class Team extends BaseEntity{
     private String name;
     private String description;

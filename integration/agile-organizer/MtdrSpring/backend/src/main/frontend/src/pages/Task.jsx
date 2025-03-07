@@ -11,20 +11,17 @@ const Task = () => {
           <h2>To Do</h2>
           <div className="kanban-column kanban-scroll">
             <TaskCard/>
-            <TaskCard/>
           </div>
         </div>
         <div>
           <h2>In Progress</h2>
           <div className="kanban-column kanban-scroll">
             <TaskCard/>
-            <TaskCard/>
           </div>
         </div>
         <div>
           <h2>Completed</h2>
           <div className="kanban-column kanban-scroll">
-            <TaskCard/>
             <TaskCard/>
           </div>
         </div>

@@ -1,21 +1,11 @@
-/*
-## MyToDoReact version 1.0.
-##
-## Copyright (c) 2021 Oracle, Inc.
-## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
-*/
-/*
- * @author  jean.de.lavarene@oracle.com
- */
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import 'antd/dist/reset.css'  // Importa los estilos de Ant Design
+import './index.css'
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  document.getElementById('root')
-);
+)
