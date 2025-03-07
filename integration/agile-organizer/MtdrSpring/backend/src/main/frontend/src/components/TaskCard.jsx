@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Avatar, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import API_LIST from '../API';
 
 const { Meta } = Card;
 
@@ -31,16 +32,33 @@ const TaskCard = ({ title, description, dueDate, avatarUrl, storyPoints }) => (
 );
 
 const KanbanBoard = () => {
-    // tasks hardcoded, cambiar para integracion
-  const tasks = [
-    {
-      title: 'ER to SQL OCI',
-      description: 'Design and implement SQL scripts in Oracle Cloud Infrastructure (OCI) based on an Entity-Relationship (ER) model.',
-      dueDate: '29/02/25',
-      avatarUrl: 'https://via.placeholder.com/32',
-      storyPoints: '0/3',
-    },
-  ];
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(API_LIST)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Something went wrong fetching tasks');
+        }
+      })
+      .then(
+        (result) => {
+          setLoading(false);
+          setTasks(result);
+        },
+        (error) => {
+          setLoading(false);
+          setError(error);
+        });
+  }, []);
+
+  if (loading) return <p>Loading tasks...</p>;
+  if (error) return <p>Error loading tasks: {error.message}</p>;
 
   return (
     <Row gutter={[16, 16]}>
