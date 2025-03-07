@@ -3,7 +3,7 @@ import { Layout, theme } from 'antd';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SideBar from './components/SideBar';
 // import RightSidebar from './components/RightSidebar';
-import ChatBot from './pages/ChatBot';
+import ChatBot from './pages/Chatbot';
 import Task from './pages/Task';
 import Users from './pages/Users';
 
