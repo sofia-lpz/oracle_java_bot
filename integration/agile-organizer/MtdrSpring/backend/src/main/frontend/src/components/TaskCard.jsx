@@ -43,30 +43,6 @@ const KanbanBoard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(API_LIST)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Something went wrong fetching tasks');
-        }
-      })
-      .then(
-        (result) => {
-          setLoading(false);
-          setTasks(result);
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        });
-  }, []);
-
-  if (loading) return <p>Loading tasks...</p>;
-  if (error) return <p>Error loading tasks: {error.message}</p>;
-
   return (
     <Row gutter={[16, 16]}>
       {tasks.map((task, index) => (
@@ -78,4 +54,4 @@ const KanbanBoard = () => {
   );
 };
 
-export default KanbanBoard;
+export default TaskCard;
