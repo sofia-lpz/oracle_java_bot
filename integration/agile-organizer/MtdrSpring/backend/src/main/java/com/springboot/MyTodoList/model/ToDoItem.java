@@ -113,9 +113,6 @@ public class ToDoItem {
         return priority != null ? priority : "";
     }
 
-
-
-
     // Setters
     public void setID(int id) { this.id = id; }
     public void setTitle(String title) { this.title = title; }
