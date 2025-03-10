@@ -5,26 +5,33 @@ import API_LIST from '../API';
 
 const { Meta } = Card;
 
+//Black #1d1d1d
+//Gray #272727
+//Oracle #c6624b
+
 const TaskCard = ({ title, description, dueDate, avatarUrl, storyPoints }) => (
   <Card
+    className="custom-task-card"
     style={{
         width: 270,
         borderRadius: '8px',
         marginTop: '16px',
         marginBottom: '16px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        background: '#1d1d1d',
+        border: '2px solid #1d1d1d'
     }}
     actions={[
-      <span>{storyPoints}</span>,
+      <span style={{fontWeight: 'bold',color: '#c6624b'}}>{storyPoints}</span>,
     ]}
   >
     <Meta
       avatar={<Avatar src={avatarUrl} icon={<UserOutlined />} />}
-      title={title}
+      title={<span style={{color: '#ffffff'}}>{title}</span>}
       description={
         <>
-          <p>{description}</p>
-          <p style={{ color: '#1890ff' }}>Due on {dueDate}</p>
+          <p style={{color: '#ffffff'}}>{description}</p>
+          <p style={{fontWeight: 'bold' ,color: '#c6624b' }}>Due on {dueDate}</p>
         </>
       }
     />
