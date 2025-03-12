@@ -42,7 +42,7 @@ const Task = () => {
     fetchTasks();
   }, []);
 
-  const todoTasks = tasks.filter(task => task.state?.name === 'TODO');
+  const todoTasks = tasks.filter(task => !task.state?.name || task.state?.name === 'TODO');
   const inProgressTasks = tasks.filter(task => task.state?.name === 'IN_PROGRESS');
   const completedTasks = tasks.filter(task => task.state?.name === 'COMPLETED');
 
