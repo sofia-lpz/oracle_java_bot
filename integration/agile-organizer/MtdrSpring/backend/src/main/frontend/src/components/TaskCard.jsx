@@ -9,7 +9,7 @@ const { Meta } = Card;
 //Gray #272727
 //Oracle #c6624b
 
-const TaskCard = ({ title, description, dueDate, avatarUrl, storyPoints }) => (
+const TaskCard = ({ title, description, dueDate, avatarUrl, storyPoints, estimatedHours, realHours }) => (
   <Card
     className="custom-task-card"
     style={{
@@ -22,7 +22,13 @@ const TaskCard = ({ title, description, dueDate, avatarUrl, storyPoints }) => (
         border: '2px solid #1d1d1d'
     }}
     actions={[
-      <span style={{fontWeight: 'bold',color: '#c6624b'}}>{storyPoints}</span>,
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', backgroundColor: '#1d1d1d' }}>
+        <p style={{fontWeight: 'bold', color: '#c6624b'}}>
+  Story Points <br /> {storyPoints ?? 'N/A'}
+</p>
+        <p style={{fontWeight: 'bold', color: '#c6624b'}}>Estimated <br /> {estimatedHours}</p>
+        <p style={{fontWeight: 'bold', color: '#c6624b'}}>Real <br />{realHours}</p>
+      </div>
     ]}
   >
     <Meta

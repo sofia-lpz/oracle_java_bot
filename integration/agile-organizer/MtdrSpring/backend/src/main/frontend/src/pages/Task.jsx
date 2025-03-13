@@ -67,6 +67,8 @@ const Task = () => {
                   dueDate={formatDate(task.dueDate)}
                   storyPoints={task.storyPoints}
                   avatarUrl={task.assignee?.avatarUrl}
+                  estimatedHours={task.estimatedHours}
+                  realHours={task.realHours}
                 />
               ))
             ) : (
@@ -88,6 +90,8 @@ const Task = () => {
                   dueDate={formatDate(task.dueDate)}
                   storyPoints={task.storyPoints}
                   avatarUrl={task.assignee?.avatarUrl}
+                  estimatedHours={task.estimatedHours}
+                  realHours={task.realHours}
                 />
               ))
             ) : (
@@ -109,6 +113,8 @@ const Task = () => {
                   dueDate={formatDate(task.dueDate)}
                   storyPoints={task.storyPoints}
                   avatarUrl={task.assignee?.avatarUrl}
+                  estimatedHours={task.estimatedHours}
+                  realHours={task.realHours}
                 />
               ))
             ) : (
