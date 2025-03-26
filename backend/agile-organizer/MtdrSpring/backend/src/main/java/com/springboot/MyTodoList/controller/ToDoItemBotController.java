@@ -252,7 +252,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id) {
 		try {
 			ResponseEntity<ToDoItem> responseEntity = toDoItemService.getItemById(id);
-			return new ResponseEntity<ToDoItem>(responseEntity.getBody(), HttpStatus.OK);
+			return new ResponseEntity<>(toDoItem, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -293,5 +293,4 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			return new ResponseEntity<>(flag, HttpStatus.NOT_FOUND);
 		}
 	}
-
 }

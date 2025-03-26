@@ -1,0 +1,314 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.springboot:MyTodoList:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: org.springframework.boot:spring-boot-starter-test:jar -> duplicate declaration of version (?) @ line 81, column 19
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ---------------------< com.springboot:MyTodoList >----------------------
+[INFO] Building MyTodoList 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:2.6.4:run (default-cli) > test-compile @ MyTodoList >>>
+[INFO] 
+[INFO] --- frontend:1.9.1:install-node-and-npm (install-frontend-tools) @ MyTodoList ---
+[INFO] Node v16.13.2 is already installed.
+[INFO] NPM 8.1.2 is already installed.
+[INFO] 
+[INFO] --- frontend:1.9.1:npm (npm install) @ MyTodoList ---
+[INFO] Running 'npm install' in /Users/andresvilla/Documents/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend/src/main/frontend
+[INFO] npm WARN EBADENGINE Unsupported engine {
+[INFO] npm WARN EBADENGINE   package: 'react-router@7.3.0',
+[INFO] npm WARN EBADENGINE   required: { node: '>=20.0.0' },
+[INFO] npm WARN EBADENGINE   current: { node: 'v16.13.2', npm: '8.1.2' }
+[INFO] npm WARN EBADENGINE }
+[INFO] npm WARN EBADENGINE Unsupported engine {
+[INFO] npm WARN EBADENGINE   package: 'react-router-dom@7.3.0',
+[INFO] npm WARN EBADENGINE   required: { node: '>=20.0.0' },
+[INFO] npm WARN EBADENGINE   current: { node: 'v16.13.2', npm: '8.1.2' }
+[INFO] npm WARN EBADENGINE }
+[INFO] npm WARN EBADENGINE Unsupported engine {
+[INFO] npm WARN EBADENGINE   package: 'cookie@1.0.2',
+[INFO] npm WARN EBADENGINE   required: { node: '>=18' },
+[INFO] npm WARN EBADENGINE   current: { node: 'v16.13.2', npm: '8.1.2' }
+[INFO] npm WARN EBADENGINE }
+[INFO] 
+[INFO] up to date, audited 1571 packages in 765ms
+[INFO] 
+[INFO] 248 packages are looking for funding
+[INFO]   run `npm fund` for details
+[INFO] 
+[INFO] 12 vulnerabilities (6 moderate, 6 high)
+[INFO] 
+[INFO] To address all issues (including breaking changes), run:
+[INFO]   npm audit fix --force
+[INFO] 
+[INFO] Run `npm audit` for details.
+[INFO] 
+[INFO] --- frontend:1.9.1:npm (npm run build) @ MyTodoList ---
+[INFO] Running 'npm run build' in /Users/andresvilla/Documents/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend/src/main/frontend
+[INFO] 
+[INFO] > todolistapp-react@0.1.0 build
+[INFO] > react-scripts build
+[INFO] 
+[INFO] Creating an optimized production build...
+[INFO] Compiled with warnings.
+[INFO] 
+[INFO] [eslint] 
+[INFO] src/App.jsx
+[INFO]   Line 11:18:  'Footer' is assigned a value but never used            no-unused-vars
+[INFO]   Line 14:10:  'items' is assigned a value but never used             no-unused-vars
+[INFO]   Line 15:10:  'loading' is assigned a value but never used           no-unused-vars
+[INFO]   Line 16:10:  'error' is assigned a value but never used             no-unused-vars
+[INFO]   Line 19:14:  'colorBgContainer' is assigned a value but never used  no-unused-vars
+[INFO] 
+[INFO] Search for the keywords to learn more about each warning.
+[INFO] To ignore, add // eslint-disable-next-line to the line before.
+[INFO] 
+[INFO] File sizes after gzip:
+[INFO] 
+[INFO]   181.84 kB (-8 B)  build/static/js/main.6afb6ce1.js
+[INFO]   1.82 kB           build/static/css/main.cfb9c64d.css
+[INFO] 
+[INFO] The project was built assuming it is hosted at ./.
+[INFO] You can control this with the homepage field in your package.json.
+[INFO] 
+[INFO] The build folder is ready to be deployed.
+[INFO] 
+[INFO] Find out more about deployment here:
+[INFO] 
+[INFO]   https://cra.link/deployment
+[INFO] 
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ MyTodoList ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 2 resources
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ MyTodoList ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ MyTodoList ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /Users/andresvilla/Documents/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ MyTodoList ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] <<< spring-boot:2.6.4:run (default-cli) < test-compile @ MyTodoList <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.6.4:run (default-cli) @ MyTodoList ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+[32m :: Spring Boot :: [39m              [2m (v2.6.4)[0;39m
+
+[2m2025-03-07 12:24:26.662[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.MyTodoList.MyTodoListApplication    [0;39m [2m:[0;39m Starting MyTodoListApplication using Java 23.0.2 on Andress-Mac.local with PID 16081 (/Users/andresvilla/Documents/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend/target/classes started by andresvilla in /Users/andresvilla/Documents/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend)
+[2m2025-03-07 12:24:26.663[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.MyTodoList.MyTodoListApplication    [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+[2m2025-03-07 12:24:26.885[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2m2025-03-07 12:24:26.900[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 12 ms. Found 2 JPA repository interfaces.
+[2m2025-03-07 12:24:27.052[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port(s): 9898 (http)
+[2m2025-03-07 12:24:27.055[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2025-03-07 12:24:27.055[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.apache.catalina.core.StandardEngine [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/9.0.58]
+[2m2025-03-07 12:24:27.078[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2025-03-07 12:24:27.078[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 398 ms
+[2m2025-03-07 12:24:27.190[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.MyTodoList.config.DbSettings        [0;39m [2m:[0;39m Using Driver null
+[2m2025-03-07 12:24:27.190[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.MyTodoList.config.DbSettings        [0;39m [2m:[0;39m Using URL: jdbc:oracle:thin:@reacttodox774w_tp?TNS_ADMIN=/Users/andresvilla/Documents/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend/src/Wallet
+[2m2025-03-07 12:24:27.190[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.MyTodoList.config.DbSettings        [0;39m [2m:[0;39m Using Username ADMIN
+[2m2025-03-07 12:24:27.219[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.jpa.internal.util.LogHelper [0;39m [2m:[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
+[2m2025-03-07 12:24:27.233[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.Version                   [0;39m [2m:[0;39m HHH000412: Hibernate ORM core version 5.6.5.Final
+[2m2025-03-07 12:24:27.283[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.annotations.common.Version  [0;39m [2m:[0;39m HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2m2025-03-07 12:24:28.003[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.dialect.Dialect           [0;39m [2m:[0;39m HHH000400: Using dialect: org.hibernate.dialect.Oracle12cDialect
+[2m2025-03-07 12:24:28.268[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.h.e.t.j.p.i.JtaPlatformInitiator      [0;39m [2m:[0;39m HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2m2025-03-07 12:24:28.270[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2m2025-03-07 12:24:28.353[0;39m [33m WARN[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mJpaBaseConfiguration$JpaWebConfiguration[0;39m [2m:[0;39m spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2m2025-03-07 12:24:28.390[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.s.web.DefaultSecurityFilterChain    [0;39m [2m:[0;39m Will not secure any request
+[2m2025-03-07 12:24:28.447[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.a.w.s.WelcomePageHandlerMapping   [0;39m [2m:[0;39m Adding welcome page: class path resource [static/index.html]
+[2m2025-03-07 12:24:28.498[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.a.e.web.EndpointLinksResolver     [0;39m [2m:[0;39m Exposing 1 endpoint(s) beneath base path '/actuator'
+[2m2025-03-07 12:24:28.510[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat started on port(s): 9898 (http) with context path ''
+[2m2025-03-07 12:24:28.514[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.MyTodoList.MyTodoListApplication    [0;39m [2m:[0;39m Started MyTodoListApplication in 1.958 seconds (JVM running for 2.071)
+[2m2025-03-07 12:24:28.545[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.M.controller.ToDoItemBotController  [0;39m [2m:[0;39m Bot Token: 7910490076:AAGfUStGJpmUILbMWcnr6-AKCB47yv5IDdM
+[2m2025-03-07 12:24:28.545[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.M.controller.ToDoItemBotController  [0;39m [2m:[0;39m Bot name: yaporfavor_bot
+[2m2025-03-07 12:24:29.104[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[           main][0;39m [36mc.s.MyTodoList.MyTodoListApplication    [0;39m [2m:[0;39m Bot registered and started succesfully!
+[2m2025-03-07 12:24:43.348[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[nio-9898-exec-1][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2m2025-03-07 12:24:43.348[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[nio-9898-exec-1][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Initializing Servlet 'dispatcherServlet'
+[2m2025-03-07 12:24:43.350[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[nio-9898-exec-1][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Completed initialization in 2 ms
+Hibernate: select todoitem0_.id as id1_4_, todoitem0_.creation_date as creation_date2_4_, todoitem0_.deleted as deleted3_4_, todoitem0_.description as description4_4_, todoitem0_.done as done5_4_, todoitem0_.due_date as due_date6_4_, todoitem0_.priority as priority7_4_, todoitem0_.project_id as project_id10_4_, todoitem0_.sprint_id as sprint_id11_4_, todoitem0_.state_id as state_id12_4_, todoitem0_.story_points as story_points8_4_, todoitem0_.title as title9_4_, todoitem0_.user_id as user_id13_4_ from todo todoitem0_
+Hibernate: select project0_.id as id1_0_0_, project0_.creation_date as creation_date2_0_0_, project0_.deleted as deleted3_0_0_, project0_.description as description4_0_0_, project0_.due_date as due_date5_0_0_, project0_.name as name6_0_0_, project0_.state_id as state_id7_0_0_, state1_.id as id1_2_1_, state1_.creation_date as creation_date2_2_1_, state1_.deleted as deleted3_2_1_, state1_.description as description4_2_1_, state1_.name as name5_2_1_, state1_.workflow_priority as workflow_priority6_2_1_ from projects project0_ left outer join states state1_ on project0_.state_id=state1_.id where project0_.id=?
+Hibernate: select sprint0_.id as id1_1_0_, sprint0_.creation_date as creation_date2_1_0_, sprint0_.deleted as deleted3_1_0_, sprint0_.due_date as due_date4_1_0_, sprint0_.name as name5_1_0_, sprint0_.project_id as project_id6_1_0_, sprint0_.state_id as state_id7_1_0_, project1_.id as id1_0_1_, project1_.creation_date as creation_date2_0_1_, project1_.deleted as deleted3_0_1_, project1_.description as description4_0_1_, project1_.due_date as due_date5_0_1_, project1_.name as name6_0_1_, project1_.state_id as state_id7_0_1_, state2_.id as id1_2_2_, state2_.creation_date as creation_date2_2_2_, state2_.deleted as deleted3_2_2_, state2_.description as description4_2_2_, state2_.name as name5_2_2_, state2_.workflow_priority as workflow_priority6_2_2_, state3_.id as id1_2_3_, state3_.creation_date as creation_date2_2_3_, state3_.deleted as deleted3_2_3_, state3_.description as description4_2_3_, state3_.name as name5_2_3_, state3_.workflow_priority as workflow_priority6_2_3_ from sprints sprint0_ left outer join projects project1_ on sprint0_.project_id=project1_.id left outer join states state2_ on project1_.state_id=state2_.id left outer join states state3_ on sprint0_.state_id=state3_.id where sprint0_.id=?
+Hibernate: select user0_.id as id1_5_0_, user0_.name as name2_5_0_, user0_.password as password3_5_0_, user0_.phone_number as phone_number4_5_0_, user0_.role as role5_5_0_, user0_.team_id as team_id6_5_0_, team1_.id as id1_3_1_, team1_.creation_date as creation_date2_3_1_, team1_.deleted as deleted3_3_1_, team1_.description as description4_3_1_, team1_.name as name5_3_1_ from users user0_ left outer join teams team1_ on user0_.team_id=team1_.id where user0_.id=?
+Hibernate: select todoitem0_.id as id1_4_, todoitem0_.creation_date as creation_date2_4_, todoitem0_.deleted as deleted3_4_, todoitem0_.description as description4_4_, todoitem0_.done as done5_4_, todoitem0_.due_date as due_date6_4_, todoitem0_.priority as priority7_4_, todoitem0_.project_id as project_id10_4_, todoitem0_.sprint_id as sprint_id11_4_, todoitem0_.state_id as state_id12_4_, todoitem0_.story_points as story_points8_4_, todoitem0_.title as title9_4_, todoitem0_.user_id as user_id13_4_ from todo todoitem0_
+Hibernate: select project0_.id as id1_0_0_, project0_.creation_date as creation_date2_0_0_, project0_.deleted as deleted3_0_0_, project0_.description as description4_0_0_, project0_.due_date as due_date5_0_0_, project0_.name as name6_0_0_, project0_.state_id as state_id7_0_0_, state1_.id as id1_2_1_, state1_.creation_date as creation_date2_2_1_, state1_.deleted as deleted3_2_1_, state1_.description as description4_2_1_, state1_.name as name5_2_1_, state1_.workflow_priority as workflow_priority6_2_1_ from projects project0_ left outer join states state1_ on project0_.state_id=state1_.id where project0_.id=?
+Hibernate: select sprint0_.id as id1_1_0_, sprint0_.creation_date as creation_date2_1_0_, sprint0_.deleted as deleted3_1_0_, sprint0_.due_date as due_date4_1_0_, sprint0_.name as name5_1_0_, sprint0_.project_id as project_id6_1_0_, sprint0_.state_id as state_id7_1_0_, project1_.id as id1_0_1_, project1_.creation_date as creation_date2_0_1_, project1_.deleted as deleted3_0_1_, project1_.description as description4_0_1_, project1_.due_date as due_date5_0_1_, project1_.name as name6_0_1_, project1_.state_id as state_id7_0_1_, state2_.id as id1_2_2_, state2_.creation_date as creation_date2_2_2_, state2_.deleted as deleted3_2_2_, state2_.description as description4_2_2_, state2_.name as name5_2_2_, state2_.workflow_priority as workflow_priority6_2_2_, state3_.id as id1_2_3_, state3_.creation_date as creation_date2_2_3_, state3_.deleted as deleted3_2_3_, state3_.description as description4_2_3_, state3_.name as name5_2_3_, state3_.workflow_priority as workflow_priority6_2_3_ from sprints sprint0_ left outer join projects project1_ on sprint0_.project_id=project1_.id left outer join states state2_ on project1_.state_id=state2_.id left outer join states state3_ on sprint0_.state_id=state3_.id where sprint0_.id=?
+Hibernate: select user0_.id as id1_5_0_, user0_.name as name2_5_0_, user0_.password as password3_5_0_, user0_.phone_number as phone_number4_5_0_, user0_.role as role5_5_0_, user0_.team_id as team_id6_5_0_, team1_.id as id1_3_1_, team1_.creation_date as creation_date2_3_1_, team1_.deleted as deleted3_3_1_, team1_.description as description4_3_1_, team1_.name as name5_3_1_ from users user0_ left outer join teams team1_ on user0_.team_id=team1_.id where user0_.id=?
+Hibernate: select todoitem0_.id as id1_4_, todoitem0_.creation_date as creation_date2_4_, todoitem0_.deleted as deleted3_4_, todoitem0_.description as description4_4_, todoitem0_.done as done5_4_, todoitem0_.due_date as due_date6_4_, todoitem0_.priority as priority7_4_, todoitem0_.project_id as project_id10_4_, todoitem0_.sprint_id as sprint_id11_4_, todoitem0_.state_id as state_id12_4_, todoitem0_.story_points as story_points8_4_, todoitem0_.title as title9_4_, todoitem0_.user_id as user_id13_4_ from todo todoitem0_
+Hibernate: select project0_.id as id1_0_0_, project0_.creation_date as creation_date2_0_0_, project0_.deleted as deleted3_0_0_, project0_.description as description4_0_0_, project0_.due_date as due_date5_0_0_, project0_.name as name6_0_0_, project0_.state_id as state_id7_0_0_, state1_.id as id1_2_1_, state1_.creation_date as creation_date2_2_1_, state1_.deleted as deleted3_2_1_, state1_.description as description4_2_1_, state1_.name as name5_2_1_, state1_.workflow_priority as workflow_priority6_2_1_ from projects project0_ left outer join states state1_ on project0_.state_id=state1_.id where project0_.id=?
+Hibernate: select sprint0_.id as id1_1_0_, sprint0_.creation_date as creation_date2_1_0_, sprint0_.deleted as deleted3_1_0_, sprint0_.due_date as due_date4_1_0_, sprint0_.name as name5_1_0_, sprint0_.project_id as project_id6_1_0_, sprint0_.state_id as state_id7_1_0_, project1_.id as id1_0_1_, project1_.creation_date as creation_date2_0_1_, project1_.deleted as deleted3_0_1_, project1_.description as description4_0_1_, project1_.due_date as due_date5_0_1_, project1_.name as name6_0_1_, project1_.state_id as state_id7_0_1_, state2_.id as id1_2_2_, state2_.creation_date as creation_date2_2_2_, state2_.deleted as deleted3_2_2_, state2_.description as description4_2_2_, state2_.name as name5_2_2_, state2_.workflow_priority as workflow_priority6_2_2_, state3_.id as id1_2_3_, state3_.creation_date as creation_date2_2_3_, state3_.deleted as deleted3_2_3_, state3_.description as description4_2_3_, state3_.name as name5_2_3_, state3_.workflow_priority as workflow_priority6_2_3_ from sprints sprint0_ left outer join projects project1_ on sprint0_.project_id=project1_.id left outer join states state2_ on project1_.state_id=state2_.id left outer join states state3_ on sprint0_.state_id=state3_.id where sprint0_.id=?
+Hibernate: select user0_.id as id1_5_0_, user0_.name as name2_5_0_, user0_.password as password3_5_0_, user0_.phone_number as phone_number4_5_0_, user0_.role as role5_5_0_, user0_.team_id as team_id6_5_0_, team1_.id as id1_3_1_, team1_.creation_date as creation_date2_3_1_, team1_.deleted as deleted3_3_1_, team1_.description as description4_3_1_, team1_.name as name5_3_1_ from users user0_ left outer join teams team1_ on user0_.team_id=team1_.id where user0_.id=?
+Hibernate: select todoitem0_.id as id1_4_, todoitem0_.creation_date as creation_date2_4_, todoitem0_.deleted as deleted3_4_, todoitem0_.description as description4_4_, todoitem0_.done as done5_4_, todoitem0_.due_date as due_date6_4_, todoitem0_.priority as priority7_4_, todoitem0_.project_id as project_id10_4_, todoitem0_.sprint_id as sprint_id11_4_, todoitem0_.state_id as state_id12_4_, todoitem0_.story_points as story_points8_4_, todoitem0_.title as title9_4_, todoitem0_.user_id as user_id13_4_ from todo todoitem0_
+Hibernate: select project0_.id as id1_0_0_, project0_.creation_date as creation_date2_0_0_, project0_.deleted as deleted3_0_0_, project0_.description as description4_0_0_, project0_.due_date as due_date5_0_0_, project0_.name as name6_0_0_, project0_.state_id as state_id7_0_0_, state1_.id as id1_2_1_, state1_.creation_date as creation_date2_2_1_, state1_.deleted as deleted3_2_1_, state1_.description as description4_2_1_, state1_.name as name5_2_1_, state1_.workflow_priority as workflow_priority6_2_1_ from projects project0_ left outer join states state1_ on project0_.state_id=state1_.id where project0_.id=?
+Hibernate: select sprint0_.id as id1_1_0_, sprint0_.creation_date as creation_date2_1_0_, sprint0_.deleted as deleted3_1_0_, sprint0_.due_date as due_date4_1_0_, sprint0_.name as name5_1_0_, sprint0_.project_id as project_id6_1_0_, sprint0_.state_id as state_id7_1_0_, project1_.id as id1_0_1_, project1_.creation_date as creation_date2_0_1_, project1_.deleted as deleted3_0_1_, project1_.description as description4_0_1_, project1_.due_date as due_date5_0_1_, project1_.name as name6_0_1_, project1_.state_id as state_id7_0_1_, state2_.id as id1_2_2_, state2_.creation_date as creation_date2_2_2_, state2_.deleted as deleted3_2_2_, state2_.description as description4_2_2_, state2_.name as name5_2_2_, state2_.workflow_priority as workflow_priority6_2_2_, state3_.id as id1_2_3_, state3_.creation_date as creation_date2_2_3_, state3_.deleted as deleted3_2_3_, state3_.description as description4_2_3_, state3_.name as name5_2_3_, state3_.workflow_priority as workflow_priority6_2_3_ from sprints sprint0_ left outer join projects project1_ on sprint0_.project_id=project1_.id left outer join states state2_ on project1_.state_id=state2_.id left outer join states state3_ on sprint0_.state_id=state3_.id where sprint0_.id=?
+Hibernate: select user0_.id as id1_5_0_, user0_.name as name2_5_0_, user0_.password as password3_5_0_, user0_.phone_number as phone_number4_5_0_, user0_.role as role5_5_0_, user0_.team_id as team_id6_5_0_, team1_.id as id1_3_1_, team1_.creation_date as creation_date2_3_1_, team1_.deleted as deleted3_3_1_, team1_.description as description4_3_1_, team1_.name as name5_3_1_ from users user0_ left outer join teams team1_ on user0_.team_id=team1_.id where user0_.id=?
+[2m2025-03-07 13:35:09.863[0;39m [32m INFO[0;39m [35m16081[0;39m [2m---[0;39m [2m[gram Connection][0;39m [36mo.t.t.u.DefaultBotSession               [0;39m [2m:[0;39m Read timed out
+
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796) ~[na:na]
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:1116) ~[na:na]
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1103) ~[na:na]
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489) ~[na:na]
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483) ~[na:na]
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70) ~[na:na]
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1462) ~[na:na]
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1068) ~[na:na]
+	at org.apache.http.impl.io.SessionInputBufferImpl.streamRead(SessionInputBufferImpl.java:137) ~[httpcore-4.4.15.jar:4.4.15]
+	at org.apache.http.impl.io.SessionInputBufferImpl.fillBuffer(SessionInputBufferImpl.java:153) ~[httpcore-4.4.15.jar:4.4.15]
+	at org.apache.http.impl.io.SessionInputBufferImpl.readLine(SessionInputBufferImpl.java:280) ~[httpcore-4.4.15.jar:4.4.15]
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:138) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:56) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.io.AbstractMessageParser.parse(AbstractMessageParser.java:259) ~[httpcore-4.4.15.jar:4.4.15]
+	at org.apache.http.impl.DefaultBHttpClientConnection.receiveResponseHeader(DefaultBHttpClientConnection.java:163) ~[httpcore-4.4.15.jar:4.4.15]
+	at org.apache.http.impl.conn.CPoolProxy.receiveResponseHeader(CPoolProxy.java:157) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.protocol.HttpRequestExecutor.doReceiveResponse(HttpRequestExecutor.java:273) ~[httpcore-4.4.15.jar:4.4.15]
+	at org.apache.http.protocol.HttpRequestExecutor.execute(HttpRequestExecutor.java:125) ~[httpcore-4.4.15.jar:4.4.15]
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:272) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.getUpdatesFromServer(DefaultBotSession.java:249) ~[telegrambots-6.5.0.jar:na]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.run(DefaultBotSession.java:188) ~[telegrambots-6.5.0.jar:na]
+
+[2m2025-03-07 13:35:10.376[0;39m [31mERROR[0;39m [35m16081[0;39m [2m---[0;39m [2m[gram Connection][0;39m [36mo.t.t.u.DefaultBotSession               [0;39m [2m:[0;39m api.telegram.org: nodename nor servname provided, or not known
+
+java.net.UnknownHostException: api.telegram.org: nodename nor servname provided, or not known
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method) ~[na:na]
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52) ~[na:na]
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1221) ~[na:na]
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1817) ~[na:na]
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1149) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1807) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1676) ~[na:na]
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.getUpdatesFromServer(DefaultBotSession.java:249) ~[telegrambots-6.5.0.jar:na]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.run(DefaultBotSession.java:188) ~[telegrambots-6.5.0.jar:na]
+
+[2m2025-03-07 13:35:10.832[0;39m [31mERROR[0;39m [35m16081[0;39m [2m---[0;39m [2m[gram Connection][0;39m [36mo.t.t.u.DefaultBotSession               [0;39m [2m:[0;39m api.telegram.org
+
+java.net.UnknownHostException: api.telegram.org
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:998) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1807) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1676) ~[na:na]
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.getUpdatesFromServer(DefaultBotSession.java:249) ~[telegrambots-6.5.0.jar:na]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.run(DefaultBotSession.java:188) ~[telegrambots-6.5.0.jar:na]
+
+[2m2025-03-07 13:35:11.877[0;39m [31mERROR[0;39m [35m16081[0;39m [2m---[0;39m [2m[gram Connection][0;39m [36mo.t.t.u.DefaultBotSession               [0;39m [2m:[0;39m api.telegram.org
+
+java.net.UnknownHostException: api.telegram.org
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:998) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1807) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1676) ~[na:na]
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.getUpdatesFromServer(DefaultBotSession.java:249) ~[telegrambots-6.5.0.jar:na]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.run(DefaultBotSession.java:188) ~[telegrambots-6.5.0.jar:na]
+
+[2m2025-03-07 13:35:13.050[0;39m [31mERROR[0;39m [35m16081[0;39m [2m---[0;39m [2m[gram Connection][0;39m [36mo.t.t.u.DefaultBotSession               [0;39m [2m:[0;39m api.telegram.org
+
+java.net.UnknownHostException: api.telegram.org
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:998) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1807) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1676) ~[na:na]
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.getUpdatesFromServer(DefaultBotSession.java:249) ~[telegrambots-6.5.0.jar:na]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.run(DefaultBotSession.java:188) ~[telegrambots-6.5.0.jar:na]
+
+[2m2025-03-07 13:35:15.091[0;39m [31mERROR[0;39m [35m16081[0;39m [2m---[0;39m [2m[gram Connection][0;39m [36mo.t.t.u.DefaultBotSession               [0;39m [2m:[0;39m api.telegram.org
+
+java.net.UnknownHostException: api.telegram.org
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:998) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1807) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1676) ~[na:na]
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.getUpdatesFromServer(DefaultBotSession.java:249) ~[telegrambots-6.5.0.jar:na]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.run(DefaultBotSession.java:188) ~[telegrambots-6.5.0.jar:na]
+
+[2m2025-03-07 13:35:18.116[0;39m [31mERROR[0;39m [35m16081[0;39m [2m---[0;39m [2m[gram Connection][0;39m [36mo.t.t.u.DefaultBotSession               [0;39m [2m:[0;39m api.telegram.org
+
+java.net.UnknownHostException: api.telegram.org
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:998) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1807) ~[na:na]
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1676) ~[na:na]
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83) ~[httpclient-4.5.13.jar:4.5.13]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.getUpdatesFromServer(DefaultBotSession.java:249) ~[telegrambots-6.5.0.jar:na]
+	at org.telegram.telegrambots.updatesreceivers.DefaultBotSession$ReaderThread.run(DefaultBotSession.java:188) ~[telegrambots-6.5.0.jar:na]
+
