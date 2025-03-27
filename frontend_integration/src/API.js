@@ -16,8 +16,11 @@
 // Copy from the endpoint from the API Gateway Deployment
 // Example: const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.<region>.oci.customer-oci.com/todolist';
 // const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.eu-frankfurt-1.oci.customer-oci.com/todolist';
-const API_LIST = '/todolist';
-const API_STATES = '/states';
+
+//local host
+const API_SERVER = 'http://localhost:8080'
+const API_LIST = `${API_SERVER}/todolist`;
+const API_STATES = `${API_SERVER}/states`;
 
 export default API_LIST;
 export { API_LIST, API_STATES };
