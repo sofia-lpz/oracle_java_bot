@@ -129,12 +129,12 @@ public class ToDoItem {
         return priority != null ? priority : "";
     }
 
-    @JsonGetter("estimatedHours")
+    @JsonGetter("estimated_hours")
 public Integer getEstimatedHours() {
     return estimatedHours != null ? estimatedHours : 0;
 }
 
-@JsonGetter("realHours") 
+@JsonGetter("real_hours") 
 public Integer getRealHours() {
     return realHours != null ? realHours : 0;
 }
