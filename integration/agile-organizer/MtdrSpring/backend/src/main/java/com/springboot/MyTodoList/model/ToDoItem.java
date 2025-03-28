@@ -10,10 +10,15 @@ import com.springboot.MyTodoList.model.Project;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Entity
 @Table(name = "todo")
 public class ToDoItem {
+    private static final Logger logger = LoggerFactory.getLogger(ToDoItem.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -49,6 +54,12 @@ public class ToDoItem {
     @Column(name = "story_points", nullable = true)
     private Integer storyPoints;  // Changed from int to Integer to allow nulls
 
+    @Column(name = "estimated_hours", nullable = true)
+    private Integer estimatedHours;  // Changed from int to Integer to allow nulls
+
+    @Column(name = "real_hours", nullable = true)
+    private Integer realHours;  // Changed from int to Integer to allow nulls
+
     @Column(name = "priority", nullable = true)
     private String priority;
 
@@ -62,21 +73,25 @@ public class ToDoItem {
 
     // Constructor with all fields
     public ToDoItem(int id, String title, String description, OffsetDateTime creationDate,
-                   OffsetDateTime dueDate, State state, Sprint sprint, User user,
-                   Project project, int storyPoints, String priority, boolean deleted) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.creationDate = creationDate;
-        this.dueDate = dueDate;
-        this.state = state;
-        this.sprint = sprint;
-        this.user = user;
-        this.project = project;
-        this.storyPoints = storyPoints;
-        this.priority = priority;
-        this.deleted = deleted;
-    }
+    OffsetDateTime dueDate, State state, Sprint sprint, User user,
+    Project project, int storyPoints, String priority, boolean deleted, boolean done,
+    Integer estimatedHours, Integer realHours) { // Add new parameters
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.creationDate = creationDate; 
+    this.dueDate = dueDate;
+    this.state = state;
+    this.sprint = sprint;
+    this.user = user;
+    this.project = project;
+    this.storyPoints = storyPoints;
+    this.priority = priority;
+    this.deleted = deleted;
+    this.done = done;
+    this.estimatedHours = estimatedHours; // Add new field
+    this.realHours = realHours; // Add new field
+}
 
     // Getters
     public int getID() { return id; }
@@ -88,8 +103,9 @@ public class ToDoItem {
     public Sprint getSprint() { return sprint; }
     public User getUser() { return user; }
     public Project getProject() { return project; }
-    public void setDone(boolean done) { 
-        this.done = done; 
+    public Boolean isDone() {
+        logger.debug("isDone() called, returning: {}", (done != null ? done : false));
+        return done != null ? done : false;
     }
 
     //emtpy json getters
@@ -104,7 +120,7 @@ public class ToDoItem {
     }
 
     @JsonGetter("done")
-    public Boolean isDone() {
+    public Boolean getDone() {
         return done != null ? done : false;
     }
 
@@ -112,6 +128,16 @@ public class ToDoItem {
     public String getPriority() {
         return priority != null ? priority : "";
     }
+
+    @JsonGetter("estimated_hours")
+public Integer getEstimatedHours() {
+    return estimatedHours != null ? estimatedHours : 0;
+}
+
+@JsonGetter("real_hours") 
+public Integer getRealHours() {
+    return realHours != null ? realHours : 0;
+}
 
     // Setters
     public void setID(int id) { this.id = id; }
@@ -126,10 +152,21 @@ public class ToDoItem {
     public void setStoryPoints(int storyPoints) { this.storyPoints = storyPoints; }
     public void setPriority(String priority) { this.priority = priority; }
     public void setDeleted(boolean deleted) { this.deleted = deleted; }
+    public void setDone(boolean done) { 
+        this.done = done; 
+    }
+    public void setEstimatedHours(Integer estimatedHours) {
+        this.estimatedHours = estimatedHours;
+    }
+    
+    public void setRealHours(Integer realHours) {
+        this.realHours = realHours;
+    }
+    
 
     @Override
     public String toString() {
-        return "ToDoItem{" +
+        String str = "ToDoItem{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
@@ -140,8 +177,13 @@ public class ToDoItem {
                 ", user=" + user +
                 ", project=" + project +
                 ", storyPoints=" + storyPoints +
+                ", estimatedHours=" + estimatedHours + // Add new field
+                ", realHours=" + realHours + // Add new field 
                 ", priority='" + priority + '\'' +
                 ", deleted=" + deleted +
+                ", done=" + done +
                 '}';
+        logger.debug("toString() called, returning: {}", str);
+        return str;
     }
 }

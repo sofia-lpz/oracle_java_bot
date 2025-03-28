@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Avatar, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import API_LIST from '../API';
 
 const { Meta } = Card;
 
