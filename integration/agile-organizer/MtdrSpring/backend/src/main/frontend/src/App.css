@@ -44,8 +44,8 @@ h2 {
 }
 
 .custom-task-card .ant-card-actions {
-  background: #1d1d1d !important; /* Cambia el fondo de la parte inferior */
-  border-top: 2px solid #272727; /* Opcional: Ajusta el borde superior */
+  background: #1d1d1d !important;
+  border-top: 2px solid #272727;
 }
 
 .kanban-header {
@@ -271,4 +271,56 @@ h2 {
   background-color: #c6624b;
   border-color: #c6624b;
   width: 20%;
+}
+
+input {
+  background-color: #272727;
+  color: white !important;
+  padding: 8px 12px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #c6624b;
+  outline: none;
+}
+
+form {
+  background-color: #1d1d1d;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 8px;
+}
+
+form label {
+  display: block;
+  color: white;
+  margin-bottom: 8px;
+}
+
+form button {
+  background-color: #c6624b;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #a6513c;
+}
+
+.ant-modal .ant-modal-content {
+  background-color: #1d1d1d;
+}
+
+.ant-modal .ant-modal-title {
+  background-color: #1d1d1d;
+  color: white;
 }
