@@ -58,3 +58,100 @@ h2 {
   border-radius: 50%;
   display: inline-block;
 }
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #272727;
+}
+
+.login-card {
+  width: 600px;
+  background-color: #272727;
+  border: 1px solid #272727;
+}
+
+.login-logo {
+  display: block;
+  margin: 0 auto 2px auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.login-title {
+  text-align: center;
+  color: white !important;
+}
+
+.login-input {
+  background-color: white;
+  color: black !important;
+}
+
+.login-card .ant-form-item-label > label {
+  color: white !important;
+}
+
+.login-button {
+  background-color: #c6624b;
+  border-color: #c6624b;
+}
+
+.chatbot-container {
+  padding: 24px;
+}
+
+.chatbot-list {
+  margin-bottom: 16px;
+  height: calc(100vh - 250px);
+  overflow-y: auto;
+  background-color: #272727;
+  color: white;
+  border: 1px solid #272727;
+}
+
+.chatbot-item {
+  background-color: #272727;
+  color: white;
+}
+
+.chatbot-empty {
+  color: #d3d3d3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 290px);
+}
+
+.chatbot-empty-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+  color: #d3d3d3;
+}
+
+.chatbot-input-group {
+  width: 100%;
+}
+
+.chatbot-input {
+  width: 80% !important;
+  background-color: #272727 !important;
+  color: white;
+  border: 1px solid #272727 !important;
+}
+
+.chatbot-input::placeholder {
+  color: #d3d3d3 !important;
+}
+
+.chatbot-send-button {
+  background-color: #c6624b;
+  border-color: #c6624b;
+  width: 20%;
+}

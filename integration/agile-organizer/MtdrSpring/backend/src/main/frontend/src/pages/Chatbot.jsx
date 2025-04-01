@@ -33,14 +33,7 @@ const ChatBot = () => {
   }, [messages]);
 
   return (
-    <div style={{ padding: 24 }}>
-      <style>
-        {`
-          input::placeholder {
-            color: #d3d3d3 !important;
-          }
-        `}
-      </style>
+    <div className="chatbot-container">
       <h1 level={2}>ChatBot</h1>
 
       <List
@@ -50,29 +43,15 @@ const ChatBot = () => {
         dataSource={messages}
         locale={{
           emptyText: (
-            <div style={{
-              color: '#d3d3d3',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 'calc(100vh - 290px)'
-            }}>
-              <EditFilled style={{ fontSize: 40, marginBottom: 8, color: '#d3d3d3' }} />
+            <div className="chatbot-empty">
+              <EditFilled className="chatbot-empty-icon" />
               <div>No messages yet.</div>
             </div>
           )
         }}
-        style={{
-          marginBottom: 16,
-          height: 'calc(100vh - 250px)',
-          overflowY: 'auto',
-          backgroundColor: '#272727',
-          color: 'white',
-          border: '1px solid #272727'
-        }}
+        className="chatbot-list"
         renderItem={(item) => (
-          <List.Item style={{ backgroundColor: '#272727', color: 'white' }}>
+          <List.Item className="chatbot-item">
             <strong style={{ color: 'white' }}>
               {item.from === 'user' ? 'Me' : 'Bot'}:
             </strong> {item.text}
@@ -81,24 +60,16 @@ const ChatBot = () => {
       />
       <div ref={messagesEndRef} />
 
-      <Input.Group compact style={{ width: '102.8%' }}>
+      <Input.Group compact className="chatbot-input-group">
         <Input
-          style={{
-            width: 'calc(100% - 100px)',
-            backgroundColor: '#272727',
-            color: 'white',
-            border: '1px solid #272727'
-          }}
+          className="chatbot-input"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onPressEnter={handleSend}
           placeholder="Message..."
         />
         <Button
-          style={{
-            backgroundColor: '#c6624b',
-            borderColor: '#c6624b'
-          }}
+          className="chatbot-send-button"
           type="primary"
           onClick={handleSend}
         >

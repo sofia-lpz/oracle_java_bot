@@ -10,35 +10,14 @@ const Login = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      width: '100vw',
-      backgroundColor: '#272727'
-    }}>
-      <Card style={{ width: 600, backgroundColor: '#272727', border: '1px solid #272727' }}>
+    <div className="login-container">
+      <Card className="login-card">
         <img
           src="/oracle_O.png"
           alt="Logo"
-          style={{
-            display: 'block',
-            margin: '0 auto 2px auto',
-            width: '100px',
-            height: '100px',
-            borderRadius: '50%',
-            objectFit: 'cover'
-          }}
+          className="login-logo"
         />
-        <Title level={2} style={{ textAlign: 'center', color: 'white' }}>Login</Title>
-        <style>
-          {`
-            .ant-form-item-label > label {
-              color: white !important;
-            }
-          `}
-        </style>
+        <Title level={2} className="login-title">Login</Title>
         <Form
           name="login"
           layout="vertical"
@@ -49,7 +28,7 @@ const Login = ({ setIsAuthenticated }) => {
             name="email"
             rules={[{ required: true, message: 'Please enter your email' }]}
           >
-            <Input placeholder="Enter your email" style={{ backgroundColor: 'white', color: 'black' }} />
+            <Input className="login-input" placeholder="Enter your email" />
           </Form.Item>
 
           <Form.Item
@@ -57,11 +36,11 @@ const Login = ({ setIsAuthenticated }) => {
             name="password"
             rules={[{ required: true, message: 'Please enter your password' }]}
           >
-            <Input.Password placeholder="Enter your password" style={{ backgroundColor: 'white', color: 'black' }} />
+            <Input.Password className="login-input" placeholder="Enter your password" />
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block style={{ backgroundColor: '#c6624b', borderColor: '#c6624b' }}>
+            <Button type="primary" htmlType="submit" block className="login-button">
               Log In
             </Button>
           </Form.Item>
