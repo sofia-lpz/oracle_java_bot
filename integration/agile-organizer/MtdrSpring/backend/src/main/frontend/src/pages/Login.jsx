@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Typography, Card } from 'antd';
+import { Form, Input, Button, Typography, Checkbox } from 'antd';
 
 const { Title } = Typography;
 
@@ -10,25 +10,26 @@ const Login = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <div className="login-container">
-      <Card className="login-card">
-        <img
+    <div className="login-wrapper">
+      <div className="login-form-side">
+      <img
           src="/oracle_O.png"
           alt="Logo"
-          className="login-logo"
+          className="login-logo-mini"
         />
-        <Title level={2} className="login-title">Login</Title>
+        <Title level={2} className="login-title">Sign In</Title>
+
         <Form
           name="login"
           layout="vertical"
           onFinish={onFinish}
         >
           <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: 'Please enter your email' }]}
+            label="Username"
+            name="username"
+            rules={[{ required: true, message: 'Please enter your username' }]}
           >
-            <Input className="login-input" placeholder="Enter your email" />
+            <Input placeholder="Username" />
           </Form.Item>
 
           <Form.Item
@@ -36,16 +37,29 @@ const Login = ({ setIsAuthenticated }) => {
             name="password"
             rules={[{ required: true, message: 'Please enter your password' }]}
           >
-            <Input.Password className="login-input" placeholder="Enter your password" />
+            <Input.Password placeholder="Password" />
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block className="login-button">
-              Log In
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Checkbox>Remember Me</Checkbox>
+              <a className="forgot-password" href="#">Forgot Password</a>
+            </div>
           </Form.Item>
+          <Button type="primary" htmlType="submit" className="login-btn">Sign In</Button>
         </Form>
-      </Card>
+      </div>
+
+      <div className="login-welcome-side">
+        <img
+          src="/logo.png"
+          alt="Logo"
+          className="login-logo"
+        />
+        <Title level={2} classname="login-title-white">Welcome to login</Title>
+        <p>Don't have an account?</p>
+        <Button type="default" className="signup-btn">Sign Up</Button>
+      </div>
     </div>
   );
 };
