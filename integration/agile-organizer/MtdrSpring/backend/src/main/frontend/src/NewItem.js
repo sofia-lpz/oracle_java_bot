@@ -1,63 +1,88 @@
-/*
-## MyToDoReact version 1.0.
-##
-## Copyright (c) 2022 Oracle, Inc.
-## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
-*/
-/*
- * Component that supports creating a new todo item.
- * @author  jean.de.lavarene@oracle.com
- */
-
 import React, { useState } from "react";
 import Button from '@mui/material/Button';
-
+import './App.css';
 
 function NewItem(props) {
-  const [item, setItem] = useState('');
+  const [task, setTask] = useState({
+    title: '',
+    description: '',
+    dueDate: '',
+  });
+
   function handleSubmit(e) {
-    // console.log("NewItem.handleSubmit("+e+")");
-    if (!item.trim()) {
+    e.preventDefault();
+    if (!task.title.trim() || !task.description.trim()) {
       return;
     }
-    // addItem makes the REST API call:
-    props.addItem(item);
-    setItem("");
-    e.preventDefault();
+    props.addItem(task);
+    setTask({ title: '', description: '', dueDate: '' }); // Clear form
   }
+
   function handleChange(e) {
-    setItem(e.target.value);
+    const { name, value } = e.target;
+    setTask(prevTask => ({
+      ...prevTask,
+      [name]: value,
+    }));
   }
+
   return (
-    <div id="newinputform">
-    <form>
-      <input
-        id="newiteminput"
-        placeholder="New item"
-        type="text"
-        autoComplete="off"
-        value={item}
-        onChange={handleChange}
-        // No need to click on the "ADD" button to add a todo item. You
-        // can simply press "Enter":
-        onKeyDown={event => {
-          if (event.key === 'Enter') {
-            handleSubmit(event);
-          }
-        }}
-      />
-      <span>&nbsp;&nbsp;</span>
-      <Button
-        className="AddButton"
-        variant="contained"
-        disabled={props.isInserting}
-        onClick={!props.isInserting ? handleSubmit : null}
-        size="small"
-      >
-        {props.isInserting ? 'Adding…' : 'Add'}
-      </Button>
+    <form className="new-task-form">
+      <div className="form-group">
+        <label htmlFor="title">Título</label>
+        <input
+          id="title"
+          name="title"
+          placeholder="Ingresa el título de la tarea"
+          type="text"
+          value={task.title}
+          onChange={handleChange}
+          className="task-title-input"
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="description">Descripción</label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Ingresa la descripción de la tarea"
+          value={task.description}
+          onChange={handleChange}
+          className="task-description-input"
+          rows={3}
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="dueDate">Fecha de entrega</label>
+        <input
+          id="dueDate"
+          name="dueDate"
+          placeholder="Selecciona la fecha"
+          type="date"
+          value={task.dueDate}
+          onChange={handleChange}
+          className="task-due-date-input"
+        />
+      </div>
+        
+      <div className="form-actions">
+        <Button 
+          type="primary" 
+          style={{ 
+            backgroundColor: '#c6624b', 
+            color: 'white',
+            padding: '8px 24px',
+            borderRadius: '8px',
+            marginTop: '16px'
+          }}  
+          onClick={handleSubmit}
+        >
+          Agregar tarea
+        </Button>
+      </div>
     </form>
-    </div>
   );
 }
 
