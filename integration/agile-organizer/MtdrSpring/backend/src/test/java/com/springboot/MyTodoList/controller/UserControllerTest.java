@@ -1,5 +1,6 @@
 package com.springboot.MyTodoList.controller;
 
+import com.springboot.MyTodoList.controller.UserController;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -109,5 +111,39 @@ public class UserControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         assertEquals(false, result.getBody());
         verify(userService, times(1)).deleteUser(1);
+    }
+
+    @Test
+    public void testNonAdminCannotCreateAdminUser() throws Exception {
+        User newAdminUser = new User();
+        newAdminUser.setName("New Admin");
+        newAdminUser.setPassword("password123");
+        newAdminUser.setRole(Role.ADMIN.toString());
+
+        when(userService.addUser(newAdminUser))
+                .thenThrow(new AccessDeniedException("Only admins can create admin users"));
+
+        Exception exception = assertThrows(AccessDeniedException.class, () -> {
+            userController.addUser(newAdminUser);
+        });
+
+        assertEquals("Only admins can create admin users", exception.getMessage());
+        verify(userService, times(1)).addUser(newAdminUser);
+    }
+
+    @Test
+    public void testPasswordNotReturnedInGetUser() {
+        User user = new User();
+        user.setID(1);
+        user.setName("Test User");
+        user.setPassword("encrypted_password");
+
+        when(userService.getUserById(1)).thenReturn(new ResponseEntity<>(user, HttpStatus.OK));
+
+        ResponseEntity<User> result = userController.getUserById(1);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+
+        assertNull(result.getBody().getPassword());
+        verify(userService, times(1)).getUserById(1);
     }
 }
