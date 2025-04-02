@@ -350,9 +350,9 @@ form button:hover {
 } */
 
 /* Estilos específicos para inputs del formulario de tareas */
-input[name="title"],
-input[name="description"],
-input[name="dueDate"] {
+.task-title-input,
+.task-description-input,
+.task-due-date-input {
   background-color: #272727;
   color: white !important;
   padding: 8px 12px;
@@ -360,19 +360,72 @@ input[name="dueDate"] {
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.3s ease;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
-input[name="title"]::placeholder,
-input[name="description"]::placeholder,
-input[name="dueDate"]::placeholder {
+/* Estilos específicos para el textarea de descripción */
+textarea.task-description-input {
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.task-title-input::placeholder,
+.task-description-input::placeholder,
+.task-due-date-input::placeholder {
   color: #d3d3d3 !important;
 }
 
-input[name="title"]:focus,
-input[name="description"]:focus,
-input[name="dueDate"]:focus {
+.task-title-input:focus,
+.task-description-input:focus,
+.task-due-date-input:focus {
   border-color: #c6624b;
   outline: none;
+}
+
+/* .ant-input {
+  color: inherit !important;
+} */
+
+/* Estilos para el formulario de nueva tarea */
+.new-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* .ant-input {
+  color: inherit !important;
+} */
+
+/* Estilo para el icono de cerrar del modal */
+.ant-modal-close-x {
+  color: white !important;
+}
+
+.ant-modal-close:hover .ant-modal-close-x {
+  color: #c6624b !important;
 }
 
 /* .ant-input {
