@@ -7,6 +7,7 @@ import ChatBot from './pages/Chatbot';
 import Task from './pages/Task';
 import Users from './pages/Users';
 import API_LIST from './API';
+import Login from './pages/Login';
 
 const { Content, Footer } = Layout;
 
@@ -14,6 +15,7 @@ function App() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -40,7 +42,7 @@ function App() {
         });
   }, []);
 
-  return (
+  return isAuthenticated ? (
     <Router>
       <Layout style={{ minHeight: '100vh', minWidth: '100vw', display: 'flex' }}>
         
@@ -70,6 +72,8 @@ function App() {
 
       </Layout>
     </Router>
+  ) : (
+    <Login setIsAuthenticated={setIsAuthenticated} />
   );
 };
 

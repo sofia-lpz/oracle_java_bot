@@ -1,5 +1,6 @@
 package com.springboot.MyTodoList.controller;
 
+import com.springboot.MyTodoList.controller.StateController;
 import com.springboot.MyTodoList.model.State;
 import com.springboot.MyTodoList.service.StateService;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,6 +109,34 @@ public class StateControllerTest {
         ResponseEntity<Boolean> result = stateController.deleteState(1);
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         assertEquals(false, result.getBody());
+        verify(stateService, times(1)).deleteState(1);
+    }
+
+    @Test
+    public void testCannotCreateDuplicateWorkflowPriority() throws Exception {
+        State state = new State();
+        state.setName("New State");
+        state.setWorkflowPriority(1);
+
+        when(stateService.addState(state))
+                .thenThrow(new IllegalArgumentException("State with this workflow priority already exists"));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            stateController.addState(state);
+        });
+
+        assertEquals("State with this workflow priority already exists", exception.getMessage());
+        verify(stateService, times(1)).addState(state);
+    }
+
+    @Test
+    public void testDeleteStateReassignsTasks() {
+        when(stateService.deleteState(1)).thenReturn(true);
+
+        ResponseEntity<Boolean> result = stateController.deleteState(1);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(true, result.getBody());
+
         verify(stateService, times(1)).deleteState(1);
     }
 }
