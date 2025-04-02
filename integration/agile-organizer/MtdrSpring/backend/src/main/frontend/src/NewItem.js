@@ -1,63 +1,60 @@
-/*
-## MyToDoReact version 1.0.
-##
-## Copyright (c) 2022 Oracle, Inc.
-## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
-*/
-/*
- * Component that supports creating a new todo item.
- * @author  jean.de.lavarene@oracle.com
- */
-
 import React, { useState } from "react";
 import Button from '@mui/material/Button';
-
+import './App.css';
 
 function NewItem(props) {
-  const [item, setItem] = useState('');
+  const [task, setTask] = useState({
+    title: '',
+    description: '',
+    dueDate: '',
+    
+  });
+
   function handleSubmit(e) {
-    // console.log("NewItem.handleSubmit("+e+")");
-    if (!item.trim()) {
+    e.preventDefault();
+    if (!task.title.trim() || !task.description.trim()) {
       return;
     }
-    // addItem makes the REST API call:
-    props.addItem(item);
-    setItem("");
-    e.preventDefault();
+    props.addItem(task);
+    setTask({ title: '', description: '', dueDate: '' }); // Clear form
   }
+
   function handleChange(e) {
-    setItem(e.target.value);
+    const { name, value } = e.target;
+    setTask(prevTask => ({
+      ...prevTask,
+      [name]: value,
+    }));
   }
+
   return (
-    <div id="newinputform">
     <form>
       <input
-        id="newiteminput"
-        placeholder="New item"
+        name="title"
+        placeholder="Title"
         type="text"
-        autoComplete="off"
-        value={item}
+        value={task.title}
         onChange={handleChange}
-        // No need to click on the "ADD" button to add a todo item. You
-        // can simply press "Enter":
-        onKeyDown={event => {
-          if (event.key === 'Enter') {
-            handleSubmit(event);
-          }
-        }}
       />
-      <span>&nbsp;&nbsp;</span>
-      <Button
-        className="AddButton"
-        variant="contained"
-        disabled={props.isInserting}
-        onClick={!props.isInserting ? handleSubmit : null}
-        size="small"
-      >
-        {props.isInserting ? 'Adding…' : 'Add'}
+      <input
+        name="description"
+        placeholder="Description"
+        type="text"
+        value={task.description}
+        onChange={handleChange}
+      />
+      <input
+        name="dueDate"
+        placeholder="Due date"
+        type="date"
+        value={task.dueDate}
+        onChange={handleChange}
+      />
+        
+      <Button type="primary" style={{ backgroundColor: '#c6624b', color: 'white' }}  onClick={handleSubmit}>
+        Add task
       </Button>
     </form>
-    </div>
   );
 }
 

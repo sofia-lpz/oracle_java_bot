@@ -1,0 +1,326 @@
+html, body, #root {
+  height: 80%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-layout {
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.kanban {
+  margin-top: 32px;
+  display: flex;
+}
+
+.kanban-column {
+  background-color: rgb(39, 39, 39);
+  min-height: 70vh;
+  padding-inline: 16px;
+  margin-right: 16px;
+  border-radius: 16px;
+}
+
+.kanban-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.custom-task-card .ant-card-actions {
+  background: #1d1d1d !important;
+  border-top: 2px solid #272727;
+}
+
+.kanban-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* LOGIN */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #272727;
+}
+
+.login-card {
+  width: 600px;
+  background-color: #272727;
+  border: 1px solid #272727;
+}
+
+.login-logo {
+  display: block;
+  margin: 0 auto 2px auto;
+  width: 200px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.login-logo-mini {
+  display: block;
+  margin: 0 auto 2px auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 32px;
+  color: #333 !important;
+}
+
+.login-welcome-side h2 {
+  color: white !important;
+}
+
+.login-input {
+  background-color: white;
+  color: black !important;
+}
+
+.login-form-side .ant-form-item-label > label {
+  color: #333 !important;
+}
+
+.login-button {
+  background-color: #c6624b;
+  border-color: #c6624b;
+}
+
+.login-wrapper {
+  display: flex;
+  width: 800px;
+  height: 500px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: auto;
+  margin-top: 10vh;
+  background-color: white;
+}
+
+.login-form-side {
+  flex: 1;
+  padding: 40px;
+  background-color: #fff;
+}
+
+.login-welcome-side {
+  flex: 1;
+  color: white;
+  background: #272727;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-btn {
+  background: #c6624b;
+  border: none;
+  width: 100%;
+  color: white;
+  margin-top: 16px;
+}
+
+.signup-btn {
+  color: white;
+  border: 1px solid white;
+  background: transparent;
+  margin-top: 16px;
+}
+
+.signup-btn:hover {
+  color: white !important;
+  background-color: #c6624b !important;
+  border-color: #c6624b !important;
+}
+
+.forgot-password {
+  float: right;
+  font-size: 12px;
+  color: #c6624b;
+}
+
+.forgot-password:hover {
+  color: #a84832; /* o el tono de naranja más oscuro que prefieras */
+  /* text-decoration: underline; */
+  cursor: pointer;
+}
+
+/* Hover en botón primario */
+.ant-btn-primary:hover,
+.ant-btn-color-primary:hover,
+.ant-btn-primary:focus,
+.ant-btn-color-primary:focus {
+  background-color: #c6624b !important;
+  border-color: #c6624b !important;
+  color: white !important;
+  box-shadow: 0 2px 0 rgba(198, 98, 75, 0.2) !important;
+}
+
+/* Checkbox naranja */
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #c6624b !important;
+  border-color: #c6624b !important;
+  box-shadow: none !important;
+}
+
+.ant-checkbox-checked::after {
+  border: 1px solid #c6624b;
+}
+
+/* Hover del checkbox */
+.ant-checkbox-inner:hover {
+  border-color: #c6624b !important;
+}
+
+/* Hover en checkbox cuando NO está seleccionado */
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner {
+  border-color: #c6624b !important;
+}
+
+/*  CHATBOT */
+
+.chatbot-container {
+  padding: 24px;
+}
+
+.chatbot-list {
+  margin-bottom: 16px;
+  height: calc(100vh - 250px);
+  overflow-y: auto;
+  background-color: #272727;
+  color: white;
+  border: 1px solid #272727;
+}
+
+.chatbot-item {
+  background-color: #272727;
+  color: white !important;
+}
+
+.chatbot-item * {
+  color: white !important;
+}
+
+.chatbot-empty {
+  color: #d3d3d3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 290px);
+}
+
+.chatbot-empty-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+  color: #d3d3d3;
+}
+
+.chatbot-input-group {
+  width: 100%;
+}
+
+.chatbot-input {
+  width: 80% !important;
+  background-color: #272727 !important;
+  color: white;
+  border: 1px solid #272727 !important;
+}
+
+.chatbot-input::placeholder {
+  color: #d3d3d3 !important;
+}
+
+.chatbot-send-button {
+  background-color: #c6624b;
+  border-color: #c6624b;
+  width: 20%;
+}
+
+input {
+  background-color: #272727;
+  color: white !important;
+  padding: 8px 12px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #c6624b;
+  outline: none;
+}
+
+form {
+  background-color: #1d1d1d;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 8px;
+}
+
+form label {
+  display: block;
+  color: white;
+  margin-bottom: 8px;
+}
+
+form button {
+  background-color: #c6624b;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #a6513c;
+}
+
+.ant-modal .ant-modal-content {
+  background-color: #1d1d1d;
+}
+
+.ant-modal .ant-modal-title {
+  background-color: #1d1d1d;
+  color: white;
+}

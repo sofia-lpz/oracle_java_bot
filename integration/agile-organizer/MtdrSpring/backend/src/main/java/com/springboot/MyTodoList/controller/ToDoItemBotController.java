@@ -41,6 +41,27 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		this.botName = botName;
 	}
 
+	private String formatTodoList(List<ToDoItem> items) {
+		logger.debug("formatTodoList() called with {} items", items.size());
+
+		if (items.isEmpty()) {
+			return "No tasks found.";
+		}
+		
+		StringBuilder sb = new StringBuilder("*Your Todo List:*\n\n");
+		
+		for (ToDoItem item : items) {
+			sb.append(String.format("📌 *%s*\n", item.getTitle()))
+			  .append(String.format("Description: %s\n", item.getDescription()))
+			  .append(String.format("Status: %s\n", item.isDone() ? "✅ Done" : "⏳ Pending"))
+			  .append("\n");
+		}
+
+		logger.debug("formatTodoList() returning: {}", sb.toString());
+		
+		return sb.toString();
+	}
+
 	@Override
 	public void onUpdateReceived(Update update) {
 
@@ -192,6 +213,9 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				messageToTelegram.setChatId(chatId);
 				messageToTelegram.setText(BotLabels.MY_TODO_LIST.getLabel());
 				messageToTelegram.setReplyMarkup(keyboardMarkup);
+				//send the list as a message with formatting
+
+				messageToTelegram.setText(formatTodoList(allItems));
 
 				try {
 					execute(messageToTelegram);
@@ -221,7 +245,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			else {
 				try {
 					ToDoItem newItem = new ToDoItem();
-					newItem.setDescription(messageTextFromTelegram);
+					newItem.setTitle(messageTextFromTelegram);
 					newItem.setCreation_ts(OffsetDateTime.now());
 					newItem.setDone(false);
 					ResponseEntity entity = addToDoItem(newItem);
@@ -245,9 +269,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 	// GET /todolist
 	public List<ToDoItem> getAllToDoItems() { 
-		return toDoItemService.findAll();
+		List<ToDoItem> items = toDoItemService.findAll();
+		logger.debug("getAllToDoItems() found {} items", items.size());
+		return items;
 	}
-
 	// GET BY ID /todolist/{id}
 	public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id) {
 		try {
