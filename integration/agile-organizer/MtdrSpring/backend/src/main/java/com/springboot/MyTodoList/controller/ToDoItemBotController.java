@@ -5,6 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import com.springboot.MyTodoList.model.Sprint;
+import com.springboot.MyTodoList.model.State;
+import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.model.Project;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -243,19 +252,16 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			}
 
 			else {
-				try {
-					ToDoItem newItem = new ToDoItem();
-					newItem.setTitle(messageTextFromTelegram);
-					newItem.setCreation_ts(OffsetDateTime.now());
-					newItem.setDone(false);
+				try{
+					ToDoItem newItem = parseToDoItem(messageTextFromTelegram);
 					ResponseEntity entity = addToDoItem(newItem);
-
+			
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
 					messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
-
+			
 					execute(messageToTelegram);
-				} catch (Exception e) {
+				}catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
 			}
@@ -319,4 +325,153 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		}
 	}
 
+	private ToDoItem parseToDoItem(String message) {
+    ToDoItem newItem = new ToDoItem();
+    newItem.setCreation_ts(OffsetDateTime.now()); // Keep existing creation timestamp
+    newItem.setDone(false); // Keep existing done status
+    newItem.setDeleted(false); // Ensure it's not marked as deleted
+
+    // Check if the message contains commas for advanced parsing
+    if (message.contains(",")) {
+        String[] values = message.split(",");
+        
+        // Process each field based on its position
+        for (int i = 0; i < values.length; i++) {
+            String value = values[i].trim();
+            
+            // Skip empty values
+            if (value.isEmpty()) {
+                continue;
+            }
+            
+            // Set the appropriate field based on position
+            switch (i) {
+                case 0: // Title
+                    newItem.setTitle(value);
+                    break;
+                case 1: // Description
+                    newItem.setDescription(value);
+                    break;
+                case 2: // Due date (day-month-year)
+                    try {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        LocalDate localDate = LocalDate.parse(value, formatter);
+                        OffsetDateTime dueDate = localDate.atStartOfDay().atOffset(ZoneOffset.UTC);
+                        newItem.setDueDate(dueDate);
+                    } catch (Exception e) {
+                        logger.error("Error parsing due date: " + value, e);
+                    }
+                    break;
+                case 3: // State - need to find by name
+                    try {
+                        State state = getStateByName(value);
+                        if (state != null) {
+                            newItem.setState(state);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Error setting state: " + value, e);
+                    }
+                    break;
+                case 4: // Sprint - need to find by name
+                    try {
+                        Sprint sprint = getSprintByName(value);
+                        if (sprint != null) {
+                            newItem.setSprint(sprint);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Error setting sprint: " + value, e);
+                    }
+                    break;
+                case 5: // User - need to find by name
+                    try {
+                        User user = getUserByName(value);
+                        if (user != null) {
+                            newItem.setUser(user);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Error setting user: " + value, e);
+                    }
+                    break;
+                case 6: // Project - need to find by name
+                    try {
+                        Project project = getProjectByName(value);
+                        if (project != null) {
+                            newItem.setProject(project);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Error setting project: " + value, e);
+                    }
+                    break;
+                case 7: // Story points
+                    try {
+                        int storyPoints = Integer.parseInt(value);
+                        newItem.setStoryPoints(storyPoints);
+                    } catch (NumberFormatException e) {
+                        logger.error("Error parsing story points: " + value, e);
+                    }
+                    break;
+                case 8: // Priority
+                    newItem.setPriority(value);
+                    break;
+                case 9: // Estimated hours
+                    try {
+                        int estimatedHours = Integer.parseInt(value);
+                        newItem.setEstimatedHours(estimatedHours);
+                    } catch (NumberFormatException e) {
+                        logger.error("Error parsing estimated hours: " + value, e);
+                    }
+                    break;
+                case 10: // Real hours
+                    try {
+                        int realHours = Integer.parseInt(value);
+                        newItem.setRealHours(realHours);
+                    } catch (NumberFormatException e) {
+                        logger.error("Error parsing real hours: " + value, e);
+                    }
+                    break;
+            }
+        }
+    } else {
+        // If no commas found, use the existing behavior of just setting the title
+        newItem.setTitle(message);
+    }
+    
+    return newItem;
 }
+
+// Helper methods to get entity references - these would need to use your service layer
+private State getStateByName(String stateName) {
+    // This is a placeholder - you'll need to implement this based on your service layer
+    // Example implementation:
+    // return stateService.findByName(stateName);
+    logger.debug("Attempting to find state with name: {}", stateName);
+    return null;
+}
+
+private Sprint getSprintByName(String sprintName) {
+    // This is a placeholder - you'll need to implement this based on your service layer
+    // Example implementation:
+    // return sprintService.findByName(sprintName);
+    logger.debug("Attempting to find sprint with name: {}", sprintName);
+    return null;
+}
+
+private User getUserByName(String userName) {
+    // This is a placeholder - you'll need to implement this based on your service layer
+    // Example implementation:
+    // return userService.findByName(userName);
+    logger.debug("Attempting to find user with name: {}", userName);
+    return null;
+}
+
+private Project getProjectByName(String projectName) {
+    // This is a placeholder - you'll need to implement this based on your service layer
+    // Example implementation:
+    // return projectService.findByName(projectName);
+    logger.debug("Attempting to find project with name: {}", projectName);
+    return null;
+}
+
+}
+
+
