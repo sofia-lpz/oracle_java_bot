@@ -239,6 +239,7 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 					KeyboardRow currentRow = new KeyboardRow();
 					currentRow.add(item.getTitle());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UPDATE_ITEM.getLabel());
 					keyboard.add(currentRow);
 				}
 
@@ -247,7 +248,7 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 
 				for (ToDoItem item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
+					currentRow.add(item.getTitle());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UPDATE_ITEM.getLabel());
