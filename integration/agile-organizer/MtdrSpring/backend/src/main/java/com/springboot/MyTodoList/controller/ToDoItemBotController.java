@@ -2,7 +2,9 @@ package com.springboot.MyTodoList.controller;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import java.time.LocalDate;
@@ -53,6 +55,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	private ProjectService projectService;
 	private SprintService sprintService;
 	private String botName;
+private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 
 	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService,
 			StateService stateService, UserService userService, ProjectService projectService, SprintService sprintService) {
@@ -180,6 +183,28 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					logger.error(e.getLocalizedMessage(), e);
 				}
 
+			} else if (messageTextFromTelegram.indexOf(BotLabels.UPDATE_ITEM.getLabel()) != -1) {
+				String itemId = messageTextFromTelegram.substring(0,
+				messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+		Integer id = Integer.valueOf(itemId);
+	
+		// Store that this user is updating this specific item
+		userUpdatingItemMap.put(chatId, id);
+		
+		SendMessage messageToTelegram = new SendMessage();
+		messageToTelegram.setChatId(chatId);
+		messageToTelegram.setText(BotMessages.TYPE_UPDATE_TODO_ITEM.getMessage());
+		
+		// Add keyboard removal if needed
+		ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
+		messageToTelegram.setReplyMarkup(keyboardMarkup);
+		
+		try {
+			execute(messageToTelegram);
+		} catch (TelegramApiException e) {
+			logger.error(e.getLocalizedMessage(), e);
+		}
+			
 			} else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
 
@@ -225,8 +250,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					currentRow.add(item.getDescription());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UPDATE_ITEM.getLabel());
 					keyboard.add(currentRow);
 				}
+
+				
 
 				// command back to main screen
 				KeyboardRow mainScreenRowBottom = new KeyboardRow();
@@ -270,19 +298,181 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			}
 
 			else {
-				try{
-					ToDoItem newItem = parseToDoItem(messageTextFromTelegram);
-					ResponseEntity entity = addToDoItem(newItem);
-			
-					SendMessage messageToTelegram = new SendMessage();
-					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
-			
-					execute(messageToTelegram);
-				}catch (Exception e) {
+				try {
+					// Check if this user is in the middle of updating an item
+					if (userUpdatingItemMap.containsKey(chatId)) {
+						Integer itemId = userUpdatingItemMap.get(chatId);
+						
+						// Get the existing item
+						ResponseEntity<ToDoItem> response = getToDoItemById(itemId);
+						if (response.getStatusCode() == HttpStatus.OK) {
+							ToDoItem existingItem = response.getBody();
+							
+							// Parse the update message and apply changes to the existing item
+							updateItemFromMessage(existingItem, messageTextFromTelegram);
+							
+							// Update the item in the database
+							ResponseEntity updateResponse = updateToDoItem(existingItem, itemId);
+							
+							// Clear the updating state
+							userUpdatingItemMap.remove(chatId);
+							
+							// Inform the user that the update was successful
+							SendMessage messageToTelegram = new SendMessage();
+							messageToTelegram.setChatId(chatId);
+							messageToTelegram.setText(BotMessages.ITEM_UPDATED.getMessage());
+							execute(messageToTelegram);
+						} else {
+							SendMessage messageToTelegram = new SendMessage();
+							messageToTelegram.setChatId(chatId);
+							messageToTelegram.setText("Item not found. Please try again.");
+							execute(messageToTelegram);
+							userUpdatingItemMap.remove(chatId);
+						}
+					} else {
+						// Handle as a new item
+						ToDoItem newItem = parseToDoItem(messageTextFromTelegram);
+						ResponseEntity entity = addToDoItem(newItem);
+				
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
+				
+						execute(messageToTelegram);
+					}
+				} catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
+					
+					// Inform the user of the error
+					try {
+						SendMessage errorMessage = new SendMessage();
+						errorMessage.setChatId(chatId);
+						errorMessage.setText("An error occurred: " + e.getMessage());
+						execute(errorMessage);
+						
+						// Clear any updating state on error
+						userUpdatingItemMap.remove(chatId);
+					} catch (TelegramApiException telegramException) {
+						logger.error("Failed to send error message", telegramException);
+					}
 				}
 			}
+		}
+	}
+
+	private void updateItemFromMessage(ToDoItem existingItem, String message) {
+		// Don't update creation timestamp or ID
+		
+		// Check if the message contains commas for advanced parsing
+		if (message.contains(",")) {
+			String[] values = message.split(",");
+			
+			// Process each field based on its position
+			for (int i = 0; i < values.length; i++) {
+				String value = values[i].trim();
+				
+				// Skip empty values - those fields won't be updated
+				if (value.isEmpty()) {
+					continue;
+				}
+				
+				// Update the appropriate field based on position
+				switch (i) {
+					case 0: // Title
+						existingItem.setTitle(value);
+						break;
+					case 1: // Description
+						existingItem.setDescription(value);
+						break;
+					case 2: // Due date (day-month-year)
+						try {
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+							LocalDate localDate = LocalDate.parse(value, formatter);
+							OffsetDateTime dueDate = localDate.atStartOfDay().atOffset(ZoneOffset.UTC);
+							existingItem.setDueDate(dueDate);
+						} catch (Exception e) {
+							logger.error("Error parsing due date: " + value, e);
+						}
+						break;
+					case 3: // State - need to find by name
+						try {
+							ResponseEntity<State> responseEntity = this.stateService.getStateByName(value);
+							if (responseEntity != null && responseEntity.getBody() != null) {
+								State state = responseEntity.getBody();
+								existingItem.setState(state);
+							}
+						} catch (Exception e) {
+							logger.error("Error setting state: " + value, e);
+						}
+						break;
+					case 4: // Sprint
+						try {
+							ResponseEntity<Sprint> responseEntity = this.sprintService.getSprintById(Integer.parseInt(value));
+							if (responseEntity != null && responseEntity.getBody() != null) {
+								Sprint sprint = responseEntity.getBody();
+								existingItem.setSprint(sprint);
+							}
+						} catch (Exception e) {
+							logger.error("Error setting sprint: " + value, e);
+						}
+						break;
+					case 5: // User - need to find by name
+						try {
+							ResponseEntity<User> responseEntity = this.userService.getUserByName(value);
+							if (responseEntity != null && responseEntity.getBody() != null) {
+								User user = responseEntity.getBody();
+								existingItem.setUser(user);
+							}
+						} catch (Exception e) {
+							logger.error("Error setting user: " + value, e);
+						}
+						break;
+					case 6: // Story points
+						try {
+							int storyPoints = Integer.parseInt(value);
+							existingItem.setStoryPoints(storyPoints);
+						} catch (NumberFormatException e) {
+							logger.error("Error parsing story points: " + value, e);
+						}
+						break;
+					case 7: // Priority
+						String priorityLower = value.toLowerCase();
+						if (priorityLower.equals("low") || priorityLower.equals("medium") || priorityLower.equals("high")) {
+							existingItem.setPriority(priorityLower);
+						} else {
+							logger.warn("Invalid priority value: '{}'. Keeping existing value.", value);
+						}
+						break;
+					case 8: // Estimated hours
+						try {
+							int estimatedHours = Integer.parseInt(value);
+							existingItem.setEstimatedHours(estimatedHours);
+						} catch (NumberFormatException e) {
+							logger.error("Error parsing estimated hours: " + value, e);
+						}
+						break;
+					case 9: // Real hours
+						try {
+							int realHours = Integer.parseInt(value);
+							existingItem.setRealHours(realHours);
+						} catch (NumberFormatException e) {
+							logger.error("Error parsing real hours: " + value, e);
+						}
+						break;
+					case 10: // Done status
+						if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes") || 
+							value.equalsIgnoreCase("done") || value.equalsIgnoreCase("1")) {
+							existingItem.setDone(true);
+						} else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("no") || 
+								   value.equalsIgnoreCase("pending") || value.equalsIgnoreCase("0")) {
+							existingItem.setDone(false);
+						}
+						break;
+				}
+			}
+		} else {
+			// If only a simple message is sent, update the title
+			existingItem.setTitle(message);
 		}
 	}
 
