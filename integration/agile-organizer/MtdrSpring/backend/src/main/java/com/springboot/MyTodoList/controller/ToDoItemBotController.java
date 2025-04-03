@@ -48,14 +48,23 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 	private static final Logger logger = LoggerFactory.getLogger(ToDoItemBotController.class);
 	private ToDoItemService toDoItemService;
+	private StateService stateService;
+	private UserService userService;
+	private ProjectService projectService;
+	private SprintService sprintService;
 	private String botName;
 
-	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService) {
+	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService,
+			StateService stateService, UserService userService, ProjectService projectService, SprintService sprintService) {
 		super(botToken);
 		logger.info("Bot Token: " + botToken);
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
+		this.stateService = stateService;
+		this.userService = userService;
+		this.projectService = projectService;
+		this.sprintService = sprintService;
 	}
 
 	private String formatTodoList(List<ToDoItem> items) {
@@ -87,6 +96,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			String messageTextFromTelegram = update.getMessage().getText();
 			long chatId = update.getMessage().getChatId();
 
+			// START MESSAGE
 			if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
 
@@ -97,14 +107,12 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 				List<KeyboardRow> keyboard = new ArrayList<>();
 
-				// first row
+				// first keyboard
 				KeyboardRow row = new KeyboardRow();
 				row.add(BotLabels.LIST_ALL_ITEMS.getLabel());
 				row.add(BotLabels.ADD_NEW_ITEM.getLabel());
-				// Add the first row to the keyboard
 				keyboard.add(row);
 
-				// second row
 				row = new KeyboardRow();
 				row.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 				row.add(BotLabels.HIDE_MAIN_SCREEN.getLabel());
@@ -120,6 +128,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					execute(messageToTelegram);
 				} catch (TelegramApiException e) {
 					logger.error(e.getLocalizedMessage(), e);
+					messageToTelegram.setText(BotMessages.ERROR.getMessage());
 				}
 
 			} else if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
@@ -203,7 +212,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				for (ToDoItem item : activeItems) {
 
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
+					currentRow.add(item.getTitle());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
@@ -238,6 +247,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					execute(messageToTelegram);
 				} catch (TelegramApiException e) {
 					logger.error(e.getLocalizedMessage(), e);
+					messageToTelegram.setText(BotMessages.ERROR.getMessage());
 				}
 
 			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
@@ -339,6 +349,9 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
     newItem.setDone(false); // Keep existing done status
     newItem.setDeleted(false); // Ensure it's not marked as deleted
 
+	Project defaultProject = projectService.findAll().get(0);
+	newItem.setProject(defaultProject);
+
     // Check if the message contains commas for advanced parsing
     if (message.contains(",")) {
         String[] values = message.split(",");
@@ -368,75 +381,77 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
                         newItem.setDueDate(dueDate);
                     } catch (Exception e) {
                         logger.error("Error parsing due date: " + value, e);
-                    }
+						}
                     break;
                 case 3: // State - need to find by name
                     try {
-						StateService stateService = new StateService(); // Or get it through dependency injection
-						ResponseEntity<State> responseEntity = stateService.getStateByName(value);
+						ResponseEntity<State> responseEntity = this.stateService.getStateByName(value);
 						if (responseEntity != null && responseEntity.getBody() != null) {
 							State state = responseEntity.getBody();
 							newItem.setState(state);
 						}
                     } catch (Exception e) {
                         logger.error("Error setting state: " + value, e);
+				
                     }
                     break;
-                case 4: // Sprint - need to find by name
-                    try {
-                        Sprint sprint = getSprintByName(value);
-                        if (sprint != null) {
-                            newItem.setSprint(sprint);
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error setting sprint: " + value, e);
-                    }
-                    break;
+                case 4: // Sprint
+					try {
+						ResponseEntity<Sprint> responseEntity = this.sprintService.getSprintById(Integer.parseInt(value));
+						if (responseEntity != null && responseEntity.getBody() != null) {
+							Sprint sprint = responseEntity.getBody();
+							newItem.setSprint(sprint);
+						}
+					} catch (Exception e) {
+						logger.error("Error setting sprint: " + value, e);
+					}
+					break;
                 case 5: // User - need to find by name
-                    try {
-                        User user = getUserByName(value);
-                        if (user != null) {
-                            newItem.setUser(user);
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error setting user: " + value, e);
-                    }
+					try {
+						ResponseEntity<User> responseEntity = this.userService.getUserByName(value);
+						if (responseEntity != null && responseEntity.getBody() != null) {
+							User user = responseEntity.getBody();
+							newItem.setUser(user);
+						}
+					} catch (Exception e) {
+						logger.error("Error setting user: " + value, e);
+				
+					}
                     break;
-                case 6: // Project - need to find by name
-                    try {
-                        Project project = getProjectByName(value);
-                        if (project != null) {
-                            newItem.setProject(project);
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error setting project: " + value, e);
-                    }
-                    break;
-                case 7: // Story points
+                case 6: // Story points
                     try {
                         int storyPoints = Integer.parseInt(value);
                         newItem.setStoryPoints(storyPoints);
                     } catch (NumberFormatException e) {
                         logger.error("Error parsing story points: " + value, e);
+				
                     }
                     break;
-                case 8: // Priority
-                    newItem.setPriority(value);
-                    break;
-                case 9: // Estimated hours
+				case 7: // Priority
+					String priorityLower = value.toLowerCase();
+					if (priorityLower.equals("low") || priorityLower.equals("medium") || priorityLower.equals("high")) {
+						newItem.setPriority(priorityLower);
+					} else {
+						logger.warn("Invalid priority value: '{}'. Setting to 'medium'", value);
+						newItem.setPriority("medium");
+					}
+					break;
+                case 8: // Estimated hours
                     try {
                         int estimatedHours = Integer.parseInt(value);
                         newItem.setEstimatedHours(estimatedHours);
                     } catch (NumberFormatException e) {
                         logger.error("Error parsing estimated hours: " + value, e);
+					
                     }
                     break;
-                case 10: // Real hours
+                case 9: // Real hours
                     try {
                         int realHours = Integer.parseInt(value);
                         newItem.setRealHours(realHours);
                     } catch (NumberFormatException e) {
                         logger.error("Error parsing real hours: " + value, e);
+						
                     }
                     break;
             }

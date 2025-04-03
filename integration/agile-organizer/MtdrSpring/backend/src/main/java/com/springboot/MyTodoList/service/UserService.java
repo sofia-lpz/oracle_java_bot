@@ -34,6 +34,15 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public ResponseEntity<User> getUserByName(String name) {
+        Optional<User> userByName = userRepository.findByName(name);
+        if (userByName.isPresent()) {
+            return new ResponseEntity<>(userByName.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     public User addUser(User newUser) {
         return userRepository.save(newUser);
     }
