@@ -20,9 +20,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
     public List<User> findAll() {
         List<User> users = userRepository.findAll();
         return users;
@@ -71,11 +68,5 @@ public class UserService implements UserDetailsService {
 
     public boolean userExists(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).isPresent();
-    }
-
-    public User saveUser(User user) {
-        // Encrypt the password before saving
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
     }
 }
