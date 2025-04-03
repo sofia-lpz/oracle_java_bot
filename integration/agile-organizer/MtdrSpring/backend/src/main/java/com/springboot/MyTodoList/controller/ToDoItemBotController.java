@@ -12,6 +12,14 @@ import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.State;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.model.Project;
+import com.springboot.MyTodoList.service.StateService;
+import com.springboot.MyTodoList.service.UserService;
+import com.springboot.MyTodoList.service.ProjectService;
+import com.springboot.MyTodoList.service.SprintService;
+import com.springboot.MyTodoList.service.TeamService;
+import com.springboot.MyTodoList.service.ToDoItemService;
+
+import org.springframework.http.ResponseEntity;
 
 
 import org.slf4j.Logger;
@@ -364,10 +372,12 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
                     break;
                 case 3: // State - need to find by name
                     try {
-                        State state = getStateByName(value);
-                        if (state != null) {
-                            newItem.setState(state);
-                        }
+						StateService stateService = new StateService(); // Or get it through dependency injection
+						ResponseEntity<State> responseEntity = stateService.getStateByName(value);
+						if (responseEntity != null && responseEntity.getBody() != null) {
+							State state = responseEntity.getBody();
+							newItem.setState(state);
+						}
                     } catch (Exception e) {
                         logger.error("Error setting state: " + value, e);
                     }
@@ -443,9 +453,8 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 private State getStateByName(String stateName) {
     // This is a placeholder - you'll need to implement this based on your service layer
     // Example implementation:
-    // return stateService.findByName(stateName);
-    logger.debug("Attempting to find state with name: {}", stateName);
-    return null;
+    //return StateService.getStateByName(stateName);
+	return null;
 }
 
 private Sprint getSprintByName(String sprintName) {
