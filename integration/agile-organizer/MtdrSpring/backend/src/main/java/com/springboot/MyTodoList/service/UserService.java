@@ -37,6 +37,15 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public ResponseEntity<User> getUserByName(String name) {
+        Optional<User> userByName = userRepository.findByName(name);
+        if (userByName.isPresent()) {
+            return new ResponseEntity<>(userByName.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     public User addUser(User newUser) {
         return userRepository.save(newUser);
     }
@@ -72,10 +81,11 @@ public class UserService implements UserDetailsService {
     public boolean userExists(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).isPresent();
     }
-
+    
     public User saveUser(User user) {
         // Encrypt the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
 }

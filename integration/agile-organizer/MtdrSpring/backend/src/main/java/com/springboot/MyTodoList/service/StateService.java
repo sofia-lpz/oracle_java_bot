@@ -31,6 +31,15 @@ public class StateService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    public ResponseEntity<State> getStateByName(String name){
+        Optional<State> stateData = stateRepository.findByName(name);
+        if (stateData.isPresent()){
+            return new ResponseEntity<>(stateData.get(), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     public State addState(State state){
         return stateRepository.save(state);

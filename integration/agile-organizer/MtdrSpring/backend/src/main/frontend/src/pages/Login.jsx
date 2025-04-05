@@ -23,6 +23,7 @@ const Login = ({ setIsAuthenticated }) => {
           name="login"
           layout="vertical"
           onFinish={onFinish}
+          className="custom-login-form"
         >
           <Form.Item
             label="Username"

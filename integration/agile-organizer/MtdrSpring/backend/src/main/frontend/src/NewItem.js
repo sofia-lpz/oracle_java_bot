@@ -7,7 +7,6 @@ function NewItem(props) {
     title: '',
     description: '',
     dueDate: '',
-    
   });
 
   function handleSubmit(e) {
@@ -28,32 +27,61 @@ function NewItem(props) {
   }
 
   return (
-    <form>
-      <input
-        name="title"
-        placeholder="Title"
-        type="text"
-        value={task.title}
-        onChange={handleChange}
-      />
-      <input
-        name="description"
-        placeholder="Description"
-        type="text"
-        value={task.description}
-        onChange={handleChange}
-      />
-      <input
-        name="dueDate"
-        placeholder="Due date"
-        type="date"
-        value={task.dueDate}
-        onChange={handleChange}
-      />
+    <form className="new-task-form">
+      <div className="form-group">
+        <label htmlFor="title">Título</label>
+        <input
+          id="title"
+          name="title"
+          placeholder="Ingresa el título de la tarea"
+          type="text"
+          value={task.title}
+          onChange={handleChange}
+          className="task-title-input"
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="description">Descripción</label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Ingresa la descripción de la tarea"
+          value={task.description}
+          onChange={handleChange}
+          className="task-description-input"
+          rows={3}
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="dueDate">Fecha de entrega</label>
+        <input
+          id="dueDate"
+          name="dueDate"
+          placeholder="Selecciona la fecha"
+          type="date"
+          value={task.dueDate}
+          onChange={handleChange}
+          className="task-due-date-input"
+        />
+      </div>
         
-      <Button type="primary" style={{ backgroundColor: '#c6624b', color: 'white' }}  onClick={handleSubmit}>
-        Add task
-      </Button>
+      <div className="form-actions">
+        <Button 
+          type="primary" 
+          style={{ 
+            backgroundColor: '#c6624b', 
+            color: 'white',
+            padding: '8px 24px',
+            borderRadius: '8px',
+            marginTop: '16px'
+          }}  
+          onClick={handleSubmit}
+        >
+          Agregar tarea
+        </Button>
+      </div>
     </form>
   );
 }
