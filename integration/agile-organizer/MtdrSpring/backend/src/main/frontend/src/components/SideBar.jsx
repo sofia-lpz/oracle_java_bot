@@ -1,72 +1,138 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
+import { Menu, Avatar } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
-import { CheckCircleOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons';
-
-const { Sider } = Layout;
+import { 
+  HomeOutlined,
+  MessageOutlined,
+  ProjectOutlined,
+  UserOutlined
+} from '@ant-design/icons';
 
 const SideBar = () => {
-  const location = useLocation(); // Obtener la ruta actual
+  const location = useLocation();
 
   return (
-    <Sider width={250} style={{ background: '#1f1f1f', height: '100vh', padding: '20px 15px 20px 20px' }}>
-      <div style={{ textAlign: 'center', padding: '20px 0' }}>
-        <img 
-          src="/logo.png" // Asegúrate de que la imagen esté en `/public/`
-          alt="Oracle"
-          style={{ width: '120px', height: 'auto', marginBottom: '20px' }} 
-        />
+    <>
+      <style>{`
+        .sidebar-menu .ant-menu-item-selected {
+          background-color: #272727 !important;
+          border-radius: 6px !important;
+          margin: 4px 8px !important;
+          width: calc(100% - 16px) !important;
+          position: relative !important;
+        }
+        .sidebar-menu .ant-menu-item-selected::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background-color: #c6624b;
+          border-top-left-radius: 6px;
+          border-bottom-left-radius: 6px;
+        }
+      `}</style>
+      <div style={{ 
+        backgroundColor: '#1a1a1a', 
+        height: '100vh',
+        width: '250px',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '16px'
+      }}>
+        {/* Header */}
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          padding: '8px 16px',
+          marginBottom: '24px',
+          flexDirection: 'column'
+        }}>
+          <img
+            src="/oracle_O.png"
+            alt="Oracle Logo"
+            style={{
+              width: '100px',
+              height: '100px',
+              marginBottom: '12px'
+            }}
+          />
+          <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>
+            My To-Do
+          </span>
+          <span style={{ 
+            color: '#666', 
+            fontSize: '12px' 
+          }}>
+            v3.0
+          </span>
+        </div>
+
+        {/* Main Navigation */}
+        <div style={{ marginBottom: '24px' }}>
+          <div style={{ 
+            color: '#666',
+            fontSize: '12px',
+            padding: '8px 16px',
+            fontWeight: 'bold'
+          }}>
+            NAVIGATION
+          </div>
+          <Menu
+            mode="inline"
+            selectedKeys={[location.pathname]}
+            style={{ 
+              backgroundColor: 'transparent',
+              border: 'none'
+            }}
+            theme="dark"
+            className="sidebar-menu"
+          >
+            <Menu.Item key="/home">
+              <Link to="/home">
+                <HomeOutlined />
+                <span>Home</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/chatbot">
+              <Link to="/chatbot">
+                <MessageOutlined />
+                <span>Chatbot</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/task">
+              <Link to="/task">
+                <ProjectOutlined />
+                <span>Kanban</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/users">
+              <Link to="/users">
+                <UserOutlined />
+                <span>Users</span>
+              </Link>
+            </Menu.Item>
+          </Menu>
+        </div>
+
+        {/* User Profile */}
+        <div style={{ 
+          marginTop: 'auto',
+          padding: '12px',
+          borderTop: '1px solid #333',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <Avatar size={32} icon={<UserOutlined />} />
+          <div style={{ flex: 1 }}>
+            <div style={{ color: 'white', fontSize: '14px' }}>Admin User</div>
+            <div style={{ color: '#666', fontSize: '12px' }}>admin@agileorganizer.com</div>
+          </div>
+        </div>
       </div>
-
-      <Menu
-        theme="dark"
-        mode="inline"
-        selectedKeys={[location.pathname]}
-        style={{ background: '#1f1f1f', borderRight: 'none' }}
-      >
-        <Menu.Item
-          key="/"
-          icon={<MessageOutlined />}
-          style={{
-            background: location.pathname === "/" ? "#c6624b" : "transparent",
-            color: location.pathname === "/" ? "white" : "#aaa",
-            marginBottom: '10px',
-            padding: '10px 20px',
-            borderRadius: '8px',
-          }}
-        >
-          <Link to="/" style={{ color: 'inherit' }}>ChatBot</Link>
-        </Menu.Item>
-
-        <Menu.Item
-          key="/Task"
-          icon={<CheckCircleOutlined />}
-          style={{
-            background: location.pathname === "/Task" ? "#c6624b" : "transparent",
-            color: location.pathname === "/Task" ? "white" : "#aaa",
-            marginBottom: '10px',
-            padding: '10px 20px',
-            borderRadius: '8px',
-          }}
-        >
-          <Link to="/Task" style={{ color: 'inherit' }}>Task</Link>
-        </Menu.Item>
-
-        <Menu.Item
-          key="/Users"
-          icon={<UserOutlined />}
-          style={{
-            background: location.pathname === "/Users" ? "#c6624b" : "transparent",
-            color: location.pathname === "/Users" ? "white" : "#aaa",
-            marginBottom: '10px',
-            padding: '10px 20px',
-            borderRadius: '8px',
-          }}
-        >
-          <Link to="/Users" style={{ color: 'inherit' }}>Users</Link>
-        </Menu.Item>
-      </Menu>
-    </Sider>
+    </>
   );
 };
 
