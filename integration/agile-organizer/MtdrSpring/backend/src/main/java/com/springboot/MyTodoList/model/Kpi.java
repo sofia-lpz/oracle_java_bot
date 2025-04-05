@@ -12,10 +12,10 @@ public class Kpi extends BaseEntity{
     private String type;
     
     @Column(name = "total")
-    private Double total;
+    private Integer total;
     
     @Column(name = "sum")
-    private Double sum;
+    private Integer sum;
     
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
@@ -35,7 +35,7 @@ public class Kpi extends BaseEntity{
 
     public Kpi() {
     }
-    public Kpi(String type, Double total, Double sum, User user, Team team, Project project, Sprint sprint) {
+    public Kpi(String type, Integer total, Integer sum, User user, Team team, Project project, Sprint sprint) {
         this.type = type;
         this.total = total;
         this.sum = sum;
@@ -51,11 +51,11 @@ public class Kpi extends BaseEntity{
         return type;
     }
 
-    public Double getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public Double getSum() {
+    public Integer getSum() {
         return sum;
     }
 
@@ -80,11 +80,11 @@ public class Kpi extends BaseEntity{
         this.type = type;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 
-    public void setSum(Double sum) {
+    public void setSum(Integer sum) {
         this.sum = sum;
     }
 
