@@ -29,7 +29,7 @@ const TaskCard = ({ title, description, dueDate, avatarUrl, storyPoints, estimat
   <Card
     className="custom-task-card"
     style={{
-        width: 270,
+        // width: 270, // Eliminado para permitir que el ancho sea dinámico
         borderRadius: '8px',
         marginTop: '16px',
         marginBottom: '16px',

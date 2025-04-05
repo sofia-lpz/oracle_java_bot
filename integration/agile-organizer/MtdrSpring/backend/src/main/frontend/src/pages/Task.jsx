@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Modal, message, Space, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import NewItem from '../NewItem';
 import TaskCard from '../components/TaskCard';
@@ -12,6 +12,10 @@ const Task = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false); // Modal state
+  const [messageApi, contextHolder] = message.useMessage();
+  const [isStateModalVisible, setIsStateModalVisible] = useState(false);
+  const [newStateName, setNewStateName] = useState('');
+  const [states, setStates] = useState(['TODO', 'IN_PROGRESS', 'COMPLETED']);
 
   const formatDate = (dateString) => {
     if (!dateString) return 'No due date';
@@ -72,12 +76,15 @@ const Task = () => {
   
       setTasks([...tasks, createdTask]);
       setIsModalVisible(false);
+      messageApi.open({
+        type: 'success',
+        content: 'Task created successfully',
+        style: undefined
+      });
     } catch (err) {
       console.error('Error creating task:', err);
     }
   };
-  
-  
 
   const todoTasks = tasks.filter(task => !task.state?.name || task.state?.name === 'TODO');
   const inProgressTasks = tasks.filter(task => task.state?.name === 'IN_PROGRESS');
@@ -89,15 +96,36 @@ const Task = () => {
   const showModal = () => setIsModalVisible(true);
   const handleCancel = () => setIsModalVisible(false);
 
+  const showStateModal = () => setIsStateModalVisible(true);
+  const handleStateCancel = () => setIsStateModalVisible(false);
+
+  const addNewState = () => {
+    if (newStateName.trim()) {
+      setStates([...states, newStateName.trim()]);
+      setNewStateName('');
+      setIsStateModalVisible(false);
+    }
+  };
+
   return (
     <div>
       <h1>Tasks</h1>
-
-      <Button type="primary" style={{ backgroundColor: '#c6624b', color: 'white' }} icon={<PlusOutlined />} onClick={showModal}>
-        Add task
-      </Button>
+      {contextHolder}
+      <div className="menu-bar">
+        <Space>
+          <Button type="primary" style={{ backgroundColor: '#c6624b', color: 'white' }} icon={<PlusOutlined />} onClick={showModal}>
+            Add task
+          </Button>
+          <Button type="default" style={{ backgroundColor: '#c6624b', color: 'white' }} onClick={showStateModal}>
+            Add State
+          </Button>
+        </Space>
+      </div>
       <Modal title="Add Task" visible={isModalVisible} onCancel={handleCancel} footer={null}>
         <NewItem addItem={addTask} />
+      </Modal>
+      <Modal title="Add New State" visible={isStateModalVisible} onCancel={handleStateCancel} onOk={addNewState} okText="Add" cancelText="Cancel">
+        <Input placeholder="State Name" value={newStateName} onChange={(e) => setNewStateName(e.target.value)} />
       </Modal>
 
       <div className="kanban">
@@ -170,6 +198,33 @@ const Task = () => {
             )}
           </div>
         </div>
+        {states.map(state => (
+          !['TODO', 'IN_PROGRESS', 'COMPLETED'].includes(state) && (
+            <div key={state}>
+              <div className="kanban-header">
+                <h2><span className="status-indicator" style={{ backgroundColor: '#3376cd' }}></span> {state}</h2>
+              </div>
+              <div className="kanban-column kanban-scroll">
+                {tasks.filter(task => task.state?.name === state).length > 0 ? (
+                  tasks.filter(task => task.state?.name === state).map(task => (
+                    <TaskCard
+                      key={task.id}
+                      title={task.title || task.name}
+                      description={task.description}
+                      dueDate={formatDate(task.dueDate)}
+                      storyPoints={task.storyPoints}
+                      avatarUrl={task.assignee?.avatarUrl}
+                      estimatedHours={task.estimatedHours}
+                      realHours={task.realHours}
+                    />
+                  ))
+                ) : (
+                  <p>No tasks in this state</p>
+                )}
+              </div>
+            </div>
+          )
+        ))}
       </div>
     </div>
   );

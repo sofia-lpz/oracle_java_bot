@@ -21,16 +21,19 @@ html, body, #root {
 }
 
 .kanban {
-  margin-top: 32px;
   display: flex;
+  overflow-x: auto;
+  padding: 16px;
 }
 
 .kanban-column {
+  flex: 0 0 auto;
+  margin-right: 16px;
   background-color: rgb(39, 39, 39);
   min-height: 70vh;
   padding-inline: 16px;
-  margin-right: 16px;
   border-radius: 16px;
+  width: 330px;
 }
 
 .kanban-scroll {
@@ -431,3 +434,13 @@ textarea.task-description-input {
 /* .ant-input {
   color: inherit !important;
 } */
+
+.ant-message-notice-content {
+  background-color: #1f1f1f !important;
+  color: white !important;
+}
+
+.ant-message-notice {
+  width: auto !important;
+  max-width: 100% !important;
+}
