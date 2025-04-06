@@ -32,11 +32,11 @@ public class OracleConfiguration {
         OracleDataSource ds = new OracleDataSource();
         ds.setDriverType(env.getProperty("driver_class_name"));
         logger.info("Using Driver " + env.getProperty("driver_class_name"));
-        ds.setURL(env.getProperty("db_url"));
-        logger.info("Using URL: " + env.getProperty("db_url"));
-        ds.setUser(env.getProperty("db_user"));
-        logger.info("Using Username " + env.getProperty("db_user"));
-        ds.setPassword(env.getProperty("dbpassword"));
+        ds.setURL("jdbc:oracle:thin:@reacttodosfnfo_tp?TNS_ADMIN=/Users/andresvilla/Documents/OracleBotvEstable/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend/src/Wallet");
+        logger.info("Using URL: jdbc:oracle:thin:@reacttodosfnfo_tp?TNS_ADMIN=/Users/andresvilla/Documents/OracleBotvEstable/oracle_java_bot/integration/agile-organizer/MtdrSpring/backend/src/Wallet");
+        ds.setUser("TODOUSER");
+        logger.info("Using Username: TODOUSER");
+        ds.setPassword("None00010001");
 //        For local testing
 //        ds.setDriverType(dbSettings.getDriver_class_name());
 //        logger.info("Using Driver " + dbSettings.getDriver_class_name());
