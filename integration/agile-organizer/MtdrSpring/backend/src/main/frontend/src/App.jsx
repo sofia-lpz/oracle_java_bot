@@ -12,21 +12,21 @@ import './App.css';
 const { Content } = Layout;
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleLogin = (token) => {
-    localStorage.setItem('token', token);
-    setIsAuthenticated(true);
-  };
+  // const handleLogin = (token) => {
+  //   localStorage.setItem('token', token);
+  //   setIsAuthenticated(true);
+  // };
 
-  const PrivateRoute = ({ children }) => {
-    return isAuthenticated ? children : <Navigate to="/login" />;
-  };
+  // const PrivateRoute = ({ children }) => {
+  //   return isAuthenticated ? children : <Navigate to="/login" />;
+  // };
 
   return (
     <Router future={{ v7_startTransition: true }}>
       <Layout style={{ minHeight: '100vh', background: '#1d1d1d' }}>
-        {isAuthenticated && <SideBar />}
+        {<SideBar />}
         <Layout>
           <Content style={{ 
             margin: '24px 16px', 
@@ -36,11 +36,15 @@ function App() {
             overflow: 'auto'
           }}>
             <Routes>
-              <Route path="/login" element={<Login onLogin={handleLogin} />} />
-              <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+              {/* <Route path="/login" element={<Login onLogin={handleLogin} />} /> */}
+              {/* <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
               <Route path="/task" element={<PrivateRoute><Task /></PrivateRoute>} />
               <Route path="/chatbot" element={<PrivateRoute><ChatBot /></PrivateRoute>} />
-              <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
+              <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} /> */}
+              <Route path="/" element={<Home />} />
+              <Route path="/task" element={<Task />} />
+              <Route path="/chatbot" element={<ChatBot />} />
+              <Route path="/users" element={<Users />} />
             </Routes>
           </Content>
         </Layout>

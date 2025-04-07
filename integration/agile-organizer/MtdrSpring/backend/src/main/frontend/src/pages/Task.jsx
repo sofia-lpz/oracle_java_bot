@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, message, Space, Input, Select, Spin, Flex } from 'antd';
 import { PlusOutlined, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
+import KanbanColumn from '../components/KanbanColumn';
 import NewItem from '../NewItem';
-import TaskCard from '../components/TaskCard';
 import '../App.css';
 
 import API_LIST from '../API';
 import API_STATES from '../API_STATES';
+import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import TaskCard from '../components/TaskCard';
 
 const Task = () => {
   const [tasks, setTasks] = useState([]);
@@ -20,33 +23,8 @@ const Task = () => {
   const containerRef = useRef(null);
   const [isDeleteStateModalVisible, setIsDeleteStateModalVisible] = useState(false);
   const [selectedStateToDelete, setSelectedStateToDelete] = useState(null);
-  const [percent, setPercent] = useState(-50);
-  const timerRef = useRef(null);
-
-  useEffect(() => {
-    if (loading) {
-      timerRef.current = setTimeout(() => {
-        setPercent(v => {
-          const nextPercent = v + 5;
-          return nextPercent > 150 ? -50 : nextPercent;
-        });
-      }, 100);
-    }
-    return () => clearTimeout(timerRef.current);
-  }, [percent, loading]);
-
-  const formatDate = (dateString) => {
-    if (!dateString) return 'No due date';
-    
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return 'Invalid date';
-    
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  const [activeId, setActiveId] = useState(null);
+  const [overId, setOverId] = useState(null);
 
   useEffect(() => {
     const fetchTasksAndStates = async () => {
@@ -132,7 +110,6 @@ const Task = () => {
         return;
       }
 
-      // Obtener el workflow_priority más alto actual
       const maxPriority = Math.max(...states.map(state => state.workflow_priority || 0));
       
       const response = await fetch(API_STATES, {
@@ -151,20 +128,17 @@ const Task = () => {
         throw new Error(errorText || 'Error al crear el estado');
       }
 
-      // Crear el nuevo estado localmente
       const newState = {
-        id: Date.now(), // ID temporal hasta que se confirme con el servidor
+        id: Date.now(),
         name: newStateName,
         workflow_priority: maxPriority + 1
       };
 
-      // Actualizar el estado local inmediatamente
       setStates(prevStates => [...prevStates, newState]);
       setNewStateName('');
       setIsStateModalVisible(false);
       messageApi.success('Estado creado exitosamente');
 
-      // Recargar los estados desde el servidor para obtener el ID correcto
       const statesResponse = await fetch(API_STATES);
       if (statesResponse.ok) {
         const statesData = await statesResponse.json();
@@ -173,7 +147,6 @@ const Task = () => {
     } catch (err) {
       console.error('Error creating state:', err);
       messageApi.error(err.message || 'Error al crear el estado');
-      // Revertir el cambio en caso de error
       setStates(prevStates => prevStates.filter(state => state.id !== Date.now()));
     }
   };
@@ -216,23 +189,58 @@ const Task = () => {
     }
   };
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
+  const handleDragOver = (event) => {
+    setOverId(event.over?.id || null);
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    setActiveId(null);
+    setOverId(null);
+    if (!over || active.id === over.id) return;
+
+    const activeTask = tasks.find(task => task.id.toString() === active.id);
+    const overColumn = states.find(state => state.id.toString() === over.id);
+
+    if (!activeTask || !overColumn || activeTask.state?.id === overColumn.id) return;
+
+    const updatedTask = { ...activeTask, state: overColumn };
+
+    fetch(`${API_LIST}/${active.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedTask)
+    })
+      .then(() => {
+        setTasks(prev =>
+          prev.map(task => task.id === updatedTask.id ? updatedTask : task)
+        );
+      })
+      .catch(error => console.error('Error updating task state:', error));
+  };
+
   const tasksByState = states.reduce((acc, state) => {
     acc[state.id.toString()] = tasks.filter(task => task.state?.id.toString() === state.id.toString());
     return acc;
   }, {});
 
+  const activeTask = tasks.find(task => task.id.toString() === activeId);
+
   const getStateColor = (stateName) => {
     const colors = {
-      'TODO': '#3376cd', // Azul
-      'IN_PROGRESS': '#f7cc4f', // Amarillo
-      'COMPLETED': '#2ecc71', // Verde
+      'TODO': '#3376cd',
+      'IN_PROGRESS': '#f7cc4f',
+      'COMPLETED': '#2ecc71',
     };
 
     if (colors[stateName]) {
       return colors[stateName];
     }
 
-    // Generar color aleatorio para nuevos estados
     const randomColor = () => {
       const letters = '0123456789ABCDEF';
       let color = '#';
@@ -243,6 +251,11 @@ const Task = () => {
     };
 
     return randomColor();
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   if (loading) return (
@@ -286,7 +299,7 @@ const Task = () => {
         maxWidth: '1200px', 
         margin: '0 auto', 
         padding: '20px 20px 20px 0',
-        height: '100vh',
+        height: 'calc(100vh - 40px)',
         overflow: 'hidden'
       }}>
         <h1 style={{ textAlign: 'left', color: 'white' }}>Tasks</h1>
@@ -394,91 +407,54 @@ const Task = () => {
           )}
         </Modal>
 
-        <div className="ant-layout css-dev-only-do-not-override-1d4w9r2" style={{ 
-          overflowX: 'auto', 
-          display: 'flex', 
-          flexWrap: 'nowrap', 
-          height: 'calc(100vh - 200px)',
-          width: '100%',
-          minWidth: '100%',
-          padding: '8px',
-          gap: '1px',
-          backgroundColor: '#1f1f1f',
-          borderRadius: '8px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
-        }}>
-          {states.map((state) => (
-            <div
-              key={state.id.toString()}
-              style={{
-                backgroundColor: '#1d1d1d',
-                padding: '8px',
-                borderRadius: '8px',
-                height: 'calc(100vh - 250px)',
-                minWidth: '300px',
-                maxWidth: '300px',
-                transition: 'background-color 0.2s ease',
-                flexShrink: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-              }}
-            >
-              <div className="kanban-header" style={{ 
-                padding: '8px', 
-                borderBottom: '1px solid #333',
-                marginBottom: '8px',
-                flexShrink: 0,
-                width: '100%'
-              }}>
-                <h2 style={{ 
-                  color: 'white', 
-                  margin: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}>
-                  <span className="status-indicator" style={{ 
-                    backgroundColor: getStateColor(state.name),
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    display: 'inline-block'
-                  }}></span> 
-                  {state.name}
-                </h2>
-              </div>
-              <div className="kanban-column kanban-scroll" style={{ 
-                overflowY: 'auto',
-                flex: 1,
-                padding: '0 8px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '100%'
-              }}>
-                {tasksByState[state.id.toString()]?.map((task) => {
-                  if (!task || !task.id) return null;
-                  return (
-                    <div key={task.id.toString()} style={{ width: '100%', margin: '1px 0' }}>
-                      <TaskCard
-                        taskId={task.id.toString()}
-                        title={task.title || task.name}
-                        description={task.description}
-                        dueDate={formatDate(task.dueDate)}
-                        storyPoints={task.storyPoints}
-                        avatarUrl={task.assignee?.avatarUrl}
-                        estimatedHours={task.estimatedHours}
-                        realHours={task.realHours}
-                        onDelete={() => deleteTask(task.id)}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragCancel={() => {
+            document.body.style.cursor = 'default';
+          }}
+        >
+          <SortableContext
+            items={states.flatMap(state => tasksByState[state.id.toString()] || []).map(task => task.id.toString())}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="ant-layout css-dev-only-do-not-override-1d4w9r2" style={{ 
+              overflowX: 'auto', 
+              display: 'flex', 
+              flexWrap: 'nowrap', 
+              height: '100%',
+              width: '100%',
+              minWidth: '100%',
+              padding: '8px',
+              gap: '1px',
+              backgroundColor: '#1f1f1f',
+              borderRadius: '8px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+            }}>
+              {states.map((state) => (
+                <SortableContext key={state.id} items={tasksByState[state.id.toString()].map(task => task.id.toString())} strategy={verticalListSortingStrategy}>
+                  <div style={{ border: state.id.toString() === overId ? '2px solid #c6624b' : 'none', borderRadius: '8px', padding: '8px', height: '76%' }}>
+                    <KanbanColumn
+                      state={state}
+                      tasks={tasksByState[state.id.toString()].map(task => ({
+                        ...task,
+                        style: task.id === activeId ? { border: '2px dashed #ccc', padding: '8px', visibility: 'hidden' } : {},
+                      }))}
+                      getStateColor={getStateColor}
+                      formatDate={formatDate}
+                      deleteTask={deleteTask}
+                    />
+                  </div>
+                </SortableContext>
+              ))}
             </div>
-          ))}
-        </div>
+          </SortableContext>
+          <DragOverlay>
+            {activeTask ? <TaskCard {...activeTask} /> : null}
+          </DragOverlay>
+        </DndContext>
       </div>
     </>
   );
