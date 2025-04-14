@@ -13,7 +13,20 @@ import java.util.List;
 public class KpiController {
     @Autowired
     private KpiService kpiService;
-    
+
+    @GetMapping(value = "/kpi/summary")
+    public ResponseEntity<List<Kpi>> getKpiSummary(@RequestParam(value = "userId", required = false) Long userId,
+                                                    @RequestParam(value = "teamId", required = false) Long teamId,
+                                                    @RequestParam(value = "projectId", required = false) Long projectId,
+                                                    @RequestParam(value = "sprintId", required = false) Long sprintId){
+        try{
+            ResponseEntity<List<Kpi>> responseEntity = kpiService.getKpiSummary(userId, teamId, projectId, sprintId);
+            return new ResponseEntity<>(responseEntity.getBody(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping(value = "/kpi")
     public List<Kpi> getAllKpis(){
         return kpiService.findAll();
