@@ -31,9 +31,7 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Disable all linters by default
           VALIDATE_ALL_CODEBASE: false
-          # Only enable Java and Node.js linters
           VALIDATE_JAVA: true
           VALIDATE_JAVASCRIPT_ES: true
           VALIDATE_JAVASCRIPT_STANDARD: true
