@@ -16,6 +16,15 @@ public class KpiService {
     @Autowired
     private KpiRepository kpiRepository;
 
+    public ResponseEntity<List<Kpi>> getKpiSummary(Long userId, Long teamId, Long projectId, Long sprintId) {
+        Optional<List<Kpi>> kpiList = kpiRepository.getKpiSummary(userId, teamId, projectId, sprintId);
+        if (kpiList.isPresent()){
+            return new ResponseEntity<>(kpiList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     public List<Kpi> findAll() {
         List<Kpi> kpis = kpiRepository.findAll();
         return kpis;
