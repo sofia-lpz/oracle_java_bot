@@ -731,3 +731,8 @@ h1 {
   margin: 0;
   padding: 0;
 }
+
+input::placeholder {
+  color: #ffffff !important;
+  opacity: 0.2;
+}

@@ -139,3 +139,10 @@ const Login = ({ onLogin }) => {
 };
 
 export default Login;
+
+<style>{`
+  ::placeholder {
+    color: #ffffff; /* Color blanco para el placeholder */
+    opacity: 1; /* Asegura que el color se aplique completamente */
+  }
+`}</style>
