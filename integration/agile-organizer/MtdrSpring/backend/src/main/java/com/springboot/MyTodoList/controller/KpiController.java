@@ -15,15 +15,15 @@ public class KpiController {
     private KpiService kpiService;
 
     @GetMapping(value = "/kpi/summary")
-    public ResponseEntity<List<Kpi>> getKpiSummary(@RequestParam(value = "userId", required = false) Long userId,
-                                                    @RequestParam(value = "teamId", required = false) Long teamId,
-                                                    @RequestParam(value = "projectId", required = false) Long projectId,
-                                                    @RequestParam(value = "sprintId", required = false) Long sprintId){
-        try{
-            ResponseEntity<List<Kpi>> responseEntity = kpiService.getKpiSummary(userId, teamId, projectId, sprintId);
-            return new ResponseEntity<>(responseEntity.getBody(), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<Kpi>> getKpiSummary(@RequestParam(required = false) Long userId,
+                                                  @RequestParam(required = false) Long teamId,
+                                                  @RequestParam(required = false) Long projectId,
+                                                  @RequestParam(required = false) Long sprintId) {
+        try {
+            List<Kpi> kpis = kpiService.getKpiSummary(userId, teamId, projectId, sprintId);
+            return ResponseEntity.ok(kpis);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -33,10 +33,10 @@ public class KpiController {
     }
     
     @GetMapping(value = "/kpi/{id}")
-    public ResponseEntity<Kpi> getKpiById(@PathVariable Long id){
+    public ResponseEntity<Kpi> getKpiById(@PathVariable int id){
         try{
-            ResponseEntity<Kpi> responseEntity = kpiService.getKpiById(id);
-            return new ResponseEntity<Kpi>(responseEntity.getBody(), HttpStatus.OK);
+            Kpi kpi = kpiService.getKpiById(id);
+            return new ResponseEntity<>(kpi, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -64,7 +64,7 @@ public class KpiController {
     }
     
     @DeleteMapping(value = "/kpi/{id}")
-    public ResponseEntity<Boolean> deleteKpi(@PathVariable("id") Long id){
+    public ResponseEntity<Boolean> deleteKpi(@PathVariable Long id){
         Boolean flag = false;
         try{
             flag = kpiService.deleteKpi(id);

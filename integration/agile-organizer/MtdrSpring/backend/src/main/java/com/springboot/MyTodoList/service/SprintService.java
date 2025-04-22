@@ -3,8 +3,6 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.repository.SprintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +19,9 @@ public class SprintService {
         return sprints;
     }
 
-    public ResponseEntity<Sprint> getSprintById(int id) {
-        Optional<Sprint> sprintData = sprintRepository.findById(id);
-        if (sprintData.isPresent()) {
-            return new ResponseEntity<>(sprintData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public Sprint getSprintById(int id) {
+        return sprintRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Sprint not found with id: " + id));
     }
 
     public Sprint addSprint(Sprint sprint) {

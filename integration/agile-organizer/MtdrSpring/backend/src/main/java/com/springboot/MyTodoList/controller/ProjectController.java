@@ -23,8 +23,8 @@ public class ProjectController {
     @GetMapping(value = "/projects/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable int id) {
         try {
-            ResponseEntity<Project> responseEntity = projectService.getProjectById(id);
-            return new ResponseEntity<>(responseEntity.getBody(), HttpStatus.OK);
+            Project project = projectService.getProjectById(id);
+            return new ResponseEntity<>(project, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
