@@ -3,8 +3,6 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.Kpi;
 import com.springboot.MyTodoList.repository.KpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +14,9 @@ public class KpiService {
     @Autowired
     private KpiRepository kpiRepository;
 
-    public ResponseEntity<List<Kpi>> getKpiSummary(Long userId, Long teamId, Long projectId, Long sprintId) {
-        Optional<List<Kpi>> kpiList = kpiRepository.getKpiSummary(userId, teamId, projectId, sprintId);
-        if (kpiList.isPresent()){
-            return new ResponseEntity<>(kpiList.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public List<Kpi> getKpiSummary(Long userId, Long teamId, Long projectId, Long sprintId) {
+        return kpiRepository.getKpiSummary(userId, teamId, projectId, sprintId)
+                .orElseThrow(() -> new RuntimeException("KPI summary not found for the specified parameters"));
     }
 
     public List<Kpi> findAll() {
@@ -30,13 +24,9 @@ public class KpiService {
         return kpis;
     }
 
-    public ResponseEntity<Kpi> getKpiById(Long id) {
-        Optional<Kpi> kpiData = kpiRepository.findById(id.intValue());
-        if (kpiData.isPresent()) {
-            return new ResponseEntity<>(kpiData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public Kpi getKpiById(int id) {
+        return kpiRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("KPI not found with id: " + id));
     }
 
     public Kpi addKpi(Kpi kpi) {

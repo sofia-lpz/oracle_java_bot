@@ -3,8 +3,6 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +19,9 @@ public class ProjectService {
         return projects;
     }
 
-    public ResponseEntity<Project> getProjectById(int id) {
-        Optional<Project> projectData = projectRepository.findById(id);
-        if (projectData.isPresent()) {
-            return new ResponseEntity<>(projectData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public Project getProjectById(int id) {
+        return projectRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
     }
 
     public Project addProject(Project project) {
