@@ -55,9 +55,6 @@ const TaskCard = ({
 
   return (
     <Card
-      ref={setNodeRef}
-      {...attributes} 
-      {...listeners}
       className="custom-task-card"
       style={style}
       actions={[
@@ -73,7 +70,10 @@ const TaskCard = ({
       <Button
         type="text"
         icon={<DeleteOutlined style={{ color: 'white' }} />}
-        onClick={showDeleteModal}
+        onClick={(e) => {
+          e.stopPropagation();
+          showDeleteModal();
+        }}
         aria-label="Delete task"
         style={{
           position: 'absolute',
@@ -85,16 +85,18 @@ const TaskCard = ({
           zIndex: 1,
         }}
       />
-      <Meta
-        avatar={<Avatar src={avatarUrl} icon={<UserOutlined />} />}
-        title={<span style={{color: '#ffffff'}}>{title}</span>}
-        description={
-          <>
-            <p style={{color: '#ffffff'}}>{description}</p>
-            <p style={{fontWeight: 'bold' ,color: '#c6624b' }}>Due on {dueDate}</p>
-          </>
-        }
-      />
+      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+        <Meta
+          avatar={<Avatar src={avatarUrl} icon={<UserOutlined />} />}
+          title={<span style={{color: '#ffffff'}}>{title}</span>}
+          description={
+            <>
+              <p style={{color: '#ffffff'}}>{description}</p>
+              <p style={{fontWeight: 'bold' ,color: '#c6624b' }}>Due on {dueDate}</p>
+            </>
+          }
+        />
+      </div>
 
       <Modal
         title="Confirm Deletion"
