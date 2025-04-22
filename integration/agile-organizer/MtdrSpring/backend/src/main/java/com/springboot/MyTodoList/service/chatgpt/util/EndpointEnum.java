@@ -2,58 +2,48 @@ package com.springboot.MyTodoList.service.chatgpt.util;
 
 public enum EndpointEnum {
     // ToDo Item endpoints
-    TODO_LIST_GET_ALL("/todolist", "GET", 1, "Retrieve all todo items", "ToDoItemService", "findAll"),
-    TODO_LIST_GET_BY_ID("/todolist/{id}", "GET", 2, "Retrieve a specific todo item by ID", "ToDoItemService", "getItemById"),
+    TODO_LIST_GET_ALL(1, "Retrieve all todo items", "ToDoItemService", "findAll", new String[]{}),
+    TODO_LIST_GET_BY_ID(2, "Retrieve a specific todo item by ID", "ToDoItemService", "getItemById", new String[]{"id"}),
     
     // Sprint endpoints
-    SPRINT_GET_ALL("/sprints", "GET", 11, "Retrieve all sprints", "SprintService", "findAll"),
-    SPRINT_GET_BY_ID("/sprints/{id}", "GET", 12, "Retrieve a specific sprint by ID", "SprintService", "getSprintById"),
+    SPRINT_GET_ALL(3, "Retrieve all sprints", "SprintService", "findAll", new String[]{}),
+    SPRINT_GET_BY_ID(4, "Retrieve a specific sprint by ID", "SprintService", "getSprintById", new String[]{"id"}),
     
     // KPI endpoints
-    KPI_GET_SUMMARY("/kpi/summary", "GET", 21, "Get KPI summary statistics", "KpiService", "getKpiSummary"),
-    KPI_GET_ALL("/kpi", "GET", 22, "Retrieve all KPI metrics", "KpiService", "findAll"),
-    KPI_GET_BY_ID("/kpi/{id}", "GET", 23, "Retrieve a specific KPI by ID", "KpiService", "getKpiById"),
-    
+    KPI_GET_SUMMARY(5, "Get KPI metrics with optional parameters such as KPI's per team and/or per user and/or per project, etc.", "KpiService", "getKpiSummary", new String[]{"userId", "teamId", "projectId", "sprintId"}),
+    KPI_GET_ALL(6, "Retrieve all KPI metrics", "KpiService", "findAll", new String[]{}),
+    KPI_GET_BY_ID(7, "Retrieve a specific KPI by ID", "KpiService", "getKpiById", new String[]{"id"}),
+
     // Team endpoints
-    TEAM_GET_ALL("/teams", "GET", 31, "Retrieve all teams", "TeamService", "findAll"),
-    TEAM_GET_BY_ID("/teams/{id}", "GET", 32, "Retrieve a specific team by ID", "TeamService", "getTeamById"),
+    TEAM_GET_ALL(8, "Retrieve all teams", "TeamService", "findAll", new String[]{}),
+    TEAM_GET_BY_ID(9, "Retrieve a specific team by ID", "TeamService", "getTeamById", new String[]{"id"}),
     
     // State endpoints
-    STATE_GET_ALL("/states", "GET", 41, "Retrieve all states", "StateService", "findAll"),
-    STATE_GET_BY_ID("/states/{id}", "GET", 42, "Retrieve a specific state by ID", "StateService", "getStateById"),
-    STATE_GET_BY_NAME("/states/name/{name}", "GET", 43, "Retrieve a specific state by name", "StateService", "getStateByName"),
+    STATE_GET_ALL(10, "Retrieve all states", "StateService", "findAll", new String[]{}),
+    STATE_GET_BY_ID(11, "Retrieve a specific state by ID", "StateService", "getStateById", new String[]{"id"}),
+    STATE_GET_BY_NAME(12, "Retrieve a specific state by name", "StateService", "getStateByName", new String[]{"name"}),
     
     // User endpoints
-    USER_GET_ALL("/users", "GET", 51, "Retrieve all users", "UserService", "findAll"),
-    USER_GET_BY_ID("/users/{id}", "GET", 52, "Retrieve a specific user by ID", "UserService", "getUserById"),
-    USER_GET_BY_NAME("/users/name/{name}", "GET", 53, "Retrieve a specific user by name", "UserService", "getUserByName"),
+    USER_GET_ALL(13, "Retrieve all users", "UserService", "findAll", new String[]{}),
+    USER_GET_BY_ID(14, "Retrieve a specific user by ID", "UserService", "getUserById", new String[]{"id"}),
+    USER_GET_BY_NAME(15, "Retrieve a specific user by name", "UserService", "getUserByName", new String[]{"name"}),
     
     // Project endpoints
-    PROJECT_GET_ALL("/projects", "GET", 61, "Retrieve all projects", "ProjectService", "findAll"),
-    PROJECT_GET_BY_ID("/projects/{id}", "GET", 62, "Retrieve a specific project by ID", "ProjectService", "getProjectById");
+    PROJECT_GET_ALL(16, "Retrieve all projects", "ProjectService", "findAll", new String[]{}),
+    PROJECT_GET_BY_ID(17, "Retrieve a specific project by ID", "ProjectService", "getProjectById", new String[]{"id"});
     
-    private final String path;
-    private final String method;
     private final int number;
     private final String description;
     private final String serviceName;
     private final String serviceMethod;
+    private final String[] parameters;
     
-    EndpointEnum(String path, String method, int number, String description, String serviceName, String serviceMethod) {
-        this.path = path;
-        this.method = method;
+    EndpointEnum(int number, String description, String serviceName, String serviceMethod, String[] parameters) {
         this.number = number;
         this.description = description;
         this.serviceName = serviceName;
         this.serviceMethod = serviceMethod;
-    }
-    
-    public String getPath() {
-        return path;
-    }
-    
-    public String getMethod() {
-        return method;
+        this.parameters = parameters;
     }
     
     public int getNumber() {
@@ -70,6 +60,14 @@ public enum EndpointEnum {
     
     public String getServiceMethod() {
         return serviceMethod;
+    }
+    
+    public String[] getParameters() {
+        return parameters;
+    }
+
+    public boolean requiresParameters() {
+        return parameters.length > 0;
     }
 
     public static EndpointEnum getByNumber(int number) {
@@ -99,14 +97,20 @@ public enum EndpointEnum {
                 currentCategory = category;
             }
             
+            // Format parameters string if present
+            String paramInfo = "";
+            if (endpoint.getParameters().length > 0) {
+                paramInfo = " [Parameters: " + String.join(", ", endpoint.getParameters()) + "]";
+            }
+            
             // Format each endpoint
-            sb.append(String.format("%d. %s %s - %s (Service: %s.%s)\n", 
+            sb.append(String.format("%d. %s - %s (Service: %s.%s)%s\n", 
                 endpoint.getNumber(),
-                endpoint.getMethod(),
-                endpoint.getPath(),
+                endpoint.name(),
                 endpoint.getDescription(),
                 endpoint.getServiceName(),
-                endpoint.getServiceMethod()));
+                endpoint.getServiceMethod(),
+                paramInfo));
         }
         
         return sb.toString();
