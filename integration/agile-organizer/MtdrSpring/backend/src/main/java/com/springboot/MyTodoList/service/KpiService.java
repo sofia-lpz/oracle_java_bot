@@ -5,18 +5,34 @@ import com.springboot.MyTodoList.repository.KpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class KpiService {
+    private static final Logger logger = LoggerFactory.getLogger(KpiService.class);
 
     @Autowired
     private KpiRepository kpiRepository;
 
-    public List<Kpi> getKpiSummary(Long userId, Long teamId, Long projectId, Long sprintId) {
-        return kpiRepository.getKpiSummary(userId, teamId, projectId, sprintId)
-                .orElseThrow(() -> new RuntimeException("KPI summary not found for the specified parameters"));
+    public List<Kpi> getKpiSummary(Integer userId, Integer teamId, Integer projectId, Integer sprintId) {
+        logger.info("Service: Fetching KPI summary with userId={}, teamId={}, projectId={}, sprintId={}", 
+                   userId, teamId, projectId, sprintId);
+        try {
+            Optional<List<Kpi>> kpisOptional = kpiRepository.getKpiSummary(userId, teamId, projectId, sprintId);
+            List<Kpi> result = kpisOptional.orElse(Collections.emptyList());
+            logger.info("Found {} KPIs in repository", result.size());
+            return result;
+        } catch (Exception e) {
+            logger.error("Error in KPI repository query: {}", e.getMessage(), e);
+            // Returning empty list instead of throwing exception
+            return Collections.emptyList();
+        }
     }
 
     public List<Kpi> findAll() {

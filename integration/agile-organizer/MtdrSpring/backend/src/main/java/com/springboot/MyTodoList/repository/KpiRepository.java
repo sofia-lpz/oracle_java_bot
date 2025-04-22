@@ -19,6 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface KpiRepository extends JpaRepository<Kpi,Integer> {
 
     @Query("SELECT k FROM Kpi k WHERE (:userId is null OR k.user.id = :userId) AND (:teamId is null OR k.team.id = :teamId) AND (:projectId is null OR k.project.id = :projectId) AND (:sprintId is null OR k.sprint.id = :sprintId)")
-    Optional<List<Kpi>> getKpiSummary(@Param("userId") Long userId, @Param("teamId") Long teamId, @Param("projectId") Long projectId, @Param("sprintId") Long sprintId);
+    Optional<List<Kpi>> getKpiSummary(@Param("userId") Integer userId, @Param("teamId") Integer teamId, @Param("projectId") Integer projectId, @Param("sprintId") Integer sprintId);
 
 }
