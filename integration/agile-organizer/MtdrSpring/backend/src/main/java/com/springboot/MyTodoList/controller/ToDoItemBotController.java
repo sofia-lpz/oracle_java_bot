@@ -396,37 +396,29 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 						}
 						break;
 					case 3: // State - need to find by name
-						try {
-							ResponseEntity<State> responseEntity = this.stateService.getStateByName(value);
-							if (responseEntity != null && responseEntity.getBody() != null) {
-								State state = responseEntity.getBody();
-								existingItem.setState(state);
-							}
-						} catch (Exception e) {
-							logger.error("Error setting state: " + value, e);
-						}
+					try {
+						State state = this.stateService.getStateByName(value);
+						existingItem.setState(state);
+					} catch (Exception e) {
+						logger.error("Error setting state: " + value, e);
+					}
+					
 						break;
 					case 4: // Sprint
-						try {
-							ResponseEntity<Sprint> responseEntity = this.sprintService.getSprintById(Integer.parseInt(value));
-							if (responseEntity != null && responseEntity.getBody() != null) {
-								Sprint sprint = responseEntity.getBody();
-								existingItem.setSprint(sprint);
-							}
-						} catch (Exception e) {
-							logger.error("Error setting sprint: " + value, e);
-						}
+					try {
+						Sprint sprint = this.sprintService.getSprintById(Integer.parseInt(value));
+						existingItem.setSprint(sprint);
+					} catch (Exception e) {
+						logger.error("Error setting sprint: " + value, e);
+					}
 						break;
 					case 5: // User - need to find by name
-						try {
-							ResponseEntity<User> responseEntity = this.userService.getUserByName(value);
-							if (responseEntity != null && responseEntity.getBody() != null) {
-								User user = responseEntity.getBody();
-								existingItem.setUser(user);
-							}
-						} catch (Exception e) {
-							logger.error("Error setting user: " + value, e);
-						}
+					try {
+						User user = this.userService.getUserByName(value);
+						existingItem.setUser(user);
+					} catch (Exception e) {
+						logger.error("Error setting user: " + value, e);
+					}
 						break;
 					case 6: // Story points
 						try {
@@ -491,7 +483,8 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 	// GET BY ID /todolist/{id}
 	public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id) {
 		try {
-			ResponseEntity<ToDoItem> responseEntity = toDoItemService.getItemById(id);
+			ToDoItem item = toDoItemService.getItemById(id);
+			ResponseEntity<ToDoItem> responseEntity = new ResponseEntity<>(item, HttpStatus.OK);
 			return new ResponseEntity<ToDoItem>(responseEntity.getBody(), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -576,9 +569,8 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
                     break;
                 case 3: // State - need to find by name
                     try {
-						ResponseEntity<State> responseEntity = this.stateService.getStateByName(value);
-						if (responseEntity != null && responseEntity.getBody() != null) {
-							State state = responseEntity.getBody();
+						State state = this.stateService.getStateByName(value);
+						if (state != null) {
 							newItem.setState(state);
 						}
                     } catch (Exception e) {
@@ -588,9 +580,8 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
                     break;
                 case 4: // Sprint
 					try {
-						ResponseEntity<Sprint> responseEntity = this.sprintService.getSprintById(Integer.parseInt(value));
-						if (responseEntity != null && responseEntity.getBody() != null) {
-							Sprint sprint = responseEntity.getBody();
+						Sprint sprint = this.sprintService.getSprintById(Integer.parseInt(value));
+						if (sprint != null) {
 							newItem.setSprint(sprint);
 						}
 					} catch (Exception e) {
@@ -599,9 +590,8 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 					break;
                 case 5: // User - need to find by name
 					try {
-						ResponseEntity<User> responseEntity = this.userService.getUserByName(value);
-						if (responseEntity != null && responseEntity.getBody() != null) {
-							User user = responseEntity.getBody();
+						User user = this.userService.getUserByName(value);
+						if (user != null) {
 							newItem.setUser(user);
 						}
 					} catch (Exception e) {
