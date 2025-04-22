@@ -1,4 +1,4 @@
-package com.springboot.MyTodoList.model.chatgpt;
+package com.springboot.MyTodoList.service;
 
 import java.util.Map;
 

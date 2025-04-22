@@ -80,39 +80,31 @@ public enum EndpointEnum {
     }
     
     public static String getAllEndpointsFormatted() {
-        StringBuilder sb = new StringBuilder();
-        String currentCategory = "";
+        StringBuilder result = new StringBuilder();
         
         for (EndpointEnum endpoint : values()) {
-            // Extract category from enum name
-            String name = endpoint.name();
-            String category = name.split("_")[0];
+            // Append endpoint number and description
+            result.append(endpoint.getNumber())
+                  .append(". ")
+                  .append(endpoint.getDescription());
             
-            // Add category header if changed
-            if (!category.equals(currentCategory)) {
-                if (!currentCategory.isEmpty()) {
-                    sb.append("\n");
+            // If parameters are required, list them
+            if (endpoint.requiresParameters()) {
+                result.append("\n   Required parameters: ");
+                String[] params = endpoint.getParameters();
+                for (int i = 0; i < params.length; i++) {
+                    result.append(params[i]);
+                    // Add comma separator if not the last parameter
+                    if (i < params.length - 1) {
+                        result.append(", ");
+                    }
                 }
-                sb.append("=== ").append(category).append(" Endpoints ===\n");
-                currentCategory = category;
             }
             
-            // Format parameters string if present
-            String paramInfo = "";
-            if (endpoint.getParameters().length > 0) {
-                paramInfo = " [Parameters: " + String.join(", ", endpoint.getParameters()) + "]";
-            }
-            
-            // Format each endpoint
-            sb.append(String.format("%d. %s - %s (Service: %s.%s)%s\n", 
-                endpoint.getNumber(),
-                endpoint.name(),
-                endpoint.getDescription(),
-                endpoint.getServiceName(),
-                endpoint.getServiceMethod(),
-                paramInfo));
+            // Add two newlines between endpoints for better readability
+            result.append("\n");
         }
         
-        return sb.toString();
+        return result.toString();
     }
 }
