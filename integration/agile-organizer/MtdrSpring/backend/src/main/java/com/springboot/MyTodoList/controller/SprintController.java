@@ -23,8 +23,8 @@ public class SprintController {
     @GetMapping(value = "/sprints/{id}")
     public ResponseEntity<Sprint> getSprintById(@PathVariable int id) {
         try {
-            ResponseEntity<Sprint> responseEntity = sprintService.getSprintById(id);
-            return new ResponseEntity<>(responseEntity.getBody(), HttpStatus.OK);
+            Sprint sprint = sprintService.getSprintById(id);
+            return new ResponseEntity<>(sprint, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

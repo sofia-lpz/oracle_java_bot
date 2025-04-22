@@ -3,8 +3,6 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,22 +23,15 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
-    public ResponseEntity<User> getUserById(int id) {
-        Optional<User> userById = userRepository.findById(id);
-        if (userById.isPresent()) {
-            return new ResponseEntity<>(userById.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+    public User getUserById(int id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
-    public ResponseEntity<User> getUserByName(String name) {
-        Optional<User> userByName = userRepository.findByName(name);
-        if (userByName.isPresent()) {
-            return new ResponseEntity<>(userByName.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public User getUserByName(String name) {
+        return userRepository.findByName(name)
+            .orElseThrow(() -> new RuntimeException("User not found with name: " + name));
     }
 
     public User addUser(User newUser) {

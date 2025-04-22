@@ -9,21 +9,43 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 public class KpiController {
+    private static final Logger logger = LoggerFactory.getLogger(KpiController.class);
+
     @Autowired
     private KpiService kpiService;
-    
+
+    @GetMapping(value = "/kpi/summary")
+    public ResponseEntity<List<Kpi>> getKpiSummary(@RequestParam(required = false) Integer userId,
+                                                  @RequestParam(required = false) Integer teamId,
+                                                  @RequestParam(required = false) Integer projectId,
+                                                  @RequestParam(required = false) Integer sprintId) {
+        logger.info("Requesting KPI summary with userId={}, teamId={}, projectId={}, sprintId={}", 
+                   userId, teamId, projectId, sprintId);
+        try {
+            List<Kpi> kpis = kpiService.getKpiSummary(userId, teamId, projectId, sprintId);
+            logger.info("Found {} KPIs matching criteria", kpis.size());
+            return ResponseEntity.ok(kpis);
+        } catch (RuntimeException e) {
+            logger.error("Error retrieving KPI summary: {}", e.getMessage(), e);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping(value = "/kpi")
     public List<Kpi> getAllKpis(){
         return kpiService.findAll();
     }
     
     @GetMapping(value = "/kpi/{id}")
-    public ResponseEntity<Kpi> getKpiById(@PathVariable Long id){
+    public ResponseEntity<Kpi> getKpiById(@PathVariable int id){
         try{
-            ResponseEntity<Kpi> responseEntity = kpiService.getKpiById(id);
-            return new ResponseEntity<Kpi>(responseEntity.getBody(), HttpStatus.OK);
+            Kpi kpi = kpiService.getKpiById(id);
+            return new ResponseEntity<>(kpi, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -51,7 +73,7 @@ public class KpiController {
     }
     
     @DeleteMapping(value = "/kpi/{id}")
-    public ResponseEntity<Boolean> deleteKpi(@PathVariable("id") Long id){
+    public ResponseEntity<Boolean> deleteKpi(@PathVariable Long id){
         Boolean flag = false;
         try{
             flag = kpiService.deleteKpi(id);
