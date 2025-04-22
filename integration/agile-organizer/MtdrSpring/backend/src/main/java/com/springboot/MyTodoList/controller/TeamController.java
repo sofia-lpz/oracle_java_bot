@@ -23,8 +23,8 @@ public class TeamController {
     @GetMapping(value = "/teams/{id}")
     public ResponseEntity<Team> getTeamById(@PathVariable int id) {
         try {
-            ResponseEntity<Team> responseEntity = teamService.getTeamById(id);
-            return new ResponseEntity<Team>(responseEntity.getBody(), HttpStatus.OK);
+            Team team = teamService.getTeamById(id);
+            return new ResponseEntity<>(team, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

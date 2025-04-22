@@ -3,8 +3,6 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.ToDoItem;
 import com.springboot.MyTodoList.repository.ToDoItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +19,9 @@ public class ToDoItemService {
         return todoItems;
     }
 
-    public ResponseEntity<ToDoItem> getItemById(int id){
-        Optional<ToDoItem> todoData = toDoItemRepository.findById(id);
-        if (todoData.isPresent()){
-            return new ResponseEntity<>(todoData.get(), HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ToDoItem getItemById(int id) {
+        return toDoItemRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ToDoItem not found with id: " + id));
     }
 
     public ToDoItem addToDoItem(ToDoItem toDoItem){

@@ -3,8 +3,6 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.Team;
 import com.springboot.MyTodoList.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +19,9 @@ public class TeamService {
         return teams;
     }
 
-    public ResponseEntity<Team> getTeamById(int id) {
-        Optional<Team> teamData = teamRepository.findById(id);
-        if (teamData.isPresent()) {
-            return new ResponseEntity<>(teamData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public Team getTeamById(int id) {
+        return teamRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Team not found with id: " + id));
     }
 
     public Team addTeam(Team team) {

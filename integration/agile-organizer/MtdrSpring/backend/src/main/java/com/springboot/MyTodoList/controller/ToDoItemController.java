@@ -30,15 +30,15 @@ public class ToDoItemController {
     @GetMapping(value = "/todolist/{id}")
     public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id){
         try{
-            ResponseEntity<ToDoItem> responseEntity = toDoItemService.getItemById(id);
-            return new ResponseEntity<ToDoItem>(responseEntity.getBody(), HttpStatus.OK);
+            ToDoItem toDoItem = toDoItemService.getItemById(id);
+            return new ResponseEntity<>(toDoItem, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     //@CrossOrigin
     @PostMapping(value = "/todolist")
-    public ResponseEntity addToDoItem(@RequestBody ToDoItem todoItem) throws Exception{
+    public ResponseEntity<Void> addToDoItem(@RequestBody ToDoItem todoItem) throws Exception{
         ToDoItem td = toDoItemService.addToDoItem(todoItem);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location",""+td.getID());
@@ -50,7 +50,7 @@ public class ToDoItemController {
     }
     //@CrossOrigin
     @PutMapping(value = "todolist/{id}")
-    public ResponseEntity updateToDoItem(@RequestBody ToDoItem toDoItem, @PathVariable int id){
+    public ResponseEntity<ToDoItem> updateToDoItem(@RequestBody ToDoItem toDoItem, @PathVariable int id){
         try{
             ToDoItem toDoItem1 = toDoItemService.updateToDoItem(id, toDoItem);
             System.out.println(toDoItem1.toString());

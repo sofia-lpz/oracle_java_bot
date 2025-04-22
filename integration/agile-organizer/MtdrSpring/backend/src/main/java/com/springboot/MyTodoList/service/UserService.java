@@ -3,8 +3,10 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -22,22 +24,15 @@ public class UserService {
         return users;
     }
 
-    public ResponseEntity<User> getUserById(int id) {
-        Optional<User> userById = userRepository.findById(id);
-        if (userById.isPresent()) {
-            return new ResponseEntity<>(userById.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+    public User getUserById(int id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
-    public ResponseEntity<User> getUserByName(String name) {
-        Optional<User> userByName = userRepository.findByName(name);
-        if (userByName.isPresent()) {
-            return new ResponseEntity<>(userByName.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public User getUserByName(String name) {
+        return userRepository.findByName(name)
+            .orElseThrow(() -> new RuntimeException("User not found with name: " + name));
     }
 
     public User addUser(User newUser) {
@@ -58,7 +53,7 @@ public class UserService {
         if (dbUser.isPresent()) {
             User user = dbUser.get();
             user.setID(id);
-            // user.setNumber(user2update.getNumber()); // Removed
+            user.setPhoneNumber(user2update.getPhoneNumber());
             user.setPassword(user2update.getPassword());
             return userRepository.save(user);
         } else {
@@ -66,14 +61,13 @@ public class UserService {
         }
     }
 
-    // @Override
-    // public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
-    //     User user = userRepository.findByPhone_number(phoneNumber)
-    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with phone number: " + phoneNumber));
-    //     return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), new ArrayList<>());
-    // }
+    @Override
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with phone number: " + phoneNumber));
+    }
 
-    // public boolean userExists(String phoneNumber) {
-    //     return userRepository.findByPhone_number(phoneNumber).isPresent();
-    // }
+    public boolean userExists(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).isPresent();
+    }
 }

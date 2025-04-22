@@ -29,8 +29,8 @@ public class StateController {
     @GetMapping(value = "/states/{id}")
     public ResponseEntity<State> getStateById(@PathVariable int id){
         try{
-            ResponseEntity<State> responseEntity = stateService.getStateById(id);
-            return new ResponseEntity<State>(responseEntity.getBody(), HttpStatus.OK);
+            State state = stateService.getStateById(id);
+            return new ResponseEntity<>(state, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
