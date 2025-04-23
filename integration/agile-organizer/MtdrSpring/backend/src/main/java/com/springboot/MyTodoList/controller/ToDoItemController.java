@@ -15,11 +15,23 @@ import java.util.List;
 public class ToDoItemController {
     @Autowired
     private ToDoItemService toDoItemService;
+
     //@CrossOrigin
     @GetMapping(value = "/todolist")
     public List<ToDoItem> getAllToDoItems(){
         return toDoItemService.findAll();
     }
+
+    @GetMapping(value = "/todolist/usersummary/{userId}")
+    public ResponseEntity<List<ToDoItem>> getToDoItemsByUserId(@PathVariable int userId){
+        try{
+            List<ToDoItem> toDoItems = toDoItemService.getToDoItemsByUserId(userId);
+            return new ResponseEntity<>(toDoItems, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     //@CrossOrigin
     @GetMapping(value = "/todolist/{id}")
     public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id){
@@ -30,6 +42,7 @@ public class ToDoItemController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     //@CrossOrigin
     @PostMapping(value = "/todolist")
     public ResponseEntity<Void> addToDoItem(@RequestBody ToDoItem todoItem) throws Exception{

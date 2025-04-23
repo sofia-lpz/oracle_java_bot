@@ -24,6 +24,10 @@ public class ToDoItemService {
             .orElseThrow(() -> new RuntimeException("ToDoItem not found with id: " + id));
     }
 
+    public List<ToDoItem> getToDoItemsByUserId(int userId) {
+        return toDoItemRepository.getToDoItemsByUserID(userId);
+    }
+
     public ToDoItem addToDoItem(ToDoItem toDoItem){
         return toDoItemRepository.save(toDoItem);
     }
