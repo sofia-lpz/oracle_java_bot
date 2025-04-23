@@ -1,80 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, theme } from 'antd';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Layout } from 'antd';
 import SideBar from './components/SideBar';
-// import RightSidebar from './components/RightSidebar';
-import ChatBot from './pages/Chatbot';
 import Task from './pages/Task';
+import ChatBot from './pages/Chatbot';
 import Users from './pages/Users';
-import API_LIST from './API';
+import Home from './pages/Home';
 import Login from './pages/Login';
+import './App.css';
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 function App() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const handleLogin = (token) => {
+    localStorage.setItem('token', token);
+    setIsAuthenticated(true);
+  };
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(API_LIST)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Something went wrong ...');
-        }
-      })
-      .then(
-        (result) => {
-          setLoading(false);
-          setItems(result);
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        });
-  }, []);
+  const PrivateRoute = ({ children }) => {
+    return isAuthenticated ? children : <Navigate to="/login" />;
+  };
 
-  return isAuthenticated ? (
-    <Router>
-      <Layout style={{ minHeight: '100vh', minWidth: '100vw', display: 'flex' }}>
-        
-        <SideBar />
-        <Content style={{ padding: '24px', flex: 1, background: '#1f1f1f'}}>
-          <div
-            style={{
-              minHeight: 640,
-              minWidth: 730,
-              background: "#1f1f1f",
-              borderRadius: borderRadiusLG,
-              padding: 24,
-              color: 'white',
-              fontSize: '8px',
-            }}
-          >
+  return (
+    <Router future={{ v7_startTransition: true }}>
+      <Layout style={{ minHeight: '100vh', background: '#1d1d1d' }}>
+        {isAuthenticated && <SideBar />}
+        <Layout>
+          <Content style={{ 
+            margin: '24px 16px', 
+            padding: 24, 
+            background: '#1d1d1d',
+            minHeight: 280,
+            overflow: 'auto'
+          }}>
             <Routes>
-              <Route path="/" element={<ChatBot />} />
-              <Route path="/Task" element={<Task />} />
-              <Route path="/Users" element={<Users />} />
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+              <Route path="/task" element={<PrivateRoute><Task /></PrivateRoute>} />
+              <Route path="/chatbot" element={<PrivateRoute><ChatBot /></PrivateRoute>} />
+              <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
             </Routes>
-          </div>
-        </Content>
-
-        {/* Sidebar derecha vacía */}
-        {/* <RightSidebar /> */}
-
+          </Content>
+        </Layout>
       </Layout>
     </Router>
-  ) : (
-    <Login setIsAuthenticated={setIsAuthenticated} />
   );
-};
+}
 
 export default App;
