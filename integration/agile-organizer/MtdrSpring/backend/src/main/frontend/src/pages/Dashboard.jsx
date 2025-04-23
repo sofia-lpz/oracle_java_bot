@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, Row, Col, Statistic, InputNumber, Button, Form, message, Progress } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { API_KPI } from '../API';
+import '../App.css';
 
 const Dashboard = () => {
   const [form] = Form.useForm();
@@ -79,12 +80,8 @@ const Dashboard = () => {
 
           return (
             <Col span={8} key={key}>
-              <Card style={{ background: '#272727', marginBottom: 24 }}>
-                <Statistic
-                  title={title}
-                  value={`${sum}/${total}`}
-                  valueStyle={{ color }}
-                />
+              <Card style={{ background: '#272727', marginBottom: 24, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+              <h3 style={{ color: 'white' }}>{title}</h3>
                 <Progress
                   percent={percent}
                   strokeColor={color}
