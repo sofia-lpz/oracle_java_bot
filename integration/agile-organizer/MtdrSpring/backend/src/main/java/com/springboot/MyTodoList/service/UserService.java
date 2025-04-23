@@ -34,6 +34,11 @@ public class UserService implements UserDetailsService {
             .orElseThrow(() -> new RuntimeException("User not found with name: " + name));
     }
 
+    public User getUserByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber)
+            .orElseThrow(() -> new RuntimeException("User not found with phone number: " + phoneNumber));
+    }
+
     public User addUser(User newUser) {
         return userRepository.save(newUser);
     }
