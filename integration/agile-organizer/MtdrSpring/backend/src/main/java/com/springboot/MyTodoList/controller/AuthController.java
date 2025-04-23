@@ -21,4 +21,4 @@ public class AuthController {
         response.put("username", loginRequest.get("username"));
         return ResponseEntity.ok(response);
     }
-} 
+}

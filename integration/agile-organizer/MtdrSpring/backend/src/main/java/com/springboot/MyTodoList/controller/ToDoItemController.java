@@ -1,8 +1,6 @@
 package com.springboot.MyTodoList.controller;
 import com.springboot.MyTodoList.model.ToDoItem;
 import com.springboot.MyTodoList.service.ToDoItemService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,16 +13,12 @@ import java.util.List;
 
 @RestController
 public class ToDoItemController {
-    private static final Logger logger = LoggerFactory.getLogger(ToDoItemController.class);
     @Autowired
     private ToDoItemService toDoItemService;
     //@CrossOrigin
     @GetMapping(value = "/todolist")
     public List<ToDoItem> getAllToDoItems(){
-        logger.info("Request received to fetch all todo items");
-        List<ToDoItem> items = toDoItemService.findAll();
-        logger.info("Number of items fetched: " + items.size());
-        return items;
+        return toDoItemService.findAll();
     }
     //@CrossOrigin
     @GetMapping(value = "/todolist/{id}")
