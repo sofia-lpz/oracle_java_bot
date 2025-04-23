@@ -1,219 +1,421 @@
+/*  Black #1d1d1d
+    Gray #272727
+    Oracle #c6624b */
+
 html, body, #root {
-  height: 80%;
+  height: 100%;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .ant-layout {
   min-height: 100vh;
-  min-width: 100vw;
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.kanban {
-  margin-top: 32px;
   display: flex;
-}
-
-.kanban-column {
-  background-color: rgb(39, 39, 39);
-  min-height: 70vh;
-  padding-inline: 16px;
-  margin-right: 16px;
-  border-radius: 16px;
-}
-
-.kanban-scroll {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-h2 {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.custom-task-card .ant-card-actions {
+  flex-direction: row;
   background: #1d1d1d !important;
-  border-top: 2px solid #272727;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.kanban-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.ant-layout-sider {
+  background: #1f1f1f !important;
+  border-right: 1px solid #272727;
+  position: fixed;
+  height: 100vh;
+  z-index: 1;
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
-.status-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
+.ant-menu {
+  background: #1f1f1f !important;
+  border-right: none !important;
+}
+
+.ant-menu-item {
+  height: 50px !important;
+  line-height: 50px !important;
+  margin: 4px 0 !important;
+  padding: 0 16px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-menu-item a {
+  color: #ffffff !important;
+  font-size: 14px !important;
+  opacity: 0.7;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.ant-menu-item:hover a {
+  opacity: 1;
+  color: #c6624b !important;
+}
+
+.ant-menu-item-selected {
+  background-color: #272727 !important;
+  border-radius: 6px !important;
+  margin: 4px 8px !important;
+  width: calc(100% - 16px) !important;
+}
+
+.ant-menu-item-selected a {
+  opacity: 1;
+  color: #c6624b !important;
+}
+
+.ant-menu-item:hover {
+  background-color: #272727 !important;
+}
+
+.ant-menu-item .anticon {
+  font-size: 18px !important;
+  margin: 0 !important;
+}
+
+.ant-menu-item:hover .anticon {
+  transform: scale(1.1);
+}
+
+.ant-layout-content {
+  margin: 0 !important;
+  flex: 1 1;
+  background: #1d1d1d !important;
+  padding: 0 !important;
+}
+
+/* Estilos para los modales */
+.ant-modal-content {
+  background: #1d1d1d !important;
+  color: white;
+}
+
+.ant-modal-header {
+  background: #1d1d1d !important;
+  border-bottom: 1px solid #272727;
+}
+
+.ant-modal-title {
+  color: white !important;
+}
+
+.ant-modal-close {
+  color: white !important;
+}
+
+/* Estilos para los formularios */
+.ant-form-item-label > label {
+  color: white !important;
+}
+
+.ant-input {
+  background: #272727 !important;
+  border: 1px solid #444 !important;
+  color: white !important;
+}
+
+.ant-input:hover,
+.ant-input:focus {
+  border-color: #c6624b !important;
+}
+
+.ant-select-selector {
+  background: #272727 !important;
+  border: 1px solid #444 !important;
+}
+
+.ant-select-selection-item {
+  color: white !important;
+}
+
+/* Estilos para los botones */
+.ant-btn-primary {
+  background: #c6624b !important;
+  border-color: #c6624b !important;
+}
+
+.ant-btn-primary:hover {
+  background: #a84832 !important;
+  border-color: #a84832 !important;
+}
+
+/* Estilos para los mensajes */
+.ant-message-notice-content {
+  background: #272727 !important;
+  color: white !important;
 }
 
 /* LOGIN */
 
 .login-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  width: 100vw;
-  background-color: #272727;
+  background: #1d1d1d;
 }
 
-.login-card {
-  width: 600px;
-  background-color: #272727;
-  border: 1px solid #272727;
+.login-left-panel {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(145deg, #272727 0%, #1d1d1d 100%);
 }
 
-.login-logo {
-  display: block;
-  margin: 0 auto 2px auto;
-  width: 200px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
+.oracle-logo {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 120px;
 }
-.login-logo-mini {
-  display: block;
-  margin: 0 auto 2px auto;
-  width: 100px;
-  height: 100px;
+
+.oracle-o {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  width: 80px;
+  opacity: 0.2;
+}
+
+.login-icons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.icon-circle {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: #272727;
+}
+
+.thinking {
+  background: linear-gradient(145deg, #c6624b 0%, #a84832 100%);
+}
+
+.writing {
+  background: linear-gradient(145deg, #c6624b 0%, #a84832 100%);
+}
+
+.picture {
+  background: linear-gradient(145deg, #c6624b 0%, #a84832 100%);
+}
+
+.design-title {
+  color: #ffffff !important;
+  font-size: 48px !important;
+  margin-bottom: 24px !important;
+}
+
+.design-subtitle {
+  color: #8c8c8c;
+  font-size: 16px;
+  max-width: 400px;
+}
+
+.navigation-dots {
+  position: absolute;
+  bottom: 60px;
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #272727;
+}
+
+.dot.active {
+  background: #c6624b;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.login-right-panel {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #1d1d1d;
+  max-width: 500px;
 }
 
 .login-title {
+  color: #ffffff !important;
   text-align: center;
-  margin-bottom: 32px;
-  color: #333 !important;
+  margin-bottom: 40px !important;
 }
 
-.login-welcome-side h2 {
-  color: white !important;
-}
-
-.login-input {
-  background-color: white;
-  color: black !important;
-}
-
-.login-form-side .ant-form-item-label > label {
-  color: #333 !important;
-}
-
-.login-button {
-  background-color: #c6624b;
-  border-color: #c6624b;
-}
-
-.login-wrapper {
+.social-login {
   display: flex;
-  width: 800px;
-  height: 500px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  border-radius: 10px;
-  overflow: hidden;
-  margin: auto;
-  margin-top: 10vh;
-  background-color: white;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-.login-form-side {
+.social-btn {
   flex: 1;
-  padding: 40px;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.login-welcome-side {
-  flex: 1;
-  color: white;
+  height: 40px;
+  border-radius: 8px;
   background: #272727;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-btn {
-  background: #c6624b;
   border: none;
-  width: 100%;
-  color: white;
-  margin-top: 16px;
+  color: #ffffff;
 }
 
-.signup-btn {
-  color: white;
-  border: 1px solid white;
-  background: transparent;
-  margin-top: 16px;
-}
-
-.signup-btn:hover {
-  color: white !important;
-  background-color: #c6624b !important;
+.social-btn:hover {
+  background: #3d3d3d;
+  color: #c6624b !important;
   border-color: #c6624b !important;
 }
 
-.forgot-password {
-  float: right;
-  font-size: 12px;
+.divider {
+  text-align: center;
+  color: #8c8c8c;
+  margin: 24px 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background: #272727;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.login-form .ant-form-item {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.login-form .ant-input,
+.login-form .ant-input-password {
+  background: #272727;
+  border: 1px solid #3d3d3d;
+  color: #ffffff;
+  width: 100%;
+}
+
+.login-form .ant-input-affix-wrapper {
+  background: #272727;
+  border: 1px solid #3d3d3d;
+  color: #ffffff;
+  width: 100%;
+}
+
+.login-form .ant-input-affix-wrapper:hover,
+.login-form .ant-input-affix-wrapper:focus {
+  border-color: #c6624b;
+  box-shadow: 0 0 0 2px rgba(198, 98, 75, 0.2);
+}
+
+.login-form .ant-input-affix-wrapper-focused {
+  border-color: #c6624b;
+  box-shadow: 0 0 0 2px rgba(198, 98, 75, 0.2);
+}
+
+.login-form .ant-input:focus,
+.login-form .ant-input-password:focus {
+  border-color: #c6624b;
+  box-shadow: 0 0 0 2px rgba(198, 98, 75, 0.2);
+}
+
+.login-form .ant-input-password .ant-input {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.login-form .ant-input-password-icon {
+  color: #8c8c8c;
+}
+
+.login-form .ant-input-password-icon:hover {
   color: #c6624b;
 }
 
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.ant-checkbox-wrapper {
+  color: #ffffff !important;
+}
+
+.forgot-password {
+  color: #c6624b;
+  text-decoration: none;
+}
+
 .forgot-password:hover {
-  color: #a84832; /* o el tono de naranja más oscuro que prefieras */
-  /* text-decoration: underline; */
-  cursor: pointer;
+  color: #a84832;
 }
 
-/* Hover en botón primario */
-.ant-btn-primary:hover,
-.ant-btn-color-primary:hover,
-.ant-btn-primary:focus,
-.ant-btn-color-primary:focus {
-  background-color: #c6624b !important;
-  border-color: #c6624b !important;
-  color: white !important;
-  box-shadow: 0 2px 0 rgba(198, 98, 75, 0.2) !important;
+.login-btn {
+  width: 100%;
+  height: 40px;
+  background: #c6624b !important;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
-/* Checkbox naranja */
-.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #c6624b !important;
-  border-color: #c6624b !important;
-  box-shadow: none !important;
+.login-btn:hover {
+  background: #a84832 !important;
 }
 
-.ant-checkbox-checked::after {
-  border: 1px solid #c6624b;
+.login-footer {
+  text-align: center;
+  color: #8c8c8c;
+  margin-top: 40px;
+  font-size: 12px;
 }
 
-/* Hover del checkbox */
-.ant-checkbox-inner:hover {
-  border-color: #c6624b !important;
+.ant-form-item-explain-error {
+  color: #ff4d4f !important;
 }
 
-/* Hover en checkbox cuando NO está seleccionado */
-.ant-checkbox-wrapper:hover .ant-checkbox-inner,
-.ant-checkbox:hover .ant-checkbox-inner {
-  border-color: #c6624b !important;
+.ant-form-item-extra {
+  color: #8c8c8c !important;
 }
 
 /*  CHATBOT */
@@ -431,3 +633,106 @@ textarea.task-description-input {
 /* .ant-input {
   color: inherit !important;
 } */
+
+.ant-message-notice-content {
+  background-color: #1f1f1f !important;
+  color: white !important;
+}
+
+.ant-message-notice {
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+.kanban {
+  display: flex;
+  overflow-x: auto;
+  padding: 0;
+  gap: 16px;
+  height: calc(100vh - 100px);
+  margin-top: 24px;
+  width: 100%;
+  overflow-y: hidden;
+  justify-content: center;
+}
+
+.kanban-column {
+  flex: 0 0 auto;
+  background-color: #272727;
+  min-height: 70vh;
+  padding: 16px;
+  border-radius: 16px;
+  width: 330px;
+  margin: 0;
+}
+
+.kanban-scroll {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.kanban-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.kanban-scroll::-webkit-scrollbar-track {
+  background: #1d1d1d;
+  border-radius: 4px;
+}
+
+.kanban-scroll::-webkit-scrollbar-thumb {
+  background: #c6624b;
+  border-radius: 4px;
+}
+
+.kanban-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a84832;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+
+.custom-task-card .ant-card-actions {
+  background: #1d1d1d !important;
+  border-top: 2px solid #272727;
+}
+
+.kanban-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.menu-bar {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+input::placeholder {
+  color: #ffffff !important;
+  opacity: 0.2;
+}
