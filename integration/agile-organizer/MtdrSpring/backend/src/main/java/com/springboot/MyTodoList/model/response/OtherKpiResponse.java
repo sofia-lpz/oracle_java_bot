@@ -7,7 +7,6 @@ public class OtherKpiResponse {
     public Integer numberOfTasks;
     public Integer numberOfStoryPoints;
 
-
     public GroupBy groupBy;
     public String groupByName;
 
