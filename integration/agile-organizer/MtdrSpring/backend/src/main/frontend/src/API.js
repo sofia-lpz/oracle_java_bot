@@ -18,6 +18,7 @@
 // const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.eu-frankfurt-1.oci.customer-oci.com/todolist';
 const API_LIST = '/todolist';
 const API_STATES = '/states';
+const API_KPI = '/kpi/summary'
 
 export default API_LIST;
-export { API_LIST, API_STATES };
+export { API_LIST, API_STATES, API_KPI };

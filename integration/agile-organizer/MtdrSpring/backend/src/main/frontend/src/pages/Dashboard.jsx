@@ -1,7 +1,105 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Card, Row, Col, Statistic, InputNumber, Button, Form, message, Progress } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { API_KPI } from '../API';
 
 const Dashboard = () => {
-  return <h1>Dashboard</h1>;
+  const [form] = Form.useForm();
+  const [kpis, setKpis] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const fetchKPIs = async (values) => {
+    setLoading(true);
+    const queryParams = new URLSearchParams();
+    if (values.userId) queryParams.append('userId', values.userId);
+    if (values.teamId) queryParams.append('teamId', values.teamId);
+    if (values.projectId) queryParams.append('projectId', values.projectId);
+    if (values.sprintId) queryParams.append('sprintId', values.sprintId);
+
+    try {
+      const response = await fetch(`${API_KPI}?${queryParams.toString()}`);
+      if (!response.ok) throw new Error('Error al obtener los KPIs');
+      const data = await response.json();
+      setKpis(data);
+    } catch (error) {
+      console.error(error);
+      messageApi.error('Error al cargar los KPIs');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Agrupa y suma por tipo
+  const getKpiAggregates = () => {
+    const aggregates = {
+      VISIBILITY: { sum: 0, total: 0 },
+      ACCOUNTABILITY: { sum: 0, total: 0 },
+      PRODUCTIVITY: { sum: 0, total: 0 },
+    };
+
+    kpis.forEach((kpi) => {
+      if (aggregates[kpi.type]) {
+        aggregates[kpi.type].sum += kpi.sum || 0;
+        aggregates[kpi.type].total += kpi.total || 0;
+      }
+    });
+
+    return aggregates;
+  };
+
+  const aggregates = getKpiAggregates();
+
+  const kpiTypes = [
+    { key: 'VISIBILITY', title: 'Visibilidad', color: '#49c2f2' },
+    { key: 'ACCOUNTABILITY', title: 'Responsabilidad', color: '#f5a623' },
+    { key: 'PRODUCTIVITY', title: 'Productividad', color: '#7ed957' },
+  ];
+
+  return (
+    <div style={{ padding: '40px', background: '#1d1d1d', minHeight: '100vh', color: 'white' }}>
+      {contextHolder}
+      <h1 style={{ color: 'white', marginBottom: '30px' }}>Dashboard</h1>
+
+      <Form layout="inline" form={form} onFinish={fetchKPIs} style={{ marginBottom: '40px' }}>
+        <Form.Item name="userId" label="User ID">
+          <InputNumber min={1} placeholder="Requerido" />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" icon={<SearchOutlined />} loading={loading}>
+            Buscar
+          </Button>
+        </Form.Item>
+      </Form>
+
+      <Row gutter={24}>
+        {kpiTypes.map(({ key, title, color }) => {
+          const { sum, total } = aggregates[key];
+          const percent = total > 0 ? Math.round((sum / total) * 100) : 0;
+
+          return (
+            <Col span={8} key={key}>
+              <Card style={{ background: '#272727', marginBottom: 24 }}>
+                <Statistic
+                  title={title}
+                  value={`${sum}/${total}`}
+                  valueStyle={{ color }}
+                />
+                <Progress
+                  percent={percent}
+                  strokeColor={color}
+                  trailColor="#333"
+                  status="active"
+                  type="circle"
+                  style={{ marginTop: '20px' }}
+                />
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
+    </div>
+  );
 };
 
-export default Dashboard; 
+export default Dashboard;
