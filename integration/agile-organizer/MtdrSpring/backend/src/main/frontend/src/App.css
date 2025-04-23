@@ -736,3 +736,11 @@ input::placeholder {
   color: #ffffff !important;
   opacity: 0.2;
 }
+
+.ant-progress-text {
+  color: #ffffff !important
+}
+
+.ant-card-bordered {
+  border: none;
+}
