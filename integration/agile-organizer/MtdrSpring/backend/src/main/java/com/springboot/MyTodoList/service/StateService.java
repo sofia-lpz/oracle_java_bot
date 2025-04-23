@@ -1,11 +1,8 @@
 package com.springboot.MyTodoList.service;
 
 import com.springboot.MyTodoList.model.State;
-import com.springboot.MyTodoList.model.ToDoItem;
 import com.springboot.MyTodoList.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,13 +20,14 @@ public class StateService {
         return states;
     }
 
-    public ResponseEntity<State> getStateById(int id){
-        Optional<State> stateData = stateRepository.findById(id);
-        if (stateData.isPresent()){
-            return new ResponseEntity<>(stateData.get(), HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public State getStateById(int id) {
+        return stateRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("State not found with id: " + id));
+    }
+    
+    public State getStateByName(String name) {
+        return stateRepository.findByName(name)
+            .orElseThrow(() -> new RuntimeException("State not found with name: " + name));
     }
 
     public State addState(State state){

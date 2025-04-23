@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.transaction.Transactional;
-
+import java.util.Optional;
 @Repository
 @Transactional
 @EnableTransactionManagement
 public interface StateRepository extends JpaRepository<State,Integer> {
-    
+    Optional<State> findByName(String name);
 }

@@ -3,8 +3,6 @@ package com.springboot.MyTodoList.service;
 import com.springboot.MyTodoList.model.ToDoItem;
 import com.springboot.MyTodoList.repository.ToDoItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +19,13 @@ public class ToDoItemService {
         return todoItems;
     }
 
-    public ResponseEntity<ToDoItem> getItemById(int id){
-        Optional<ToDoItem> todoData = toDoItemRepository.findById(id);
-        if (todoData.isPresent()){
-            return new ResponseEntity<>(todoData.get(), HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ToDoItem getItemById(int id) {
+        return toDoItemRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ToDoItem not found with id: " + id));
+    }
+
+    public List<ToDoItem> getToDoItemsByUserId(int userId) {
+        return toDoItemRepository.getToDoItemsByUserID(userId);
     }
 
     public ToDoItem addToDoItem(ToDoItem toDoItem){
@@ -48,9 +46,20 @@ public class ToDoItemService {
         if(toDoItemData.isPresent()){
             ToDoItem toDoItem = toDoItemData.get();
             toDoItem.setID(id);
+            toDoItem.setTitle(td.getTitle());
             toDoItem.setCreation_ts(td.getCreation_ts());
             toDoItem.setDescription(td.getDescription());
+            toDoItem.setDueDate(td.getDueDate());
+            toDoItem.setState(td.getState());
+            toDoItem.setSprint(td.getSprint());
+            toDoItem.setUser(td.getUser());
+            toDoItem.setProject(td.getProject());
+            toDoItem.setStoryPoints(td.getStoryPoints());
+            toDoItem.setPriority(td.getPriority());
+            toDoItem.setDeleted(td.getDeleted());
             toDoItem.setDone(td.isDone());
+            toDoItem.setEstimatedHours(td.getEstimatedHours());
+            toDoItem.setRealHours(td.getRealHours());
             return toDoItemRepository.save(toDoItem);
         }else{
             return null;
