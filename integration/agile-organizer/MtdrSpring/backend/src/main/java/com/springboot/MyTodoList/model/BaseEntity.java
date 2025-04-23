@@ -1,6 +1,6 @@
 package com.springboot.MyTodoList.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 import java.io.Serializable;
