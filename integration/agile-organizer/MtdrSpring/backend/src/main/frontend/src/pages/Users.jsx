@@ -8,6 +8,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,6 +34,14 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const columns = [
     {
       title: 'Name',
@@ -40,19 +49,19 @@ const Users = () => {
       key: 'name',
     },
     {
-      title: 'Email address',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Team',
+      dataIndex: ['team', 'teamName'],
+      key: 'teamName',
     },
     {
       title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
+      dataIndex: ['team', 'teamDescription'],
+      key: 'teamDescription',
     },
     {
-      title: 'Permission',
-      dataIndex: 'permission',
-      key: 'permission',
+      title: 'Authority',
+      dataIndex: ['authorities', 0, 'authority'],
+      key: 'authority',
     },
   ];
 
@@ -61,12 +70,29 @@ const Users = () => {
 
   return (
     <div style={{ padding: '20px', backgroundColor: '#1d1d1d', minHeight: '100vh' }}>
-      <h1 style={{ color: 'white' }}>Team <span style={{ color: '#c6624b' }}>{users.length} users</span></h1>
+      <h1 style={{ color: 'white' }}>Team <span style={{ color: '#c6624b', fontSize: 'medium' }}>{users.length} users</span></h1>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <Input placeholder="Filter by: All" prefix={<SearchOutlined />} style={{ width: '200px', backgroundColor: '#272727', color: 'white', borderColor: '#444' }} />
+        <Input 
+          placeholder="Filter by: All" 
+          prefix={<SearchOutlined />} 
+          style={{ 
+            width: '100%', 
+            maxWidth: '200px', 
+            backgroundColor: '#272727', 
+            color: 'white', 
+            borderColor: '#444', 
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+            transition: 'border-color 0.3s, box-shadow 0.3s',
+          }} 
+          value={searchTerm}
+          onChange={handleSearch}
+          onFocus={(e) => e.target.style.borderColor = '#c6624b'}
+          onBlur={(e) => e.target.style.borderColor = '#444'}
+        />
         <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: '#c6624b', borderColor: '#c6624b' }}>Invite</Button>
       </div>
-      <Table columns={columns} dataSource={users} rowKey="id" pagination={false} style={{ backgroundColor: '#272727', color: 'white' }} />
+      <Table columns={columns} dataSource={filteredUsers} rowKey="id" pagination={false} style={{ backgroundColor: '#272727', color: 'white' }} />
     </div>
   );
 };
