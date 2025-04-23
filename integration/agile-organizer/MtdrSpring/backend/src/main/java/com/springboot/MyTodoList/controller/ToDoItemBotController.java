@@ -397,8 +397,11 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 						break;
 					case 3: // State - need to find by name
 					try {
-						State state = this.stateService.getStateByName(value);
-						existingItem.setState(state);
+						ResponseEntity<State> response = this.stateService.getStateByName(value);
+						State state = response.getBody();
+						if (state != null) {
+							existingItem.setState(state);
+						}
 					} catch (Exception e) {
 						logger.error("Error setting state: " + value, e);
 					}
@@ -569,7 +572,8 @@ private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
                     break;
                 case 3: // State - need to find by name
                     try {
-						State state = this.stateService.getStateByName(value);
+						ResponseEntity<State> response = this.stateService.getStateByName(value);
+						State state = response.getBody();
 						if (state != null) {
 							newItem.setState(state);
 						}

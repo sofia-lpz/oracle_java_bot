@@ -4,6 +4,8 @@ import com.springboot.MyTodoList.model.State;
 import com.springboot.MyTodoList.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +27,6 @@ public class StateService {
             .orElseThrow(() -> new RuntimeException("State not found with id: " + id));
     }
     
-    public State getStateByName(String name) {
-        return stateRepository.findByName(name)
-            .orElseThrow(() -> new RuntimeException("State not found with name: " + name));
-    }
     public ResponseEntity<State> getStateByName(String name){
         Optional<State> stateData = stateRepository.findByName(name);
         if (stateData.isPresent()){
@@ -37,7 +35,6 @@ public class StateService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     public State addState(State state){
         return stateRepository.save(state);
