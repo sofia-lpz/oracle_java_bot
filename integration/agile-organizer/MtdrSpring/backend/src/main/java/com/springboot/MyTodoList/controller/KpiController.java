@@ -1,4 +1,5 @@
 package com.springboot.MyTodoList.controller;
+import com.springboot.MyTodoList.controller.Util.GroupBy;
 import com.springboot.MyTodoList.model.Kpi;
 import com.springboot.MyTodoList.service.KpiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,16 @@ public class KpiController {
             return ResponseEntity.ok(kpis);
         } catch (RuntimeException e) {
             logger.error("Error retrieving KPI summary: {}", e.getMessage(), e);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/kpi/other/")
+    public ResponseEntity<List<Kpi>> getKpiOther(@RequestParam(required = false) GroupBy groupBy) {
+        try {
+            List<Kpi> kpis = kpiService.getKpiOther(groupBy);
+            return ResponseEntity.ok(kpis);
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }

@@ -1,5 +1,6 @@
 package com.springboot.MyTodoList.service;
 
+import com.springboot.MyTodoList.controller.Util.GroupBy;
 import com.springboot.MyTodoList.model.Kpi;
 import com.springboot.MyTodoList.repository.KpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,15 @@ public class KpiService {
         } catch (Exception e) {
             logger.error("Error in KPI repository query: {}", e.getMessage(), e);
             // Returning empty list instead of throwing exception
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Kpi> getKpiOther(GroupBy groupBy) {
+        try {
+            List<Kpi> kpis = kpiRepository.getKpiOther(groupBy);
+            return kpis;
+        } catch (Exception e) {
             return Collections.emptyList();
         }
     }
