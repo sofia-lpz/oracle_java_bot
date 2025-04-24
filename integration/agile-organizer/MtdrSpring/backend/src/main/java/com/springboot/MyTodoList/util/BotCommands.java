@@ -6,7 +6,11 @@ public enum BotCommands {
 	HIDE_COMMAND("/hide"), 
 	TODO_LIST("/todolist"),
 	ADD_ITEM("/additem"),
-	UPDATE_ITEM("/updateitem");
+	UPDATE_ITEM("/updateitem"),
+	USER_LIST("/userlist"),
+
+	USER_SUMMARY("/usersummary"),
+	KPI("/kpi");
 
 	private String command;
 

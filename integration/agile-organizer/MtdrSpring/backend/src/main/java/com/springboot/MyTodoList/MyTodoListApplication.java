@@ -17,6 +17,8 @@ import com.springboot.MyTodoList.service.SprintService;
 import com.springboot.MyTodoList.service.StateService;
 import com.springboot.MyTodoList.service.ToDoItemService;
 import com.springboot.MyTodoList.service.UserService;
+import com.springboot.MyTodoList.service.KpiService;
+import com.springboot.MyTodoList.service.TeamService;
 import com.springboot.MyTodoList.util.BotMessages;
 
 @SpringBootApplication
@@ -39,6 +41,12 @@ private ProjectService projectService;
 @Autowired
 private SprintService sprintService;
 
+@Autowired
+private KpiService kpiService;
+
+	@Autowired
+	private TeamService teamService;
+
 	@Value("${telegram.bot.token}")
 	private String telegramBotToken;
 
@@ -60,7 +68,10 @@ private SprintService sprintService;
     stateService,
     userService,
     projectService,
-	sprintService));
+	sprintService,
+	kpiService,
+	teamService
+	));
 			logger.info(BotMessages.BOT_REGISTERED_STARTED.getMessage());
 		} catch (TelegramApiException e) {
 			e.printStackTrace();

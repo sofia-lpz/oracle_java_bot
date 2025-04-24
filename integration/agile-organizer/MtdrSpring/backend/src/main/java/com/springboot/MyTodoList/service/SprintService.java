@@ -19,6 +19,14 @@ public class SprintService {
         return sprints;
     }
 
+    public Sprint getLatestSprint() {
+        List<Sprint> sprints = sprintRepository.findAll();
+        if (sprints.isEmpty()) {
+            return null;
+        }
+        return sprints.get(sprints.size() - 1);
+    }
+
     public Sprint getSprintById(int id) {
         return sprintRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Sprint not found with id: " + id));
