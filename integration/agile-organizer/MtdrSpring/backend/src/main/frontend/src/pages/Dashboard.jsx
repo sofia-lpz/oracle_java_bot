@@ -348,7 +348,6 @@ useEffect(() => {
       </Row>
       
       <h2 style={{ color: 'white', margin: '40px 0 20px' }}>User Performance Metrics</h2>
-      <h2 style={{ color: 'white', margin: '40px 0 20px' }}>User Performance Metrics</h2>
       <Table
         dataSource={calculateUserMetrics()}
         columns={[
