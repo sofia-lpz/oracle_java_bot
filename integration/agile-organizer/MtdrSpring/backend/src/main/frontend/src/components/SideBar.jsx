@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Avatar } from 'antd';
+import { Menu, Avatar, Popover } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   HomeOutlined,
   MessageOutlined,
   ProjectOutlined,
   UserOutlined,
-  MenuOutlined
+  MenuOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 
 const SideBar = () => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 767);
+  const [popoverVisible, setPopoverVisible] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,6 +23,10 @@ const SideBar = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleVisibleChange = (visible) => {
+    setPopoverVisible(visible);
+  };
 
   return (
     <>
@@ -44,6 +50,10 @@ const SideBar = () => {
 
         .sidebar-menu .ant-menu-item {
           justify-content: center;
+        }
+
+        .ant-popover-inner {
+          background-color: #272727 !important;
         }
       `}</style>
       <div className="sidebar" style={{ 
@@ -133,13 +143,43 @@ const SideBar = () => {
           width: '100%',
           justifyContent: 'center'
         }}>
-          <Avatar size={32} icon={<UserOutlined />} />
-          {!isCollapsed && (
-            <div style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ color: 'white', fontSize: '14px' }}>Admin User</div>
-              <div style={{ color: '#666', fontSize: '12px' }}>admin@agileorganizer.com</div>
+          <Popover
+            content={<div style={{ backgroundColor: '#272727', padding: '8px', borderRadius: '4px' }}>
+              <button style={{ 
+                backgroundColor: '#ff4d4f', 
+                color: 'white', 
+                border: 'none', 
+                padding: '8px', 
+                borderRadius: '4px', 
+                cursor: 'pointer' 
+              }} 
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  window.location.pathname = '/';
+                }}> 
+                <LogoutOutlined style={{ fontSize: '16px' }} /> 
+              </button>
+            </div>}
+            trigger="click"
+            visible={popoverVisible}
+            onVisibleChange={handleVisibleChange}
+          >
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px', 
+              width: '100%', 
+              justifyContent: 'center' 
+            }}>
+              <Avatar size={32} icon={<UserOutlined />} />
+              {!isCollapsed && (
+                <div style={{ flex: 1, textAlign: 'center' }}>
+                  <div style={{ color: 'white', fontSize: '14px' }}>Admin User</div>
+                  <div style={{ color: '#666', fontSize: '12px' }}>admin@agileorganizer.com</div>
+                </div>
+              )}
             </div>
-          )}
+          </Popover>
         </div>
       </div>
     </>
