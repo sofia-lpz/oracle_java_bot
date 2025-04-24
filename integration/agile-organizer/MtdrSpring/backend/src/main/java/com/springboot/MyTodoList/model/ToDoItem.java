@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.springboot.MyTodoList.model.BaseEntity;
 import com.springboot.MyTodoList.model.Project;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
 import org.slf4j.Logger;

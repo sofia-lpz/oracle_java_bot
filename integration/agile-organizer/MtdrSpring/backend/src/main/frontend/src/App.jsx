@@ -6,6 +6,7 @@ import Task from './pages/Task';
 import ChatBot from './pages/Chatbot';
 import Users from './pages/Users';
 import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import './App.css';
 
@@ -38,6 +39,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login onLogin={handleLogin} />} />
               <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+              <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/task" element={<PrivateRoute><Task /></PrivateRoute>} />
               <Route path="/chatbot" element={<PrivateRoute><ChatBot /></PrivateRoute>} />
               <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />

@@ -5,8 +5,7 @@ import KanbanColumn from '../components/KanbanColumn';
 import NewItem from '../NewItem';
 import '../App.css';
 
-import API_LIST from '../API';
-import API_STATES from '../API_STATES';
+import { API_LIST, API_STATES } from '../API';
 import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import TaskCard from '../components/TaskCard';

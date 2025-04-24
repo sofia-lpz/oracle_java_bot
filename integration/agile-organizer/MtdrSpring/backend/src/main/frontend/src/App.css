@@ -813,3 +813,22 @@ input::placeholder {
     max-width: 80px !important;
   }
 }
+.ant-progress-text {
+  color: #ffffff !important
+}
+
+.ant-card-bordered {
+  border: none;
+}
+
+.white-select .ant-select-selection-placeholder {
+  color: white !important;
+}
+
+.white-select .ant-select-arrow {
+  color: white !important;
+}
+
+.white-select .ant-select-selection-item {
+  color: white;
+}
