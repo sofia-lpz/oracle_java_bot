@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Form, message, Progress, Select } from 'antd';
+import { Card, Row, Col, Button, Form, message, Progress, Select } from 'antd';
+import { FilterOutlined } from '@ant-design/icons';
 import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS, API_LIST } from '../API';
 
-import {  authenticatedFetch} from '../utils/authUtils';
+import {  authenticatedFetch } from '../utils/authUtils';
 
 import '../App.css';
 
@@ -10,6 +11,11 @@ const Dashboard = () => {
   const [form] = Form.useForm();
   const [kpis, setKpis] = useState([]);
   const [users, setUsers] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [sprints, setSprints] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [items, setItems] = useState([]);
+  const [metrics, setMetrics] = useState({ totalCompletedTasks: 0, totalCompletedStoryPoints: 0 });
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [filters, setFilters] = useState({
@@ -20,7 +26,8 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchAllData = async () => {
+      setLoading(true);
       try {
         const [usersRes, projectsRes, sprintsRes, teamsRes, listRes] = await Promise.all([
           authenticatedFetch(API_USERS),
@@ -50,12 +57,12 @@ const Dashboard = () => {
 
         const calculatedMetrics = calculateMetrics(itemsData);
         setMetrics(calculatedMetrics);
-  
-        // Initial fetch without filters
         fetchKPIs({});
       } catch (error) {
         console.error(error);
-        messageApi.error('Error al cargar la lista de usuarios');
+        messageApi.error('Error al cargar los datos');
+      } finally {
+        setLoading(false);
       }
     };
   
@@ -71,7 +78,6 @@ const Dashboard = () => {
   useEffect(() => {
     fetchKPIs(filters);
   }, [filters]);
-
   const fetchKPIs = async (values) => {
     setLoading(true);
     const queryParams = new URLSearchParams();
@@ -121,6 +127,19 @@ const Dashboard = () => {
     { key: 'PRODUCTIVITY', title: 'Productivity', color: '#7ed957' },
   ];
 
+  const calculateMetrics = (todoItems) => {
+    const completedTasks = todoItems.filter(item => item.done && !item.deleted);
+    const completedStoryPoints = completedTasks.reduce(
+      (sum, item) => sum + (item.storyPoints || 0),
+      0
+    );
+  
+    return {
+      totalCompletedTasks: completedTasks.length,
+      totalCompletedStoryPoints: completedStoryPoints
+    };
+  };
+  
   return (
     <div style={{ padding: '40px', background: '#1d1d1d', minHeight: '100vh', color: 'white' }}>
       {contextHolder}
@@ -131,7 +150,7 @@ const Dashboard = () => {
           <Select
             showSearch
             className='white-select'
-            placeholder="Selecciona un usuario"
+            placeholder="Select a user"
             style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             onChange={(value) => handleFilterChange('userId', value)}
@@ -199,6 +218,9 @@ const Dashboard = () => {
             }))}
           />
         </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" icon={<FilterOutlined />} loading={loading}/>
+        </Form.Item>
       </Form>
       
       <Row gutter={24}>
@@ -227,13 +249,13 @@ const Dashboard = () => {
         <Col span={12}>
           <Card className='card-dashboard'>
             <h3 style={{ color: 'white', textAlign: 'center' }}>Tasks Completed</h3>
-            {/* Number task completed header */}
+            <h1>{metrics.totalCompletedTasks}</h1>
           </Card>
         </Col>
         <Col span={12}>
           <Card className='card-dashboard'>
             <h3 style={{ color: 'white', textAlign: 'center' }}>Story Points Completed</h3>
-            {/* Number story point completed header */}
+            <h1>{metrics.totalCompletedStoryPoints}</h1>
           </Card>
         </Col>
       </Row>
