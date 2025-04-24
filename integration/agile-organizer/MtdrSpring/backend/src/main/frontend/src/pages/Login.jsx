@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Typography, Checkbox, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import API_LOGIN from '../API';
+import { API_LOGIN } from '../API'; // Corrected import
 
 const { Title, Text } = Typography;
 
@@ -19,7 +19,7 @@ const Login = ({ onLogin }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: values.username,
+          phoneNumber: values.username,
           password: values.password
         }),
       });
@@ -33,7 +33,7 @@ const Login = ({ onLogin }) => {
       const data = await response.json();
       
       if (data.token) {
-        onLogin(data.token);
+        onLogin(data.token); // This already stores the token in localStorage in App.jsx
         navigate('/dashboard');
         message.success('Inicio de sesión exitoso');
       } else {
@@ -122,10 +122,3 @@ const Login = ({ onLogin }) => {
 };
 
 export default Login;
-
-<style>{`
-  ::placeholder {
-    color: #ffffff; /* Color blanco para el placeholder */
-    opacity: 1; /* Asegura que el color se aplique completamente */
-  }
-`}</style>
