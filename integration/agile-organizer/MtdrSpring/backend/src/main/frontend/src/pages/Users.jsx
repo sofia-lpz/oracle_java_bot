@@ -4,6 +4,8 @@ import { Table, Button, Input } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { API_USERS } from '../API';
 
+import {  authenticatedFetch} from '../utils/authUtils';
+
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -14,7 +16,7 @@ const Users = () => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch(API_USERS);
+        const response = await authenticatedFetch(API_USERS);
 
         if (!response.ok) {
           throw new Error(`Error del servidor: ${response.status}`);

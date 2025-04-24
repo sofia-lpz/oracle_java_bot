@@ -106,10 +106,10 @@ const SideBar = () => {
           theme="dark"
           className="sidebar-menu"
         >
-          <Menu.Item key="/home">
-            <Link to="/home">
+          <Menu.Item key="/dashboard">
+            <Link to="/dashboard">
               <HomeOutlined />
-              <span>Home</span>
+              <span>Dashboard</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="/chatbot">
