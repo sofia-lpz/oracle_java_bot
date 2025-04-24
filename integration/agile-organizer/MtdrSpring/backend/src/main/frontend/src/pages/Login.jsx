@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Typography, Checkbox, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import API_LOGIN from '../API_LOGIN';
+import API_LOGIN from '../API';
 
 const { Title, Text } = Typography;
 

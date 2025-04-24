@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import { Card, Row, Col, Statistic, InputNumber, Button, Form, message, Progress } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Row, Col, Button, Form, message, Progress, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { API_KPI } from '../API';
+import { API_KPI, API_USERS } from '../API';
 import '../App.css';
 
 const Dashboard = () => {
   const [form] = Form.useForm();
   const [kpis, setKpis] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(API_USERS);
+        if (!response.ok) throw new Error('No se pudieron cargar los usuarios');
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error(error);
+        messageApi.error('Error al cargar la lista de usuarios');
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const fetchKPIs = async (values) => {
     setLoading(true);
@@ -31,21 +47,18 @@ const Dashboard = () => {
     }
   };
 
-  // Agrupa y suma por tipo
   const getKpiAggregates = () => {
     const aggregates = {
       VISIBILITY: { sum: 0, total: 0 },
       ACCOUNTABILITY: { sum: 0, total: 0 },
       PRODUCTIVITY: { sum: 0, total: 0 },
     };
-
     kpis.forEach((kpi) => {
       if (aggregates[kpi.type]) {
         aggregates[kpi.type].sum += kpi.sum || 0;
         aggregates[kpi.type].total += kpi.total || 0;
       }
     });
-
     return aggregates;
   };
 
@@ -63,8 +76,20 @@ const Dashboard = () => {
       <h1 style={{ color: 'white', marginBottom: '30px' }}>Dashboard</h1>
 
       <Form layout="inline" form={form} onFinish={fetchKPIs} style={{ marginBottom: '40px' }}>
-        <Form.Item name="userId" label="User ID">
-          <InputNumber min={1} placeholder="Requerido" />
+        <Form.Item name="userId" label="Usuario">
+          <Select
+            showSearch
+            placeholder="Selecciona un usuario"
+            style={{ width: 200 }}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={users.map(user => ({
+              label: user.name,
+              value: user.id
+            }))}
+          />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" icon={<SearchOutlined />} loading={loading}>
@@ -80,8 +105,8 @@ const Dashboard = () => {
 
           return (
             <Col span={8} key={key}>
-              <Card style={{ background: '#272727', marginBottom: 24, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-              <h3 style={{ color: 'white' }}>{title}</h3>
+              <Card style={{ background: '#272727', marginBottom: 24 }}>
+                <h3 style={{ color: 'white', textAlign: 'center' }}>{title}</h3>
                 <Progress
                   percent={percent}
                   strokeColor={color}
