@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Form, message, Progress, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { API_KPI, API_USERS } from '../API';
+
+import {  authenticatedFetch} from '../utils/authUtils';
+
 import '../App.css';
 
 const Dashboard = () => {
@@ -14,7 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(API_USERS);
+        const response = await authenticatedFetch(API_USERS);
         if (!response.ok) throw new Error('No se pudieron cargar los usuarios');
         const data = await response.json();
         setUsers(data);
@@ -35,7 +38,7 @@ const Dashboard = () => {
     if (values.sprintId) queryParams.append('sprintId', values.sprintId);
 
     try {
-      const response = await fetch(`${API_KPI}?${queryParams.toString()}`);
+      const response = await authenticatedFetch(`${API_KPI}?${queryParams.toString()}`);
       if (!response.ok) throw new Error('Error al obtener los KPIs');
       const data = await response.json();
       setKpis(data);
