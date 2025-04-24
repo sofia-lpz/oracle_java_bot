@@ -744,3 +744,23 @@ input::placeholder {
 .ant-card-bordered {
   border: none;
 }
+
+.white-select .ant-select-selection-placeholder {
+  color: white !important;
+}
+
+.white-select .ant-select-arrow {
+  color: white !important;
+}
+
+.white-select .ant-select-selection-item {
+  color: white;
+}
+
+.card-dashboard {
+  background-color: #272727;
+  margin-bottom: 24px;
+  display: 'flex';
+  justify-content: center;
+  align-items: center;
+}
