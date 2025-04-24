@@ -24,5 +24,5 @@ const API_SIGNUP = '/auth/signup';
 const API_KPI = '/kpi/summary'
 const API_USERS = '/users'
 
-export default API_LIST;
+
 export { API_LIST, API_STATES, API_KPI , API_LOGIN, API_LOGOUT, API_SIGNUP, API_USERS };
