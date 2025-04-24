@@ -76,11 +76,12 @@ const Dashboard = () => {
       <h1 style={{ color: 'white', marginBottom: '30px' }}>Dashboard</h1>
 
       <Form layout="inline" form={form} onFinish={fetchKPIs} style={{ marginBottom: '40px' }}>
-        <Form.Item name="userId" label="Usuario">
+        <Form.Item name="userId">
           <Select
             showSearch
+            className='white-select'
             placeholder="Selecciona un usuario"
-            style={{ width: 200 }}
+            style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
@@ -105,7 +106,7 @@ const Dashboard = () => {
 
           return (
             <Col span={8} key={key}>
-              <Card style={{ background: '#272727', marginBottom: 24 }}>
+              <Card style={{ background: '#272727', marginBottom: 24, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <h3 style={{ color: 'white', textAlign: 'center' }}>{title}</h3>
                 <Progress
                   percent={percent}
