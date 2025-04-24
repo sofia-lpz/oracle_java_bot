@@ -756,3 +756,11 @@ input::placeholder {
 .white-select .ant-select-selection-item {
   color: white;
 }
+
+.card-dashboard {
+  background-color: #272727;
+  margin-bottom: 24px;
+  display: 'flex';
+  justify-content: center;
+  align-items: center;
+}
