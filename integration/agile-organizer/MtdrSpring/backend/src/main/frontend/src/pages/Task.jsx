@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, message, Space, Input, Select, Spin, Flex } from 'antd';
-import { PlusOutlined, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, LoadingOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import KanbanColumn from '../components/KanbanColumn';
 import NewItem from '../NewItem';
 import '../App.css';
@@ -293,6 +293,53 @@ const Task = () => {
         .add-state-input::placeholder {
           color: #666 !important;
         }
+        .kanban {
+          flex-direction: column;
+          overflow-x: hidden;
+        }
+
+        .kanban-column {
+          width: 100%;
+          margin-bottom: 16px;
+        }
+
+        @media (min-width: 1440px) {
+          .kanban {
+            flex-direction: row;
+            overflow-x: auto;
+          }
+
+          .kanban-column {
+            width: 330px;
+            margin: 0;
+          }
+        }
+
+        @media (max-width: 1440px) {
+          .menu-bar {
+            flex-direction: column;
+            align-items: center;
+          }
+          .menu-bar .ant-btn {
+            width: 100%;
+            margin-bottom: 10px;
+          }
+        }
+
+        @media (max-width: 545px) {
+          .menu-bar {
+            flex-direction: column !important;
+            align-items: center !important;
+            overflow-x: hidden !important;
+          }
+          .menu-bar .ant-btn {
+            width: 100% !important;
+            margin-bottom: 10px !important;
+          }
+          .menu-bar .ant-btn > span:not(.ant-btn-icon) {
+            display: none !important;
+          }
+        }
       `}</style>
       <div ref={containerRef} style={{ 
         maxWidth: '1200px', 
@@ -312,7 +359,7 @@ const Task = () => {
             <Button type="primary" style={{ backgroundColor: '#c6624b', color: 'white' }} icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
               Add task
             </Button>
-            <Button type="default" style={{ backgroundColor: '#c6624b', color: 'white' }} onClick={() => setIsStateModalVisible(true)}>
+            <Button type="default" style={{ backgroundColor: '#c6624b', color: 'white' }} icon={<AppstoreAddOutlined />} onClick={() => setIsStateModalVisible(true)}>
               Add State
             </Button>
             <Button 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input, Button, List, Typography } from 'antd';
+import { Input, Button, List } from 'antd';
 import { EditFilled, LeftCircleFilled } from '@ant-design/icons';
 
 const ChatBot = () => {
@@ -12,16 +12,28 @@ const ChatBot = () => {
   const [inputValue, setInputValue] = useState('');
 
   // Maneja el envío del mensaje
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!inputValue.trim()) return;
 
-    // Agrega el mensaje del usuario al estado
-    const newMessages = [...messages, { from: 'user', text: inputValue }];
+    // const newMessages = [...messages, { from: 'user', text: inputValue }]; // Mantener todos los mensajes
+    // Solo mantener el último mensaje y su respuesta
+    const newMessages = [{ from: 'user', text: inputValue }];
 
-    // Simula una respuesta del bot (llamar backend aqui)
-    newMessages.push({ from: 'bot', text: 'respuesta automática.' });
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputValue),
+      });
 
-    // Actualiza los mensajes y limpia el campo de entrada
+      const data = await response.text();
+      newMessages.push({ from: 'bot', text: data });
+    } catch (error) {
+      newMessages.push({ from: 'bot', text: 'Error al comunicarse con el servicio.' });
+    }
+
     setMessages(newMessages);
     setInputValue('');
   };
@@ -81,3 +93,45 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
+
+<style>{`
+  .chatbot-container {
+    padding: 24px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .chatbot-list {
+    height: calc(100vh - 250px);
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .chatbot-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .chatbot-input {
+    width: 100% !important;
+  }
+
+  .chatbot-send-button {
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .chatbot-input-group {
+      flex-direction: row;
+    }
+
+    .chatbot-input {
+      width: 80% !important;
+    }
+
+    .chatbot-send-button {
+      width: 20%;
+    }
+  }
+`}</style>

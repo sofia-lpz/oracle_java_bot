@@ -26,9 +26,9 @@ html, body, #root {
   position: fixed;
   height: 100vh;
   z-index: 1;
-  width: 80px !important;
-  min-width: 80px !important;
-  max-width: 80px !important;
+  width: 250px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
@@ -700,6 +700,7 @@ h2 {
 .custom-task-card .ant-card-actions {
   background: #1d1d1d !important;
   border-top: 2px solid #272727;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .kanban-header {
@@ -737,6 +738,81 @@ input::placeholder {
   opacity: 0.2;
 }
 
+.user-list {
+  background-color: #1d1d1d;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.user-card {
+  background-color: #272727;
+  color: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-card h2 {
+  color: #c6624b;
+}
+
+.user-card p {
+  margin: 5px 0;
+}
+
+.ant-table {
+  background-color: #1d1d1d !important;
+  color: white !important;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #272727 !important;
+  color: white !important;
+}
+
+.ant-table-tbody > tr > td {
+  background-color: #1d1d1d;
+  color: white;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #222222 !important;
+}
+
+.ant-table-pagination {
+  background-color: #1d1d1d !important;
+  color: white !important;
+}
+
+.ant-input {
+  background-color: #272727 !important;
+  color: white !important;
+  border-color: #444 !important;
+}
+
+.ant-btn-primary {
+  background-color: #c6624b !important;
+  border-color: #c6624b !important;
+}
+
+.ant-btn-primary:hover {
+  background-color: #a84832;
+  border-color: #a84832;
+}
+
+.ant-table-thead {
+  background-color: #272727 !important;
+
+}
+
+@media (max-width: 767px) {
+  .ant-layout-sider {
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+  }
+}
 .ant-progress-text {
   color: #ffffff !important
 }
