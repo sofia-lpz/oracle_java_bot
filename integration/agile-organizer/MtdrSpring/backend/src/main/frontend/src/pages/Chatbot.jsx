@@ -15,9 +15,9 @@ const ChatBot = () => {
   const handleSend = async () => {
     if (!inputValue.trim()) return;
 
-    // const newMessages = [...messages, { from: 'user', text: inputValue }]; // Mantener todos los mensajes
+    const newMessages = [...messages, { from: 'user', text: inputValue }]; // Mantener todos los mensajes
     // Solo mantener el último mensaje y su respuesta
-    const newMessages = [{ from: 'user', text: inputValue }];
+    // const newMessages = [{ from: 'user', text: inputValue }];
 
     try {
       const response = await fetch('/api/chat', {
@@ -62,11 +62,11 @@ const ChatBot = () => {
           )
         }}
         className="chatbot-list"
-        renderItem={(item) => (
-          <List.Item className="chatbot-item">
-            <strong style={{ color: 'white' }}>
-              {item.from === 'user' ? 'Me' : 'Bot'}:
-            </strong> {item.text}
+        renderItem={(item, index) => (
+          <List.Item className={`chatbot-item ${index < messages.length - 2 ? 'old' : ''} ${item.from}`}>
+            <div className={`chatbot-bubble ${item.from}`}>
+              <strong>{item.from === 'user' ? 'Me' : 'Bot'}:</strong> {item.text}
+            </div>
           </List.Item>
         )}
       />
@@ -93,45 +93,3 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
-
-<style>{`
-  .chatbot-container {
-    padding: 24px;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .chatbot-list {
-    height: calc(100vh - 250px);
-    max-height: 400px;
-    overflow-y: auto;
-  }
-
-  .chatbot-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .chatbot-input {
-    width: 100% !important;
-  }
-
-  .chatbot-send-button {
-    width: 100%;
-  }
-
-  @media (min-width: 768px) {
-    .chatbot-input-group {
-      flex-direction: row;
-    }
-
-    .chatbot-input {
-      width: 80% !important;
-    }
-
-    .chatbot-send-button {
-      width: 20%;
-    }
-  }
-`}</style>
