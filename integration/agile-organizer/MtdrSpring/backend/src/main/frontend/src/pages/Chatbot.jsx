@@ -62,8 +62,8 @@ const ChatBot = () => {
           )
         }}
         className="chatbot-list"
-        renderItem={(item) => (
-          <List.Item className={`chatbot-item ${item.from}`}>
+        renderItem={(item, index) => (
+          <List.Item className={`chatbot-item ${index < messages.length - 2 ? 'old' : ''} ${item.from}`}>
             <div className={`chatbot-bubble ${item.from}`}>
               <strong>{item.from === 'user' ? 'Me' : 'Bot'}:</strong> {item.text}
             </div>
