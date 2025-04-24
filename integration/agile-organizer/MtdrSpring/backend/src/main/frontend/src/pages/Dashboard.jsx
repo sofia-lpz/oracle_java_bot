@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Form, message, Progress, Select } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
-import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS } from '../API';
+import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS, API_LIST } from '../API';
 
 import {  authenticatedFetch } from '../utils/authUtils';
 
@@ -14,6 +14,8 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [sprints, setSprints] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [items, setItems] = useState([]);
+  const [metrics, setMetrics] = useState({ totalCompletedTasks: 0, totalCompletedStoryPoints: 0 });
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -21,30 +23,36 @@ const Dashboard = () => {
     const fetchAllData = async () => {
       setLoading(true);
       try {
-        const [usersRes, projectsRes, sprintsRes, teamsRes] = await Promise.all([
+        const [usersRes, projectsRes, sprintsRes, teamsRes, listRes] = await Promise.all([
           authenticatedFetch(API_USERS),
           authenticatedFetch(API_PROJECTS),
           authenticatedFetch(API_SPRINTS),
           authenticatedFetch(API_TEAMS),
+          authenticatedFetch(API_LIST),
+
         ]);
   
-        if (!usersRes.ok || !projectsRes.ok || !sprintsRes.ok || !teamsRes.ok) {
+        if (!usersRes.ok || !projectsRes.ok || !sprintsRes.ok || !teamsRes.ok || !listRes.ok) {
           throw new Error('Error al cargar uno o más recursos');
         }
   
-        const [usersData, projectsData, sprintsData, teamsData] = await Promise.all([
+        const [usersData, projectsData, sprintsData, teamsData, itemsData] = await Promise.all([
           usersRes.json(),
           projectsRes.json(),
           sprintsRes.json(),
           teamsRes.json(),
+          listRes.json(),
         ]);
   
         setUsers(usersData);
         setProjects(projectsData);
         setSprints(sprintsData);
         setTeams(teamsData);
+        setItems(itemsData);
+
+        const calculatedMetrics = calculateMetrics(itemsData);
+        setMetrics(calculatedMetrics);
   
-        // 👉 Estimación global sin filtros
         fetchKPIs({});
       } catch (error) {
         console.error(error);
@@ -56,6 +64,11 @@ const Dashboard = () => {
   
     fetchAllData();
   }, []);  
+
+    useEffect(() => {
+      const calculatedMetrics = calculateMetrics(items);
+      setMetrics(calculatedMetrics);
+    }, [items]);  // Este useEffect se ejecuta cada vez que `items` cambia
 
   const fetchKPIs = async (values) => {
     setLoading(true);
@@ -101,6 +114,19 @@ const Dashboard = () => {
     { key: 'PRODUCTIVITY', title: 'Productivity', color: '#7ed957' },
   ];
 
+  const calculateMetrics = (todoItems) => {
+    const completedTasks = todoItems.filter(item => item.done && !item.deleted);
+    const completedStoryPoints = completedTasks.reduce(
+      (sum, item) => sum + (item.storyPoints || 0),
+      0
+    );
+  
+    return {
+      totalCompletedTasks: completedTasks.length,
+      totalCompletedStoryPoints: completedStoryPoints
+    };
+  };
+  
   return (
     <div style={{ padding: '40px', background: '#1d1d1d', minHeight: '100vh', color: 'white' }}>
       {contextHolder}
@@ -202,13 +228,13 @@ const Dashboard = () => {
         <Col span={12}>
           <Card className='card-dashboard'>
             <h3 style={{ color: 'white', textAlign: 'center' }}>Tasks Completed</h3>
-            {/* Number task completed header */}
+            <h1>{metrics.totalCompletedTasks}</h1>
           </Card>
         </Col>
         <Col span={12}>
           <Card className='card-dashboard'>
             <h3 style={{ color: 'white', textAlign: 'center' }}>Story Points Completed</h3>
-            {/* Number story point completed header */}
+            <h1>{metrics.totalCompletedStoryPoints}</h1>
           </Card>
         </Col>
       </Row>
