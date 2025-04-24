@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from 'antd';
 import SideBar from './components/SideBar';
@@ -8,26 +8,45 @@ import Users from './pages/Users';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import { isAuthenticated } from './utils/authUtils';
 import './App.css';
 
 const { Content } = Layout;
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Check if user is authenticated on initial load
+  const [isAuth, setIsAuth] = useState(isAuthenticated());
+
+  // Effect to check authentication status changes
+  useEffect(() => {
+    // Check if the token exists in localStorage
+    setIsAuth(isAuthenticated());
+    
+    // Listen for storage events (if user logs out in another tab)
+    const handleStorageChange = () => {
+      setIsAuth(isAuthenticated());
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const handleLogin = (token) => {
     localStorage.setItem('token', token);
-    setIsAuthenticated(true);
+    setIsAuth(true);
   };
 
   const PrivateRoute = ({ children }) => {
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    return isAuth ? children : <Navigate to="/login" />;
   };
 
   return (
     <Router future={{ v7_startTransition: true }}>
       <Layout style={{ minHeight: '100vh', background: '#1d1d1d' }}>
-        {isAuthenticated && <SideBar />}
+        {isAuth && <SideBar />}
         <Layout>
           <Content style={{ 
             margin: '24px 16px', 
@@ -37,7 +56,9 @@ function App() {
             overflow: 'auto'
           }}>
             <Routes>
-              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/login" element={
+                isAuth ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />
+              } />
               <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/task" element={<PrivateRoute><Task /></PrivateRoute>} />

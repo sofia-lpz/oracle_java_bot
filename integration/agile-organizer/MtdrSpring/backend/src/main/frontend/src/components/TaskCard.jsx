@@ -55,7 +55,7 @@ const TaskCard = ({
     borderRadius: '8px',
     marginTop: '4px',
     marginBottom: '4px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    // boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', //Shadow area drag and drop
     background: '#1d1d1d',
     border: '2px solid #1d1d1d',
     userSelect: 'none',
