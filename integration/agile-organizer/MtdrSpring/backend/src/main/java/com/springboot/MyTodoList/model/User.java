@@ -1,15 +1,14 @@
 package com.springboot.MyTodoList.model;
 
 import jakarta.persistence.*;
-import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Collection;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "USERS")
@@ -18,6 +17,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int ID;
 
+    @JsonIgnore
     @Column(name = "PASSWORD")
     String password;
 
@@ -84,35 +84,49 @@ public class User implements UserDetails {
         return ID;
     }
 
-    public void setID(int ID) {
+    public User setID(int ID) {
         this.ID = ID;
+        return this;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public User setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public User setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public User setRole(String role) {
+        this.role = role;
+        return this;
     }
 
     public Team getTeam() {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public User setTeam(Team team) {
         this.team = team;
+        return this;
     }
 }
