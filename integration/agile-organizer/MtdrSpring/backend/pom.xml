@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.4</version>
+		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.springboot</groupId>
@@ -14,7 +14,7 @@
 	<name>MyTodoList</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>23</java.version>
 		<version.lib.ojdbc>21.1.0.0</version.lib.ojdbc>
 		<frontend-src-dir>${project.basedir}/src/main/frontend</frontend-src-dir>
 		<node.version>v16.13.2</node.version>
@@ -45,10 +45,11 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.6.1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>			
-		</dependency>
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.14</version>			
+</dependency>
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc11-production</artifactId>
@@ -60,10 +61,6 @@
 				</exclusion>
 			</exclusions>
 			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -88,7 +85,52 @@
         <artifactId>mockito-core</artifactId>
         <scope>test</scope>
     </dependency>
-			<!-- Add dependencie above -->
+			<!-- Add dependencie above, spring 3 dependencies below -->
+
+			<!-- Legacy JAXB API for javax namespace support -->
+			<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>9.1.0</version>
+    <scope>provided</scope>
+</dependency>
+
+<dependency>
+    <groupId>com.fasterxml.jackson.datatype</groupId>
+    <artifactId>jackson-datatype-jsr310</artifactId>
+</dependency>
+
+<!-- JAXB API -->
+<dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>4.0.1</version>
+</dependency>
+
+<!-- JAXB Runtime implementation -->
+<dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>4.0.3</version>
+</dependency>
+
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.1</version>
+</dependency>
+<dependency>
+    <groupId>com.sun.xml.bind</groupId>
+    <artifactId>jaxb-core</artifactId>
+    <version>2.3.0.1</version>
+</dependency>
+<dependency>
+    <groupId>com.sun.xml.bind</groupId>
+    <artifactId>jaxb-impl</artifactId>
+    <version>2.3.1</version>
+</dependency>
+
+
 	</dependencies>
 	<build>
 		<plugins>

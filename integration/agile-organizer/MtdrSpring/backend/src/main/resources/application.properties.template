@@ -1,14 +1,18 @@
 spring.application.name=MicroserviceDemo
-server.port=8080
+server.port=9898
 spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 spring.datasource.url=
-spring.datasource.username=
 spring.datasource.password=
-spring.jpa.database-platform=org.hibernate.dialect.Oracle12cDialect
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+
+spring.jpa.properties.hibernate.query.in_clause_parameter_padding=true
+spring.jpa.properties.hibernate.query.default_join_style=ANSI
+
 
 telegram.bot.token=
 telegram.bot.name=
 
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
+
+openai.api.key=
+openai.model=gpt-3.5-turbo
+openai.api.url=https://api.openai.com/v1/chat/completions

@@ -1,8 +1,8 @@
 package com.springboot.MyTodoList.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.OffsetDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.HashSet;
