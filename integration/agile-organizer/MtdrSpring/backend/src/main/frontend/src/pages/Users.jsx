@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../App.css';
 import { Table, Button, Input } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import API_USERS from '../API_USERS';
+import { API_USERS } from '../API';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
