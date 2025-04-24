@@ -98,3 +98,32 @@ const Users = () => {
 };
 
 export default Users;
+
+<style>{`
+  .users-container {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .users-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .users-header input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  @media (min-width: 768px) {
+    .users-header {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .users-header input {
+      width: auto;
+      margin-bottom: 0;
+    }
+  }
+`}</style>

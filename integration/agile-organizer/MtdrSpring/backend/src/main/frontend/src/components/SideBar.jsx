@@ -1,44 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, Avatar } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   HomeOutlined,
   MessageOutlined,
   ProjectOutlined,
-  UserOutlined
+  UserOutlined,
+  MenuOutlined
 } from '@ant-design/icons';
 
 const SideBar = () => {
   const location = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 767);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsCollapsed(window.innerWidth <= 767);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
       <style>{`
-        .sidebar-menu .ant-menu-item-selected {
-          background-color: #272727 !important;
-          border-radius: 6px !important;
-          margin: 4px 8px !important;
-          width: calc(100% - 16px) !important;
-          position: relative !important;
+        .sidebar {
+          transition: width 0.3s ease;
+          width: ${isCollapsed ? '100px' : '250px'};
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
-        .sidebar-menu .ant-menu-item-selected::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0;
-          bottom: 0;
-          width: 3px;
-          background-color: #c6624b;
-          border-top-left-radius: 6px;
-          border-bottom-left-radius: 6px;
+
+        .sidebar img {
+          width: ${isCollapsed ? '40px' : '100px'};
+          height: ${isCollapsed ? '40px' : '100px'};
+        }
+
+        .sidebar span {
+          display: ${isCollapsed ? 'inline' : 'inline'};
+        }
+
+        .sidebar-menu .ant-menu-item {
+          justify-content: center;
         }
       `}</style>
-      <div style={{ 
+      <div className="sidebar" style={{ 
         backgroundColor: '#1a1a1a', 
         height: '100vh',
-        width: '250px',
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
         padding: '16px'
       }}>
         {/* Header */}
@@ -53,14 +66,16 @@ const SideBar = () => {
             src="/oracle_O.png"
             alt="Oracle Logo"
             style={{
-              width: '100px',
-              height: '100px',
+              width: isCollapsed ? '40px' : '100px',
+              height: isCollapsed ? '40px' : '100px',
               marginBottom: '12px'
             }}
           />
-          <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>
-            My To-Do
-          </span>
+          {!isCollapsed && (
+            <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>
+              My To-Do
+            </span>
+          )}
           <span style={{ 
             color: '#666', 
             fontSize: '12px' 
@@ -70,51 +85,42 @@ const SideBar = () => {
         </div>
 
         {/* Main Navigation */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ 
-            color: '#666',
-            fontSize: '12px',
-            padding: '8px 16px',
-            fontWeight: 'bold'
-          }}>
-            NAVIGATION
-          </div>
-          <Menu
-            mode="inline"
-            selectedKeys={[location.pathname]}
-            style={{ 
-              backgroundColor: 'transparent',
-              border: 'none'
-            }}
-            theme="dark"
-            className="sidebar-menu"
-          >
-            <Menu.Item key="/home">
-              <Link to="/home">
-                <HomeOutlined />
-                <span>Home</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="/chatbot">
-              <Link to="/chatbot">
-                <MessageOutlined />
-                <span>Chatbot</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="/task">
-              <Link to="/task">
-                <ProjectOutlined />
-                <span>Kanban</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="/users">
-              <Link to="/users">
-                <UserOutlined />
-                <span>Users</span>
-              </Link>
-            </Menu.Item>
-          </Menu>
-        </div>
+        <Menu
+          mode="inline"
+          selectedKeys={[location.pathname]}
+          style={{ 
+            backgroundColor: 'transparent',
+            border: 'none',
+            width: '100%'
+          }}
+          theme="dark"
+          className="sidebar-menu"
+        >
+          <Menu.Item key="/home">
+            <Link to="/home">
+              <HomeOutlined />
+              <span>Home</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/chatbot">
+            <Link to="/chatbot">
+              <MessageOutlined />
+              <span>Chatbot</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/task">
+            <Link to="/task">
+              <ProjectOutlined />
+              <span>Kanban</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/users">
+            <Link to="/users">
+              <UserOutlined />
+              <span>Users</span>
+            </Link>
+          </Menu.Item>
+        </Menu>
 
         {/* User Profile */}
         <div style={{ 
@@ -123,13 +129,17 @@ const SideBar = () => {
           borderTop: '1px solid #333',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px'
+          gap: '12px',
+          width: '100%',
+          justifyContent: 'center'
         }}>
           <Avatar size={32} icon={<UserOutlined />} />
-          <div style={{ flex: 1 }}>
-            <div style={{ color: 'white', fontSize: '14px' }}>Admin User</div>
-            <div style={{ color: '#666', fontSize: '12px' }}>admin@agileorganizer.com</div>
-          </div>
+          {!isCollapsed && (
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <div style={{ color: 'white', fontSize: '14px' }}>Admin User</div>
+              <div style={{ color: '#666', fontSize: '12px' }}>admin@agileorganizer.com</div>
+            </div>
+          )}
         </div>
       </div>
     </>

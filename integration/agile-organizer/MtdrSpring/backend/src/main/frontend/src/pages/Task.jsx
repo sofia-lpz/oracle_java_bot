@@ -294,6 +294,27 @@ const Task = () => {
         .add-state-input::placeholder {
           color: #666 !important;
         }
+        .kanban {
+          flex-direction: column;
+          overflow-x: hidden;
+        }
+
+        .kanban-column {
+          width: 100%;
+          margin-bottom: 16px;
+        }
+
+        @media (min-width: 768px) {
+          .kanban {
+            flex-direction: row;
+            overflow-x: auto;
+          }
+
+          .kanban-column {
+            width: 330px;
+            margin: 0;
+          }
+        }
       `}</style>
       <div ref={containerRef} style={{ 
         maxWidth: '1200px', 

@@ -93,3 +93,45 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
+
+<style>{`
+  .chatbot-container {
+    padding: 24px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .chatbot-list {
+    height: calc(100vh - 250px);
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .chatbot-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .chatbot-input {
+    width: 100% !important;
+  }
+
+  .chatbot-send-button {
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .chatbot-input-group {
+      flex-direction: row;
+    }
+
+    .chatbot-input {
+      width: 80% !important;
+    }
+
+    .chatbot-send-button {
+      width: 20%;
+    }
+  }
+`}</style>
