@@ -65,9 +65,9 @@ const Dashboard = () => {
   const aggregates = getKpiAggregates();
 
   const kpiTypes = [
-    { key: 'VISIBILITY', title: 'Visibilidad', color: '#49c2f2' },
-    { key: 'ACCOUNTABILITY', title: 'Responsabilidad', color: '#f5a623' },
-    { key: 'PRODUCTIVITY', title: 'Productividad', color: '#7ed957' },
+    { key: 'VISIBILITY', title: 'Visibility', color: '#49c2f2' },
+    { key: 'ACCOUNTABILITY', title: 'Accountability', color: '#f5a623' },
+    { key: 'PRODUCTIVITY', title: 'Productivity', color: '#7ed957' },
   ];
 
   return (
@@ -76,11 +76,12 @@ const Dashboard = () => {
       <h1 style={{ color: 'white', marginBottom: '30px' }}>Dashboard</h1>
 
       <Form layout="inline" form={form} onFinish={fetchKPIs} style={{ marginBottom: '40px' }}>
-        <Form.Item name="userId" label="Usuario">
+        <Form.Item name="userId">
           <Select
             showSearch
+            className='white-select'
             placeholder="Selecciona un usuario"
-            style={{ width: 200 }}
+            style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
@@ -105,20 +106,34 @@ const Dashboard = () => {
 
           return (
             <Col span={8} key={key}>
-              <Card style={{ background: '#272727', marginBottom: 24 }}>
+              <Card className='card-dashboard'>
                 <h3 style={{ color: 'white', textAlign: 'center' }}>{title}</h3>
-                <Progress
-                  percent={percent}
-                  strokeColor={color}
-                  trailColor="#333"
-                  status="active"
-                  type="circle"
-                  style={{ marginTop: '20px' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
+                  <Progress
+                    percent={percent}
+                    strokeColor={color}
+                    trailColor="#333"
+                    status="active"
+                    type="circle"
+                  />
+                </div>
               </Card>
             </Col>
           );
         })}
+
+        <Col span={12}>
+          <Card className='card-dashboard'>
+            <h3 style={{ color: 'white', textAlign: 'center' }}>Tasks Completed</h3>
+            {/* Number task completed header */}
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card className='card-dashboard'>
+            <h3 style={{ color: 'white', textAlign: 'center' }}>Story Points Completed</h3>
+            {/* Number story point completed header */}
+          </Card>
+        </Col>
       </Row>
     </div>
   );
