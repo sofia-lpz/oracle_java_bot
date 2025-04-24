@@ -1,8 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Typography, Checkbox, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { GoogleOutlined, AppleOutlined, FacebookOutlined } from '@ant-design/icons';
-import API_LOGIN from '../API_LOGIN';
+import API_LOGIN from '../API';
 
 const { Title, Text } = Typography;
 
@@ -35,7 +34,7 @@ const Login = ({ onLogin }) => {
       
       if (data.token) {
         onLogin(data.token);
-        navigate('/');
+        navigate('/dashboard');
         message.success('Inicio de sesión exitoso');
       } else {
         throw new Error('No se recibió token en la respuesta');
@@ -77,22 +76,6 @@ const Login = ({ onLogin }) => {
 
       <div className="login-right-panel">
         <Title level={2} className="login-title">Sign in to Oracle</Title>
-        
-        <div className="social-login">
-          <Button icon={<GoogleOutlined />} className="social-btn google">
-            Google
-          </Button>
-          <Button icon={<AppleOutlined />} className="social-btn apple">
-            Apple
-          </Button>
-          <Button icon={<FacebookOutlined />} className="social-btn facebook">
-            Facebook
-          </Button>
-        </div>
-
-        <div className="divider">
-          <span>or use your Oracle account</span>
-        </div>
 
         <Form
           form={form}
@@ -131,7 +114,7 @@ const Login = ({ onLogin }) => {
         </Form>
 
         <div className="login-footer">
-          ©2024 Oracle Corporation. All rights reserved.
+          ©2025 Oracle Corporation. All rights reserved.
         </div>
       </div>
     </div>
