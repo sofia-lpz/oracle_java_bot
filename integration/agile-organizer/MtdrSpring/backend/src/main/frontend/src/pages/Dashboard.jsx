@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Button, Form, message, Progress, Select } from 'antd';
+import { Card, Row, Col, Button, Form, message, Progress, Select, Table } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS, API_LIST } from '../API';
 
@@ -69,15 +69,14 @@ const Dashboard = () => {
     fetchAllData();
   }, []);  
 
-  useEffect(() => {
-    const calculatedMetrics = calculateMetrics(items);
-    setMetrics(calculatedMetrics);
-  }, [items]);
-
   // Effect to automatically fetch KPIs when filters change
-  useEffect(() => {
-    fetchKPIs(filters);
-  }, [filters]);
+useEffect(() => {
+  fetchKPIs(filters);
+  // Don't fetch items here, just recalculate metrics
+  const calculatedMetrics = calculateMetrics(items, filters);
+  setMetrics(calculatedMetrics);
+}, [filters, items]);
+
   const fetchKPIs = async (values) => {
     setLoading(true);
     const queryParams = new URLSearchParams();
@@ -127,17 +126,99 @@ const Dashboard = () => {
     { key: 'PRODUCTIVITY', title: 'Productivity', color: '#7ed957' },
   ];
 
-  const calculateMetrics = (todoItems) => {
-    const completedTasks = todoItems.filter(item => item.done && !item.deleted);
+  const calculateMetrics = (todoItems, currentFilters = {}) => {
+    // First apply filters
+    let filteredItems = [...todoItems];
+  
+    console.log('Filter values:', currentFilters);
+    console.log('Sample item before filtering:', todoItems[0]);
+    console.log('Filtered items count:', filteredItems.length);
+    
+    if (currentFilters.userId) {
+      const userId = Number(currentFilters.userId);
+      filteredItems = filteredItems.filter(item => item.user && Number(item.user.id) === userId);
+    }
+    if (currentFilters.projectId) {
+      const projectId = Number(currentFilters.projectId);
+      filteredItems = filteredItems.filter(item => item.project && Number(item.project.id) === projectId);
+    }
+    if (currentFilters.sprintId) {
+      const sprintId = Number(currentFilters.sprintId);
+      filteredItems = filteredItems.filter(item => item.sprint && Number(item.sprint.id) === sprintId);
+    }
+    if (currentFilters.teamId) {
+      const teamId = Number(currentFilters.teamId);
+      filteredItems = filteredItems.filter(item => item.team && Number(item.team.id) === teamId);
+    }
+    
+    console.log('Filtered items after applying filters:', filteredItems.length);
+   
+    
+    // Then calculate metrics on filtered items
+    const completedTasks = filteredItems.filter(item => item.done && !item.deleted);
     const completedStoryPoints = completedTasks.reduce(
       (sum, item) => sum + (item.storyPoints || 0),
+      0
+    );
+    const completedHours = completedTasks.reduce(
+      (sum, item) => sum + (item.real_hours || 0),
       0
     );
   
     return {
       totalCompletedTasks: completedTasks.length,
-      totalCompletedStoryPoints: completedStoryPoints
+      totalCompletedStoryPoints: completedStoryPoints,
+      totalCompletedHours: completedHours
     };
+  };
+  
+  const calculateUserMetrics = () => {
+    // Group completed tasks by user
+    const userMetrics = {};
+    
+    // Initialize metrics for each user
+    users.forEach(user => {
+      userMetrics[user.id] = {
+        userId: user.id,
+        userName: user.name,
+        tasksCompleted: 0,
+        storyPointsCompleted: 0,
+        hoursCompleted: 0
+      };
+    });
+    
+    // Apply current filters
+    let filteredItems = [...items];
+    
+    if (filters.projectId) {
+      const projectId = Number(filters.projectId);
+      filteredItems = filteredItems.filter(item => item.project && Number(item.project.id) === projectId);
+    }
+    if (filters.sprintId) {
+      const sprintId = Number(filters.sprintId);
+      filteredItems = filteredItems.filter(item => item.sprint && Number(item.sprint.id) === sprintId);
+    }
+    if (filters.teamId) {
+      const teamId = Number(filters.teamId);
+      filteredItems = filteredItems.filter(item => item.team && Number(item.team.id) === teamId);
+    }
+    
+    // Calculate metrics from completed tasks
+    filteredItems
+      .filter(item => item.done && !item.deleted && item.user)
+      .forEach(task => {
+        const userId = task.user.id;
+        if (userMetrics[userId]) {
+          userMetrics[userId].tasksCompleted++;
+          userMetrics[userId].storyPointsCompleted += (task.storyPoints || 0);
+          userMetrics[userId].hoursCompleted += (task.real_hours || 0);
+        }
+      });
+    
+    // Convert to array for table display and filter out users with no completed tasks
+    return Object.values(userMetrics).filter(metrics => 
+      metrics.tasksCompleted > 0 || metrics.storyPointsCompleted > 0 || metrics.hoursCompleted > 0
+    );
   };
   
   return (
@@ -150,7 +231,7 @@ const Dashboard = () => {
           <Select
             showSearch
             className='white-select'
-            placeholder="Select a user"
+            placeholder="All user"
             style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             onChange={(value) => handleFilterChange('userId', value)}
@@ -168,7 +249,7 @@ const Dashboard = () => {
           <Select
             showSearch
             className='white-select'
-            placeholder="Select a project"
+            placeholder="All project"
             style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             onChange={(value) => handleFilterChange('projectId', value)}
@@ -186,7 +267,7 @@ const Dashboard = () => {
           <Select
             showSearch
             className='white-select'
-            placeholder="Select a sprint"
+            placeholder="All sprint"
             style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             onChange={(value) => handleFilterChange('sprintId', value)}
@@ -204,7 +285,7 @@ const Dashboard = () => {
           <Select
             showSearch
             className='white-select'
-            placeholder="Select a team"
+            placeholder="All team"
             style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             onChange={(value) => handleFilterChange('teamId', value)}
@@ -258,7 +339,46 @@ const Dashboard = () => {
             <h1>{metrics.totalCompletedStoryPoints}</h1>
           </Card>
         </Col>
+        <Col span={12}>
+          <Card className='card-dashboard'>
+            <h3 style={{ color: 'white', textAlign: 'center' }}>Hours Completed</h3>
+            <h1>{metrics.totalCompletedHours || 0}</h1> 
+          </Card>
+        </Col>
       </Row>
+      
+      <h2 style={{ color: 'white', margin: '40px 0 20px' }}>User Performance Metrics</h2>
+      <h2 style={{ color: 'white', margin: '40px 0 20px' }}>User Performance Metrics</h2>
+      <Table
+        dataSource={calculateUserMetrics()}
+        columns={[
+          {
+            title: 'User',
+            dataIndex: 'userName',
+            key: 'userName',
+          },
+          {
+            title: 'Tasks Completed',
+            dataIndex: 'tasksCompleted',
+            key: 'tasksCompleted',
+          },
+          {
+            title: 'Story Points Completed',
+            dataIndex: 'storyPointsCompleted',
+            key: 'storyPointsCompleted',
+          },
+          {
+            title: 'Hours Completed',
+            dataIndex: 'hoursCompleted',
+            key: 'hoursCompleted',
+          },
+        ]}
+        pagination={false}
+        rowKey="userId"
+        loading={loading}
+        style={{ background: '#272727', borderRadius: '8px' }}
+        className="custom-dark-table"
+      />
     </div>
   );
 };

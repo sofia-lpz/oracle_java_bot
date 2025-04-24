@@ -876,3 +876,36 @@ input::placeholder {
 /*  Black #1d1d1d
     Gray #272727
     Oracle #c6624b */
+
+
+
+  /* Estilos para la lorena tabla */
+  /* Add these styles at the end of your App.css file */
+
+.custom-dark-table {
+  color: white;
+}
+
+.custom-dark-table .ant-table {
+  background: #272727;
+  color: white;
+}
+
+.custom-dark-table .ant-table-thead > tr > th {
+  background: #333;
+  color: white;
+  border-bottom: 1px solid #444;
+}
+
+.custom-dark-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #444;
+  color: white;
+}
+
+.custom-dark-table .ant-table-tbody > tr:hover > td {
+  background: #3a3a3a;
+}
+
+.custom-dark-table .ant-empty-description {
+  color: #999;
+}
