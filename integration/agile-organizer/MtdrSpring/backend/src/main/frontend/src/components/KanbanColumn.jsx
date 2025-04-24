@@ -45,8 +45,9 @@ const KanbanColumn = ({ state, tasks, getStateColor, formatDate, deleteTask }) =
               dueDate={formatDate(task.dueDate)}
               storyPoints={task.storyPoints}
               avatarUrl={task.assignee?.avatarUrl}
-              estimatedHours={task.estimatedHours}
-              realHours={task.realHours}
+              username={task.user.name}
+              estimatedHours={task.estimated_hours}
+              realHours={task.real_hours}
               onDelete={() => deleteTask(task.id)}
             />
           ))}

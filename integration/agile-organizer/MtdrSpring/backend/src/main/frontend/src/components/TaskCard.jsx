@@ -17,7 +17,8 @@ const TaskCard = ({
   title, 
   description, 
   dueDate, 
-  avatarUrl, 
+  avatarUrl,
+  username,
   storyPoints, 
   estimatedHours, 
   realHours, 
@@ -78,24 +79,6 @@ const TaskCard = ({
     >
       <Button
         type="text"
-        icon={<DeleteOutlined style={{ color: 'white' }} />}
-        onClick={(e) => {
-          e.stopPropagation();
-          showDeleteModal();
-        }}
-        aria-label="Delete task"
-        style={{
-          position: 'absolute',
-          top: '8px',
-          right: '8px',
-          backgroundColor: 'transparent',
-          border: 'none',
-          color: '#c6624b',
-          zIndex: 1,
-        }}
-      />
-      <Button
-        type="text"
         icon={<EditOutlined style={{ color: 'white' }} />}
         onClick={(e) => {
           e.stopPropagation();
@@ -118,7 +101,6 @@ const TaskCard = ({
           title={<span style={{color: '#ffffff'}}>{title}</span>}
           description={
             <>
-              <p style={{color: '#ffffff'}}>{description}</p>
               <p style={{fontWeight: 'bold' ,color: '#c6624b' }}>Due on {dueDate}</p>
             </>
           }
@@ -138,18 +120,70 @@ const TaskCard = ({
       </Modal>
 
       <Modal
-        title="Edit Task"
+        title={<div style={{ fontSize: '20px', fontWeight: '600', color: '#fff' }}>{title}</div>}
         open={isEditModalOpen}
         onCancel={handleEditCancel}
-        footer={null}
+        centered
+        width={600}
+        bodyStyle={{ 
+          backgroundColor: '#1d1d1d',
+          padding: '24px',
+          borderTop: '2px solid #333',
+          borderBottom: '2px solid #333'
+        }}
+        style={{
+          top: 20
+        }}
+        modalRender={(modal) => (
+          <div style={{ 
+            border: '3px solid #333',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}>
+            {modal}
+          </div>
+        )}
+        footer={
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            padding: '12px 24px',
+            backgroundColor: '#1d1d1d',
+            borderTop: '2px solid #333'
+          }}>
+            <Button
+              type="primary"
+              danger
+              onClick={() => {
+                handleEditCancel();
+                showDeleteModal();
+              }}
+            >
+              Delete
+            </Button>
+          </div>
+        }
       >
-        <p style={{color: 'white'}}>Title: {title}</p>
-        <p style={{color: 'white'}}>Description: {description}</p>
-        <p style={{color: 'white'}}>Due Date: {dueDate}</p>
-        <p style={{color: 'white'}}>Story Points: {storyPoints}</p>
-        <p style={{color: 'white'}}>Estimated Hours: {estimatedHours}</p>
-        <p style={{color: 'white'}}>Real Hours: {realHours}</p>
-      </Modal>  
+        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', rowGap: '16px' }}>
+          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Description:</div>
+          <div style={{ color: '#fff' }}>{description}</div>
+          
+          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Due Date:</div>
+          <div style={{ color: '#fff' }}>{dueDate}</div>
+          
+          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Story Points:</div>
+          <div style={{ color: '#fff' }}>{storyPoints || 'Not set'}</div>
+          
+          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Estimated Hours:</div>
+          <div style={{ color: '#fff' }}>{estimatedHours || 'Not set'}</div>
+          
+          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Real Hours:</div>
+          <div style={{ color: '#fff' }}>{realHours || 'Not set'}</div>
+
+          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Assigned to:</div>
+          <div style={{ color: '#fff' }}>{username || 'Not set'}</div>
+        </div>
+      </Modal>
     </Card>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Button, Form, message, Progress, Select } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { API_KPI, API_USERS } from '../API';
+import { Card, Row, Col, Form, message, Progress, Select } from 'antd';
+import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS, API_LIST } from '../API';
 
 import {  authenticatedFetch} from '../utils/authUtils';
 
@@ -13,21 +12,65 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const [filters, setFilters] = useState({
+    userId: undefined,
+    projectId: undefined,
+    sprintId: undefined,
+    teamId: undefined
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await authenticatedFetch(API_USERS);
-        if (!response.ok) throw new Error('No se pudieron cargar los usuarios');
-        const data = await response.json();
-        setUsers(data);
+        const [usersRes, projectsRes, sprintsRes, teamsRes, listRes] = await Promise.all([
+          authenticatedFetch(API_USERS),
+          authenticatedFetch(API_PROJECTS),
+          authenticatedFetch(API_SPRINTS),
+          authenticatedFetch(API_TEAMS),
+          authenticatedFetch(API_LIST),
+        ]);
+  
+        if (!usersRes.ok || !projectsRes.ok || !sprintsRes.ok || !teamsRes.ok || !listRes.ok) {
+          throw new Error('Error al cargar uno o más recursos');
+        }
+  
+        const [usersData, projectsData, sprintsData, teamsData, itemsData] = await Promise.all([
+          usersRes.json(),
+          projectsRes.json(),
+          sprintsRes.json(),
+          teamsRes.json(),
+          listRes.json(),
+        ]);
+  
+        setUsers(usersData);
+        setProjects(projectsData);
+        setSprints(sprintsData);
+        setTeams(teamsData);
+        setItems(itemsData);
+
+        const calculatedMetrics = calculateMetrics(itemsData);
+        setMetrics(calculatedMetrics);
+  
+        // Initial fetch without filters
+        fetchKPIs({});
       } catch (error) {
         console.error(error);
         messageApi.error('Error al cargar la lista de usuarios');
       }
     };
-    fetchUsers();
-  }, []);
+  
+    fetchAllData();
+  }, []);  
+
+  useEffect(() => {
+    const calculatedMetrics = calculateMetrics(items);
+    setMetrics(calculatedMetrics);
+  }, [items]);
+
+  // Effect to automatically fetch KPIs when filters change
+  useEffect(() => {
+    fetchKPIs(filters);
+  }, [filters]);
 
   const fetchKPIs = async (values) => {
     setLoading(true);
@@ -48,6 +91,11 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+    form.setFieldValue(key, value);
   };
 
   const getKpiAggregates = () => {
@@ -78,7 +126,7 @@ const Dashboard = () => {
       {contextHolder}
       <h1 style={{ color: 'white', marginBottom: '30px' }}>Dashboard</h1>
 
-      <Form layout="inline" form={form} onFinish={fetchKPIs} style={{ marginBottom: '40px' }}>
+      <Form layout="inline" form={form} style={{ marginBottom: '40px' }}>
         <Form.Item name="userId">
           <Select
             showSearch
@@ -86,6 +134,8 @@ const Dashboard = () => {
             placeholder="Selecciona un usuario"
             style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
+            onChange={(value) => handleFilterChange('userId', value)}
+            allowClear
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
             }
@@ -95,13 +145,62 @@ const Dashboard = () => {
             }))}
           />
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" icon={<SearchOutlined />} loading={loading}>
-            Buscar
-          </Button>
+        <Form.Item name="projectId">
+          <Select
+            showSearch
+            className='white-select'
+            placeholder="Select a project"
+            style={{ color: 'white', width: 200 }}
+            optionFilterProp="children"
+            onChange={(value) => handleFilterChange('projectId', value)}
+            allowClear
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={projects.map(project => ({
+              label: project.name,
+              value: project.id
+            }))}
+          />
+        </Form.Item>
+        <Form.Item name="sprintId">
+          <Select
+            showSearch
+            className='white-select'
+            placeholder="Select a sprint"
+            style={{ color: 'white', width: 200 }}
+            optionFilterProp="children"
+            onChange={(value) => handleFilterChange('sprintId', value)}
+            allowClear
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={sprints.map(sprint => ({
+              label: sprint.name,
+              value: sprint.id
+            }))}
+          />
+        </Form.Item>
+        <Form.Item name="teamId">
+          <Select
+            showSearch
+            className='white-select'
+            placeholder="Select a team"
+            style={{ color: 'white', width: 200 }}
+            optionFilterProp="children"
+            onChange={(value) => handleFilterChange('teamId', value)}
+            allowClear
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={teams.map(team => ({
+              label: team.name,
+              value: team.id
+            }))}
+          />
         </Form.Item>
       </Form>
-
+      
       <Row gutter={24}>
         {kpiTypes.map(({ key, title, color }) => {
           const { sum, total } = aggregates[key];
