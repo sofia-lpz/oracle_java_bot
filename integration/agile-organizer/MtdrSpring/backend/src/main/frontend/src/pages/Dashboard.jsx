@@ -1,30 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Form, message, Progress, Select } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { API_KPI, API_USERS } from '../API';
+import { FilterOutlined } from '@ant-design/icons';
+import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS } from '../API';
+
+import {  authenticatedFetch } from '../utils/authUtils';
+
 import '../App.css';
 
 const Dashboard = () => {
   const [form] = Form.useForm();
   const [kpis, setKpis] = useState([]);
   const [users, setUsers] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [sprints, setSprints] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchAllData = async () => {
+      setLoading(true);
       try {
-        const response = await fetch(API_USERS);
-        if (!response.ok) throw new Error('No se pudieron cargar los usuarios');
-        const data = await response.json();
-        setUsers(data);
+        const [usersRes, projectsRes, sprintsRes, teamsRes] = await Promise.all([
+          authenticatedFetch(API_USERS),
+          authenticatedFetch(API_PROJECTS),
+          authenticatedFetch(API_SPRINTS),
+          authenticatedFetch(API_TEAMS),
+        ]);
+  
+        if (!usersRes.ok || !projectsRes.ok || !sprintsRes.ok || !teamsRes.ok) {
+          throw new Error('Error al cargar uno o más recursos');
+        }
+  
+        const [usersData, projectsData, sprintsData, teamsData] = await Promise.all([
+          usersRes.json(),
+          projectsRes.json(),
+          sprintsRes.json(),
+          teamsRes.json(),
+        ]);
+  
+        setUsers(usersData);
+        setProjects(projectsData);
+        setSprints(sprintsData);
+        setTeams(teamsData);
+  
+        // 👉 Estimación global sin filtros
+        fetchKPIs({});
       } catch (error) {
         console.error(error);
-        messageApi.error('Error al cargar la lista de usuarios');
+        messageApi.error('Error al cargar los datos');
+      } finally {
+        setLoading(false);
       }
     };
-    fetchUsers();
-  }, []);
+  
+    fetchAllData();
+  }, []);  
 
   const fetchKPIs = async (values) => {
     setLoading(true);
@@ -35,7 +66,7 @@ const Dashboard = () => {
     if (values.sprintId) queryParams.append('sprintId', values.sprintId);
 
     try {
-      const response = await fetch(`${API_KPI}?${queryParams.toString()}`);
+      const response = await authenticatedFetch(`${API_KPI}?${queryParams.toString()}`);
       if (!response.ok) throw new Error('Error al obtener los KPIs');
       const data = await response.json();
       setKpis(data);
@@ -80,7 +111,7 @@ const Dashboard = () => {
           <Select
             showSearch
             className='white-select'
-            placeholder="Selecciona un usuario"
+            placeholder="Select a user"
             style={{ color: 'white', width: 200 }}
             optionFilterProp="children"
             filterOption={(input, option) =>
@@ -92,10 +123,56 @@ const Dashboard = () => {
             }))}
           />
         </Form.Item>
+        <Form.Item name="projectId">
+          <Select
+            showSearch
+            className='white-select'
+            placeholder="Select a project"
+            style={{ color: 'white', width: 200 }}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={projects.map(project => ({
+              label: project.name,
+              value: project.id
+            }))}
+          />
+        </Form.Item>
+        <Form.Item name="sprintId">
+          <Select
+            showSearch
+            className='white-select'
+            placeholder="Select a sprint"
+            style={{ color: 'white', width: 200 }}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={sprints.map(sprint => ({
+              label: sprint.name,
+              value: sprint.id
+            }))}
+          />
+        </Form.Item>
+        <Form.Item name="teamId">
+          <Select
+            showSearch
+            className='white-select'
+            placeholder="Select a team"
+            style={{ color: 'white', width: 200 }}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            options={teams.map(team => ({
+              label: team.name,
+              value: team.id
+            }))}
+          />
+        </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" icon={<SearchOutlined />} loading={loading}>
-            Buscar
-          </Button>
+          <Button type="primary" htmlType="submit" icon={<FilterOutlined />} loading={loading}/>
         </Form.Item>
       </Form>
 

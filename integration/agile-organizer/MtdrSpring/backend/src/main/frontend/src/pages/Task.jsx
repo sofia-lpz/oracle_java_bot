@@ -4,6 +4,7 @@ import { PlusOutlined, DeleteOutlined, LoadingOutlined, AppstoreAddOutlined } fr
 import KanbanColumn from '../components/KanbanColumn';
 import NewItem from '../NewItem';
 import '../App.css';
+import {  authenticatedFetch} from '../utils/authUtils';
 
 import { API_LIST, API_STATES } from '../API';
 import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
@@ -30,8 +31,8 @@ const Task = () => {
       try {
         setLoading(true);
         const [tasksResponse, statesResponse] = await Promise.all([
-          fetch(API_LIST),
-          fetch(API_STATES)
+          authenticatedFetch(API_LIST),
+          authenticatedFetch(API_STATES)
         ]);
 
         if (!tasksResponse.ok || !statesResponse.ok) {
@@ -71,7 +72,7 @@ const Task = () => {
         newTask.dueDate = dateObj.toISOString();
       }
 
-      const response = await fetch(API_LIST, {
+      const response = await authenticatedFetch(API_LIST, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,8 +86,8 @@ const Task = () => {
       }
 
       const [tasksResponse, statesResponse] = await Promise.all([
-        fetch(API_LIST),
-        fetch(API_STATES)
+        authenticatedFetch(API_LIST),
+        authenticatedFetch(API_STATES)
       ]);
 
       if (tasksResponse.ok) {
@@ -116,7 +117,7 @@ const Task = () => {
 
       const maxPriority = Math.max(...states.map(state => state.workflow_priority || 0));
       
-      const response = await fetch(API_STATES, {
+      const response = await authenticatedFetch(API_STATES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +144,7 @@ const Task = () => {
       setIsStateModalVisible(false);
       messageApi.success('Estado creado exitosamente');
 
-      const statesResponse = await fetch(API_STATES);
+      const statesResponse = await authenticatedFetch(API_STATES);
       if (statesResponse.ok) {
         const statesData = await statesResponse.json();
         setStates(statesData);
@@ -157,7 +158,7 @@ const Task = () => {
 
   const deleteTask = async (taskId) => {
     try {
-      const response = await fetch(`${API_LIST}/${taskId}`, {
+      const response = await authenticatedFetch(`${API_LIST}/${taskId}`, {
         method: 'DELETE',
       });
 
@@ -175,7 +176,7 @@ const Task = () => {
 
   const deleteState = async (stateId) => {
     try {
-      const response = await fetch(`${API_STATES}/${stateId}`, {
+      const response = await authenticatedFetch(`${API_STATES}/${stateId}`, {
         method: 'DELETE',
       });
 
@@ -214,7 +215,7 @@ const Task = () => {
 
     const updatedTask = { ...activeTask, state: overColumn };
 
-    fetch(`${API_LIST}/${active.id}`, {
+    authenticatedFetch(`${API_LIST}/${active.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedTask)
