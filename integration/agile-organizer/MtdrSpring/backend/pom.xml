@@ -14,7 +14,7 @@
 	<name>MyTodoList</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>23</java.version>
+		<java.version>21</java.version>
 		<version.lib.ojdbc>21.1.0.0</version.lib.ojdbc>
 		<frontend-src-dir>${project.basedir}/src/main/frontend</frontend-src-dir>
 		<node.version>v16.13.2</node.version>
@@ -86,6 +86,19 @@
         <scope>test</scope>
     </dependency>
 			<!-- Add dependencie above, spring 3 dependencies below -->
+
+    <dependency>
+        <groupId>org.telegram</groupId>
+        <artifactId>telegrambots</artifactId>
+        <version>6.5.0</version> <!-- Replace with the latest version -->
+    </dependency>
+
+<!-- Add your dependencies here -->
+<dependency>
+    <groupId>org.telegram</groupId>
+    <artifactId>telegrambots-abilities</artifactId>
+    <version>6.5.0</version> <!-- Replace with the latest version -->
+</dependency>
 
 			<!-- Legacy JAXB API for javax namespace support -->
 			<dependency>
