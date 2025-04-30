@@ -45,7 +45,12 @@ const Task = () => {
           throw new Error('Datos inválidos recibidos del servidor');
         }
 
-        setTasks(tasksData);
+        const mappedTasks = tasksData.map(task => ({
+          ...task,
+          estimatedHours: task.estimated_hours,
+          realHours: task.real_hours
+        }));
+        setTasks(mappedTasks);
         setStates(statesData);
         setError(null);
       } catch (error) {
