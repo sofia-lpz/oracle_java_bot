@@ -46,6 +46,7 @@ import com.springboot.MyTodoList.util.BotCommands;
 import com.springboot.MyTodoList.util.BotHelper;
 import com.springboot.MyTodoList.util.BotLabels;
 import com.springboot.MyTodoList.util.BotMessages;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 public class ToDoItemBotController extends TelegramLongPollingBot {
 
@@ -60,6 +61,50 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	private String botName;
 	private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
 
+	private void sendLongMessage(Long chatId, String longText, ReplyKeyboard replyMarkup) {
+		// Telegram message limit is 4096 characters
+		final int MAX_MESSAGE_LENGTH = 4000; // Using slightly less to be safe
+		
+		try {
+			if (longText.length() <= MAX_MESSAGE_LENGTH) {
+				// Message is short enough, send it normally
+				SendMessage message = new SendMessage();
+				message.setChatId(chatId);
+				message.setText(longText);
+				if (replyMarkup != null) {
+					message.setReplyMarkup(replyMarkup);
+				}
+				execute(message);
+			} else {
+				// Split the long message into chunks
+				int totalChunks = (int) Math.ceil((double) longText.length() / MAX_MESSAGE_LENGTH);
+				for (int i = 0; i < totalChunks; i++) {
+					int startIndex = i * MAX_MESSAGE_LENGTH;
+					int endIndex = Math.min((i + 1) * MAX_MESSAGE_LENGTH, longText.length());
+					String chunk = longText.substring(startIndex, endIndex);
+					
+					// Add chunk indicator if splitting into multiple messages
+					if (totalChunks > 1) {
+						chunk = "Part " + (i + 1) + "/" + totalChunks + ":\n\n" + chunk;
+					}
+					
+					SendMessage message = new SendMessage();
+					message.setChatId(chatId);
+					message.setText(chunk);
+					
+					// Only add the reply markup to the last chunk
+					if (i == totalChunks - 1 && replyMarkup != null) {
+						message.setReplyMarkup(replyMarkup);
+					}
+					
+					execute(message);
+				}
+			}
+		} catch (TelegramApiException e) {
+			logger.error("Error sending message: " + e.getMessage(), e);
+		}
+	}
+	
 	// Constructor
 	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService,
 			StateService stateService, UserService userService, ProjectService projectService,
@@ -233,35 +278,34 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		List<ToDoItem> allItems = getAllToDoItems();
 		ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 		List<KeyboardRow> keyboard = new ArrayList<>();
-
+	
 		// command back to main screen
 		KeyboardRow mainScreenRowTop = new KeyboardRow();
 		mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 		keyboard.add(mainScreenRowTop);
-
+	
 		KeyboardRow firstRow = new KeyboardRow();
 		firstRow.add(BotLabels.ADD_NEW_ITEM.getLabel());
 		keyboard.add(firstRow);
-
+	
 		KeyboardRow myTodoListTitleRow = new KeyboardRow();
 		myTodoListTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
 		keyboard.add(myTodoListTitleRow);
-
+	
 		List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false)
 				.collect(Collectors.toList());
-
+	
 		for (ToDoItem item : activeItems) {
-
 			KeyboardRow currentRow = new KeyboardRow();
 			currentRow.add(item.getTitle());
 			currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
 			currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UPDATE_ITEM.getLabel());
 			keyboard.add(currentRow);
 		}
-
+	
 		List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
 				.collect(Collectors.toList());
-
+	
 		for (ToDoItem item : doneItems) {
 			KeyboardRow currentRow = new KeyboardRow();
 			currentRow.add(item.getTitle());
@@ -270,30 +314,21 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UPDATE_ITEM.getLabel());
 			keyboard.add(currentRow);
 		}
-
+	
 		// command back to main screen
 		KeyboardRow mainScreenRowBottom = new KeyboardRow();
 		mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 		keyboard.add(mainScreenRowBottom);
-
+	
 		keyboardMarkup.setKeyboard(keyboard);
-
-		SendMessage messageToTelegram = new SendMessage();
-		messageToTelegram.setChatId(chatId);
-		messageToTelegram.setText(BotLabels.MY_TODO_LIST.getLabel());
-		messageToTelegram.setReplyMarkup(keyboardMarkup);
-		// send the list as a message with formatting
-
-		messageToTelegram.setText(formatTodoList(allItems));
-
-		try {
-			execute(messageToTelegram);
-		} catch (TelegramApiException e) {
-			logger.error(e.getLocalizedMessage(), e);
-			messageToTelegram.setText(BotMessages.ERROR.getMessage());
-		}
+	
+		// Format the todo list
+		String formattedList = formatTodoList(allItems);
+		
+		// Use sendLongMessage instead of direct execution
+		sendLongMessage(chatId, formattedList, keyboardMarkup);
 	}
-
+	
 	private void addItem(String messageTextFromTelegram, Long chatId) {
 		try {
 			SendMessage messageToTelegram = new SendMessage();
