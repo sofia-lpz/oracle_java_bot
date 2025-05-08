@@ -33,6 +33,21 @@ public class ToDoItemController {
         }
     }
 
+    @GetMapping(value = "/todolist/summary")
+    public ResponseEntity<List<ToDoItem>> getToDoItemsSummary(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) Integer teamId,
+            @RequestParam(required = false) Integer projectId,
+            @RequestParam(required = false) Integer sprintId,
+            @RequestParam(required = false) Boolean done) {
+        try {
+            List<ToDoItem> toDoItems = toDoItemService.getToDoItemsSummary(userId, teamId, projectId, sprintId, done);
+            return new ResponseEntity<>(toDoItems, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // @CrossOrigin
     @GetMapping(value = "/todolist/{id}")
     public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id) {

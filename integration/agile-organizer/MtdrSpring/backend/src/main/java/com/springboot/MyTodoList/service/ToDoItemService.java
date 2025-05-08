@@ -19,6 +19,10 @@ public class ToDoItemService {
         return todoItems;
     }
 
+    public List<ToDoItem> getToDoItemsSummary(Integer userId, Integer teamId, Integer projectId, Integer sprintId, Boolean done) {
+        return toDoItemRepository.getToDoItemsSummary(userId, teamId, projectId, sprintId, done);
+    }
+
     public ToDoItem getItemById(int id) {
         return toDoItemRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("ToDoItem not found with id: " + id));
