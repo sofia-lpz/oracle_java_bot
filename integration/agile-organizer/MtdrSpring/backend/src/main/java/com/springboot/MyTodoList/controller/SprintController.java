@@ -1,4 +1,6 @@
 package com.springboot.MyTodoList.controller;
+
+import com.springboot.MyTodoList.model.Kpi;
 import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.service.SprintService;
 
@@ -45,9 +47,12 @@ public class SprintController {
     public ResponseEntity updateSprint(@RequestBody Sprint sprint, @PathVariable int id) {
         try {
             Sprint updatedSprint = sprintService.updateSprint(id, sprint);
+            if (updatedSprint == null) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(updatedSprint, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -56,9 +61,12 @@ public class SprintController {
         boolean flag = false;
         try {
             flag = sprintService.deleteSprint(id);
+            if (!flag) {
+                return new ResponseEntity<>(flag, HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(flag, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(flag, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(flag, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
