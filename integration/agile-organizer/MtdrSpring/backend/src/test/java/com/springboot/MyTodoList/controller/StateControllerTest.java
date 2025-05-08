@@ -1,6 +1,5 @@
 package com.springboot.MyTodoList.controller;
 
-import com.springboot.MyTodoList.controller.StateController;
 import com.springboot.MyTodoList.model.State;
 import com.springboot.MyTodoList.service.StateService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,10 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class StateControllerTest {
-    /*
 
     @Mock
     private StateService stateService;
@@ -27,118 +26,157 @@ public class StateControllerTest {
     private StateController stateController;
 
     @BeforeEach
-    public void setUp() {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
     public void testGetAllStates() {
+        // Arrange
         State state1 = new State();
+        state1.setID(1);
+        state1.setName("To Do");
+
         State state2 = new State();
-        List<State> stateList = Arrays.asList(state1, state2);
+        state2.setID(2);
+        state2.setName("In Progress");
 
-        when(stateService.findAll()).thenReturn(stateList);
+        List<State> expectedStates = Arrays.asList(state1, state2);
 
-        List<State> result = stateController.getAllStates();
-        assertEquals(2, result.size());
+        when(stateService.findAll()).thenReturn(expectedStates);
+
+        // Act
+        List<State> actualStates = stateController.getAllStates();
+
+        // Assert
+        assertEquals(expectedStates, actualStates);
+        assertEquals(2, actualStates.size());
         verify(stateService, times(1)).findAll();
     }
 
     @Test
-    public void testGetStateById() {
-        State state = new State();
-        when(stateService.getStateById(1)).thenReturn(new ResponseEntity<>(state, HttpStatus.OK));
-
-        ResponseEntity<State> result = stateController.getStateById(1);
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        verify(stateService, times(1)).getStateById(1);
+    public void testGetStateById_Success() {
+        // Arrange
+        int stateId = 1;
+        State expectedState = new State();
+        expectedState.setID(stateId);
+        expectedState.setName("To Do");
+        
+        when(stateService.getStateById(stateId)).thenReturn(expectedState);
+        
+        // Act
+        ResponseEntity<State> response = stateController.getStateById(stateId);
+        
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedState, response.getBody());
+        verify(stateService, times(1)).getStateById(stateId);
     }
 
     @Test
-    public void testGetStateByIdNotFound() {
-        when(stateService.getStateById(1)).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-
-        ResponseEntity<State> result = stateController.getStateById(1);
-        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-        verify(stateService, times(1)).getStateById(1);
+    public void testGetStateById_NotFound() {
+        // Arrange
+        int stateId = 99;
+        when(stateService.getStateById(stateId)).thenThrow(new RuntimeException("State not found"));
+        
+        // Act
+        ResponseEntity<State> response = stateController.getStateById(stateId);
+        
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verify(stateService, times(1)).getStateById(stateId);
     }
 
     @Test
-    public void testAddState() throws Exception {
-        State state = new State();
-        when(stateService.addState(state)).thenReturn(state);
-
-        ResponseEntity result = stateController.addState(state);
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        verify(stateService, times(1)).addState(state);
+    public void testAddState_Success() throws Exception {
+        // Arrange
+        State newState = new State();
+        newState.setName("New State");
+        
+        State savedState = new State();
+        savedState.setID(3);
+        savedState.setName("New State");
+        
+        when(stateService.addState(newState)).thenReturn(savedState);
+        
+        // Act
+        ResponseEntity response = stateController.addState(newState);
+        
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(stateService, times(1)).addState(newState);
+        assertEquals("3", response.getHeaders().get("location").get(0));
+        assertEquals("location", response.getHeaders().get("Access-Control-Expose-Headers").get(0));
     }
 
     @Test
-    public void testUpdateState() {
-        State state = new State();
-        when(stateService.updateState(1, state)).thenReturn(state);
-
-        ResponseEntity result = stateController.updateState(state, 1);
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        verify(stateService, times(1)).updateState(1, state);
+    public void testUpdateState_Success() {
+        // Arrange
+        int stateId = 1;
+        State stateToUpdate = new State();
+        stateToUpdate.setID(stateId);
+        stateToUpdate.setName("Updated State");
+        
+        State updatedState = new State();
+        updatedState.setID(stateId);
+        updatedState.setName("Updated State");
+        
+        when(stateService.updateState(stateId, stateToUpdate)).thenReturn(updatedState);
+        
+        // Act
+        ResponseEntity response = stateController.updateState(stateToUpdate, stateId);
+        
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedState, response.getBody());
+        verify(stateService, times(1)).updateState(stateId, stateToUpdate);
     }
 
     @Test
-    public void testUpdateStateNotFound() {
-        State state = new State();
-        when(stateService.updateState(1, state)).thenReturn(null);
-
-        ResponseEntity result = stateController.updateState(state, 1);
-        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-        verify(stateService, times(1)).updateState(1, state);
+    public void testUpdateState_NotFound() {
+        // Arrange
+        int stateId = 99;
+        State stateToUpdate = new State();
+        stateToUpdate.setID(stateId);
+        stateToUpdate.setName("Updated State");
+        
+        when(stateService.updateState(stateId, stateToUpdate)).thenThrow(new RuntimeException("State not found"));
+        
+        // Act
+        ResponseEntity response = stateController.updateState(stateToUpdate, stateId);
+        
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verify(stateService, times(1)).updateState(stateId, stateToUpdate);
     }
 
     @Test
-    public void testDeleteState() {
-        when(stateService.deleteState(1)).thenReturn(true);
-
-        ResponseEntity<Boolean> result = stateController.deleteState(1);
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(true, result.getBody());
-        verify(stateService, times(1)).deleteState(1);
+    public void testDeleteState_Success() {
+        // Arrange
+        int stateId = 1;
+        when(stateService.deleteState(stateId)).thenReturn(true);
+        
+        // Act
+        ResponseEntity<Boolean> response = stateController.deleteState(stateId);
+        
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(true, response.getBody());
+        verify(stateService, times(1)).deleteState(stateId);
     }
 
     @Test
-    public void testDeleteStateNotFound() {
-        when(stateService.deleteState(1)).thenReturn(false);
-
-        ResponseEntity<Boolean> result = stateController.deleteState(1);
-        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-        assertEquals(false, result.getBody());
-        verify(stateService, times(1)).deleteState(1);
+    public void testDeleteState_NotFound() {
+        // Arrange
+        int stateId = 99;
+        when(stateService.deleteState(stateId)).thenThrow(new RuntimeException("State not found"));
+        
+        // Act
+        ResponseEntity<Boolean> response = stateController.deleteState(stateId);
+        
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(false, response.getBody());
+        verify(stateService, times(1)).deleteState(stateId);
     }
-
-    @Test
-    public void testCannotCreateDuplicateWorkflowPriority() throws Exception {
-        State state = new State();
-        state.setName("New State");
-        state.setWorkflowPriority(1);
-
-        when(stateService.addState(state))
-                .thenThrow(new IllegalArgumentException("State with this workflow priority already exists"));
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            stateController.addState(state);
-        });
-
-        assertEquals("State with this workflow priority already exists", exception.getMessage());
-        verify(stateService, times(1)).addState(state);
-    }
-
-    @Test
-    public void testDeleteStateReassignsTasks() {
-        when(stateService.deleteState(1)).thenReturn(true);
-
-        ResponseEntity<Boolean> result = stateController.deleteState(1);
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(true, result.getBody());
-
-        verify(stateService, times(1)).deleteState(1);
-    }
-        */
 }
