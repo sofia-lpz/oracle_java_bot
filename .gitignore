@@ -5,3 +5,5 @@ integration/agile-organizer/MtdrSpring/backend/src/Wallet.zip
 integration/agile-organizer/MtdrSpring/backend/src/main/resources/application.properties
 integration/agile-organizer/MtdrSpring/backend/src/main/java/com/springboot/MyTodoList/config/.env
 /frontend_integration/node_modules
+/apache-jmeter-5.6.3
+/jmeter
