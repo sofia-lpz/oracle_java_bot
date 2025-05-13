@@ -19,8 +19,8 @@ public interface ToDoItemRepository extends JpaRepository<ToDoItem, Integer> {
 
     List<ToDoItem> getToDoItemsByUserID(int userId);
 
-    @Query("SELECT t FROM ToDoItem t WHERE (:userId is null OR t.user.id = :userId) AND (:teamId is null OR t.team.id = :teamId) AND (:projectId is null OR t.project.id = :projectId) AND (:sprintId is null OR t.sprint.id = :sprintId) AND (:done is null OR t.done = :done)")
-    List<ToDoItem> getToDoItemsSummary(Integer userId, Integer teamId, Integer projectId, Integer sprintId,
+    @Query("SELECT t FROM ToDoItem t WHERE (:userId is null OR t.user.id = :userId) AND (:projectId is null OR t.project.id = :projectId) AND (:sprintId is null OR t.sprint.id = :sprintId) AND (:done is null OR t.done = :done)")
+    List<ToDoItem> getToDoItemsSummary(Integer userId, Integer projectId, Integer sprintId,
             Boolean done);
 
 }

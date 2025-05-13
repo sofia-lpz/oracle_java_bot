@@ -20,7 +20,7 @@ public class ToDoItemService {
     }
 
     public List<ToDoItem> getToDoItemsSummary(Integer userId, Integer teamId, Integer projectId, Integer sprintId, Boolean done) {
-        return toDoItemRepository.getToDoItemsSummary(userId, teamId, projectId, sprintId, done);
+        return toDoItemRepository.getToDoItemsSummary(userId, projectId, sprintId, done);
     }
 
     public ToDoItem getItemById(int id) {
