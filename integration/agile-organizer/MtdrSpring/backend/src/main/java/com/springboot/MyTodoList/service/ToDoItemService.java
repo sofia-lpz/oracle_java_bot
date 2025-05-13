@@ -14,40 +14,45 @@ public class ToDoItemService {
     @Autowired
     private ToDoItemRepository toDoItemRepository;
 
-    public List<ToDoItem> findAll(){
+    public List<ToDoItem> findAll() {
         List<ToDoItem> todoItems = toDoItemRepository.findAll();
         return todoItems;
     }
 
-    public List<ToDoItem> getToDoItemsSummary(Integer userId, Integer teamId, Integer projectId, Integer sprintId, Boolean done) {
-        return toDoItemRepository.getToDoItemsSummary(userId, projectId, sprintId, done);
+    public List<ToDoItem> getToDoItemsSummary(
+            List<Integer> userId,
+            List<Integer> teamId,
+            List<Integer> projectId,
+            List<Integer> sprintId,
+            Boolean done) {
+        return toDoItemRepository.getToDoItemsSummary(userId, teamId, projectId, sprintId, done);
     }
 
     public ToDoItem getItemById(int id) {
         return toDoItemRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("ToDoItem not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("ToDoItem not found with id: " + id));
     }
 
     public List<ToDoItem> getToDoItemsByUserId(int userId) {
         return toDoItemRepository.getToDoItemsByUserID(userId);
     }
 
-    public ToDoItem addToDoItem(ToDoItem toDoItem){
+    public ToDoItem addToDoItem(ToDoItem toDoItem) {
         return toDoItemRepository.save(toDoItem);
     }
 
-    public boolean deleteToDoItem(int id){
-        try{
+    public boolean deleteToDoItem(int id) {
+        try {
             toDoItemRepository.deleteById(id);
             return true;
-        }catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
-    
-    public ToDoItem updateToDoItem(int id, ToDoItem td){
+
+    public ToDoItem updateToDoItem(int id, ToDoItem td) {
         Optional<ToDoItem> toDoItemData = toDoItemRepository.findById(id);
-        if(toDoItemData.isPresent()){
+        if (toDoItemData.isPresent()) {
             ToDoItem toDoItem = toDoItemData.get();
             toDoItem.setID(id);
             toDoItem.setTitle(td.getTitle());
@@ -65,7 +70,7 @@ public class ToDoItemService {
             toDoItem.setEstimatedHours(td.getEstimatedHours());
             toDoItem.setRealHours(td.getRealHours());
             return toDoItemRepository.save(toDoItem);
-        }else{
+        } else {
             return null;
         }
     }
