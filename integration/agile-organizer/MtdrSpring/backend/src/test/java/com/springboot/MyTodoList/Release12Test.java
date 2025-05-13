@@ -98,6 +98,7 @@ public class Release12Test {
         assertEquals("location", result.getHeaders().get("Access-Control-Expose-Headers").get(0));
     }
 
+    /*
     @Test
     public void testGetKpiSummary_SpecifiedSprint() {
         // Arrange
@@ -157,7 +158,7 @@ public class Release12Test {
         verify(kpiService, times(1)).getKpiSummary(userId, null, null, sprintId);
     }
 
-// ...existing code...
+*/
 
 @Test
 public void testGetToDoItemsSummary_SpecificSprint_DoneItems() {

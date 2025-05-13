@@ -15,16 +15,15 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 public class KpiController {
-    private static final Logger logger = LoggerFactory.getLogger(KpiController.class);
-
     @Autowired
     private KpiService kpiService;
 
     @GetMapping(value = "/kpi/summary")
-    public ResponseEntity<List<Kpi>> getKpiSummary(@RequestParam(required = false) Integer userId,
-            @RequestParam(required = false) Integer teamId,
-            @RequestParam(required = false) Integer projectId,
-            @RequestParam(required = false) Integer sprintId) {
+    public ResponseEntity<List<Kpi>> getKpiSummary(
+            @RequestParam(required = false) List<Integer> userId,
+            @RequestParam(required = false) List<Integer> teamId,
+            @RequestParam(required = false) List<Integer> projectId,
+            @RequestParam(required = false) List<Integer> sprintId) {
         try {
             List<Kpi> kpis = kpiService.getKpiSummary(userId, teamId, projectId, sprintId);
             return ResponseEntity.ok(kpis);

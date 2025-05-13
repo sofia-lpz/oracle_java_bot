@@ -2,6 +2,8 @@ package com.springboot.MyTodoList.repository;
 
 
 import com.springboot.MyTodoList.model.Kpi;
+import com.springboot.MyTodoList.model.ToDoItem;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 @EnableTransactionManagement
 public interface KpiRepository extends JpaRepository<Kpi,Integer> {
 
-    @Query("SELECT k FROM Kpi k WHERE (:userId is null OR k.user.id = :userId) AND (:teamId is null OR k.team.id = :teamId) AND (:projectId is null OR k.project.id = :projectId) AND (:sprintId is null OR k.sprint.id = :sprintId)")
-    Optional<List<Kpi>> getKpiSummary(@Param("userId") Integer userId, @Param("teamId") Integer teamId, @Param("projectId") Integer projectId, @Param("sprintId") Integer sprintId);
-
+        @Query("SELECT t FROM Kpi t WHERE " +
+            "(:userIds IS EMPTY OR t.user.id IN :userIds) AND " +
+            "(:teamIds IS EMPTY OR t.user.team.id IN :teamIds) AND " +
+            "(:projectIds IS EMPTY OR t.project.id IN :projectIds) AND " +
+            "(:sprintIds IS EMPTY OR t.sprint.id IN :sprintIds)")
+    Optional<List<Kpi>> getKpiSummary(
+            @Param("userIds") List<Integer> userIds,
+            @Param("teamIds") List<Integer> teamIds,
+            @Param("projectIds") List<Integer> projectIds,
+            @Param("sprintIds") List<Integer> sprintIds
+    );
 }

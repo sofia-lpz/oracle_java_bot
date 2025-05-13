@@ -20,17 +20,16 @@ public class KpiService {
     @Autowired
     private KpiRepository kpiRepository;
 
-    public List<Kpi> getKpiSummary(Integer userId, Integer teamId, Integer projectId, Integer sprintId) {
-        logger.info("Service: Fetching KPI summary with userId={}, teamId={}, projectId={}, sprintId={}", 
-                   userId, teamId, projectId, sprintId);
+    public List<Kpi> getKpiSummary(
+            List<Integer> userId,
+            List<Integer> teamId,
+            List<Integer> projectId,
+            List<Integer> sprintId) {
         try {
             Optional<List<Kpi>> kpisOptional = kpiRepository.getKpiSummary(userId, teamId, projectId, sprintId);
             List<Kpi> result = kpisOptional.orElse(Collections.emptyList());
-            logger.info("Found {} KPIs in repository", result.size());
             return result;
         } catch (Exception e) {
-            logger.error("Error in KPI repository query: {}", e.getMessage(), e);
-            // Returning empty list instead of throwing exception
             return Collections.emptyList();
         }
     }
