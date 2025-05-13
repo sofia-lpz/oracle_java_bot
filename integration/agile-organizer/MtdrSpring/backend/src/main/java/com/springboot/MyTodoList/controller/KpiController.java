@@ -25,14 +25,10 @@ public class KpiController {
             @RequestParam(required = false) Integer teamId,
             @RequestParam(required = false) Integer projectId,
             @RequestParam(required = false) Integer sprintId) {
-        logger.info("Requesting KPI summary with userId={}, teamId={}, projectId={}, sprintId={}",
-                userId, teamId, projectId, sprintId);
         try {
             List<Kpi> kpis = kpiService.getKpiSummary(userId, teamId, projectId, sprintId);
-            logger.info("Found {} KPIs matching criteria", kpis.size());
             return ResponseEntity.ok(kpis);
         } catch (RuntimeException e) {
-            logger.error("Error retrieving KPI summary: {}", e.getMessage(), e);
             return ResponseEntity.notFound().build();
         }
     }
