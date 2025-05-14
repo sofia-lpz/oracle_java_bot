@@ -17,19 +17,19 @@ import java.util.Optional;
 @EnableTransactionManagement
 public interface ToDoItemRepository extends JpaRepository<ToDoItem, Integer> {
 
-    List<ToDoItem> getToDoItemsByUserID(int userId);
+        List<ToDoItem> getToDoItemsByUserID(int userId);
 
-    @Query("SELECT t FROM ToDoItem t WHERE " +
-            "(:userIds IS EMPTY OR t.user.id IN :userIds) AND " +
-            "(:teamIds IS EMPTY OR t.user.team.id IN :teamIds) AND " +
-            "(:projectIds IS EMPTY OR t.project.id IN :projectIds) AND " +
-            "(:sprintIds IS EMPTY OR t.sprint.id IN :sprintIds) AND " +
-            "(:done IS NULL OR t.done = :done)")
-    List<ToDoItem> getToDoItemsSummary(
-            @Param("userIds") List<Integer> userIds,
-            @Param("teamIds") List<Integer> teamIds,
-            @Param("projectIds") List<Integer> projectIds,
-            @Param("sprintIds") List<Integer> sprintIds,
-            @Param("done") Boolean done);
+        @Query("SELECT t FROM ToDoItem t WHERE " +
+                        "(coalesce(:userIds, null) IS NULL OR t.user.id IN :userIds) AND " +
+                        "(coalesce(:teamIds, null) IS NULL OR t.user.team.id IN :teamIds) AND " +
+                        "(coalesce(:projectIds, null) IS NULL OR t.project.id IN :projectIds) AND " +
+                        "(coalesce(:sprintIds, null) IS NULL OR t.sprint.id IN :sprintIds) AND " +
+                        "(:done IS NULL OR t.done = :done)")
+        List<ToDoItem> getToDoItemsSummary(
+                        @Param("userIds") List<Integer> userIds,
+                        @Param("teamIds") List<Integer> teamIds,
+                        @Param("projectIds") List<Integer> projectIds,
+                        @Param("sprintIds") List<Integer> sprintIds,
+                        @Param("done") Boolean done);
 
 }

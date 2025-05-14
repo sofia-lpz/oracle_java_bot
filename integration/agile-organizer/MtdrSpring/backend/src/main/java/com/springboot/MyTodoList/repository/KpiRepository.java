@@ -20,11 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 @EnableTransactionManagement
 public interface KpiRepository extends JpaRepository<Kpi,Integer> {
 
-        @Query("SELECT t FROM Kpi t WHERE " +
-            "(:userIds IS EMPTY OR t.user.id IN :userIds) AND " +
-            "(:teamIds IS EMPTY OR t.user.team.id IN :teamIds) AND " +
-            "(:projectIds IS EMPTY OR t.project.id IN :projectIds) AND " +
-            "(:sprintIds IS EMPTY OR t.sprint.id IN :sprintIds)")
+    @Query("SELECT t FROM Kpi t WHERE " +
+           "(coalesce(:userIds, null) IS NULL OR t.user.id IN :userIds) AND " +
+           "(coalesce(:teamIds, null) IS NULL OR t.user.team.id IN :teamIds) AND " +
+           "(coalesce(:projectIds, null) IS NULL OR t.project.id IN :projectIds) AND " +
+           "(coalesce(:sprintIds, null) IS NULL OR t.sprint.id IN :sprintIds)")
     Optional<List<Kpi>> getKpiSummary(
             @Param("userIds") List<Integer> userIds,
             @Param("teamIds") List<Integer> teamIds,
