@@ -1,5 +1,6 @@
 package com.springboot.MyTodoList.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,7 +140,12 @@ public class LupitaService {
                             sprintId = Integer.parseInt(endpointResponse.getParameters().get("sprintId"));
                         }
 
-                        List<Kpi> fetchedItems = kpiService.getKpiSummary(userId, teamId, projectId, sprintId);
+                        List<Kpi> fetchedItems = kpiService.getKpiSummary(
+                            userId != null ? Collections.singletonList(userId) : Collections.emptyList(),
+                            teamId != null ? Collections.singletonList(teamId) : Collections.emptyList(),
+                            projectId != null ? Collections.singletonList(projectId) : Collections.emptyList(),
+                            sprintId != null ? Collections.singletonList(sprintId) : Collections.emptyList()
+                        );
                         return objectMapper.writeValueAsString(fetchedItems);
 
                     } else if (endpointEnum.getServiceMethod().equals("getKpiById")) {
