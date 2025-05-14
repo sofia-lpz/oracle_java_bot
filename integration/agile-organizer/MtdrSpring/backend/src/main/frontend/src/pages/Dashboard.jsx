@@ -3,7 +3,8 @@ import { Card, Row, Col, Button, Form, message, Progress, Select, Table } from '
 import { FilterOutlined } from '@ant-design/icons';
 import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS, API_LIST } from '../API';
 
-import {  authenticatedFetch } from '../utils/authUtils';
+import { authenticatedFetch } from '../utils/authUtils';
+import ComparisonChart from '../components/ComparisonChart';
 
 import '../App.css';
 
@@ -70,12 +71,12 @@ const Dashboard = () => {
   }, []);  
 
   // Effect to automatically fetch KPIs when filters change
-useEffect(() => {
-  fetchKPIs(filters);
-  // Don't fetch items here, just recalculate metrics
-  const calculatedMetrics = calculateMetrics(items, filters);
-  setMetrics(calculatedMetrics);
-}, [filters, items]);
+  useEffect(() => {
+    fetchKPIs(filters);
+    // Don't fetch items here, just recalculate metrics
+    const calculatedMetrics = calculateMetrics(items, filters);
+    setMetrics(calculatedMetrics);
+  }, [filters, items]);
 
   const fetchKPIs = async (values) => {
     setLoading(true);
@@ -130,10 +131,6 @@ useEffect(() => {
     // First apply filters
     let filteredItems = [...todoItems];
   
-    console.log('Filter values:', currentFilters);
-    console.log('Sample item before filtering:', todoItems[0]);
-    console.log('Filtered items count:', filteredItems.length);
-    
     if (currentFilters.userId) {
       const userId = Number(currentFilters.userId);
       filteredItems = filteredItems.filter(item => item.user && Number(item.user.id) === userId);
@@ -150,9 +147,6 @@ useEffect(() => {
       const teamId = Number(currentFilters.teamId);
       filteredItems = filteredItems.filter(item => item.team && Number(item.team.id) === teamId);
     }
-    
-    console.log('Filtered items after applying filters:', filteredItems.length);
-   
     
     // Then calculate metrics on filtered items
     const completedTasks = filteredItems.filter(item => item.done && !item.deleted);
@@ -347,6 +341,14 @@ useEffect(() => {
         </Col>
       </Row>
       
+      {users && sprints && items && (
+        <ComparisonChart 
+          users={users} 
+          sprints={sprints} 
+          items={items} 
+        />
+      )}
+
       <h2 style={{ color: 'white', margin: '40px 0 20px' }}>User Performance Metrics</h2>
       <Table
         dataSource={calculateUserMetrics()}
