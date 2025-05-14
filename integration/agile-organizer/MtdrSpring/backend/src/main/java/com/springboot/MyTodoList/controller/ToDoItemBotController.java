@@ -2,6 +2,7 @@ package com.springboot.MyTodoList.controller;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -416,7 +417,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			Integer sprintId = latestSprint.getID();
 
 			// Fetch KPI data for this user
-			List<Kpi> userKpis = kpiService.getKpiSummary(userId, null, null, sprintId);
+			List<Kpi> userKpis = kpiService.getKpiSummary(List.of(userId), Collections.emptyList(), Collections.emptyList(), List.of(sprintId));
 
 			// Format KPI data
 			StringBuilder sb = new StringBuilder();
