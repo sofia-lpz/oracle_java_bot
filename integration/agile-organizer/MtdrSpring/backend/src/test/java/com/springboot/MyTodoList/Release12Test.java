@@ -98,7 +98,6 @@ public class Release12Test {
         assertEquals("location", result.getHeaders().get("Access-Control-Expose-Headers").get(0));
     }
 
-    /*
     @Test
     public void testGetKpiSummary_SpecifiedSprint() {
         // Arrange
@@ -117,15 +116,20 @@ public class Release12Test {
 
         List<Kpi> expectedKpis = Arrays.asList(kpi1, kpi2);
 
-        when(kpiService.getKpiSummary(userId, teamId, projectId, sprintId)).thenReturn(expectedKpis);
+        List<Integer> userIdList = userId != null ? List.of(userId) : null;
+        List<Integer> teamIdList = teamId != null ? List.of(teamId) : null;
+        List<Integer> projectIdList = projectId != null ? List.of(projectId) : null;
+        List<Integer> sprintIdList = sprintId != null ? List.of(sprintId) : null;
+
+        when(kpiService.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList)).thenReturn(expectedKpis);
 
         // Act
-        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userId, teamId, projectId, sprintId);
+        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedKpis, response.getBody());
-        verify(kpiService, times(1)).getKpiSummary(null, null, null, sprintId);
+        verify(kpiService, times(1)).getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
     }
 
     @Test
@@ -147,80 +151,82 @@ public class Release12Test {
 
         List<Kpi> expectedKpis = Arrays.asList(kpi1, kpi2);
 
-        when(kpiService.getKpiSummary(userId, teamId, projectId, sprintId)).thenReturn(expectedKpis);
+        List<Integer> userIdList = userId != null ? List.of(userId) : null;
+        List<Integer> teamIdList = teamId != null ? List.of(teamId) : null;
+        List<Integer> projectIdList = projectId != null ? List.of(projectId) : null;
+        List<Integer> sprintIdList = sprintId != null ? List.of(sprintId) : null;
+
+        when(kpiService.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList)).thenReturn(expectedKpis);
 
         // Act
-        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userId, teamId, projectId, sprintId);
+        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedKpis, response.getBody());
-        verify(kpiService, times(1)).getKpiSummary(userId, null, null, sprintId);
+        verify(kpiService, times(1)).getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
     }
 
-*/
+    @Test
+    public void testGetToDoItemsSummary_SpecificSprint_DoneItems() {
+        // Arrange
+        Integer sprintId = 3;
+        Boolean done = true;
+        
+        // Convert to List<Integer>
+        List<Integer> sprintIds = sprintId != null ? Collections.singletonList(sprintId) : null;
 
-@Test
-public void testGetToDoItemsSummary_SpecificSprint_DoneItems() {
-    // Arrange
-    Integer sprintId = 3;
-    Boolean done = true;
-    
-    // Convert to List<Integer>
-    List<Integer> sprintIds = sprintId != null ? Collections.singletonList(sprintId) : null;
+        ToDoItem item1 = new ToDoItem();
+        item1.setID(1);
+        item1.setTitle("Sprint Task 1");
+        item1.setDone(true);
 
-    ToDoItem item1 = new ToDoItem();
-    item1.setID(1);
-    item1.setTitle("Sprint Task 1");
-    item1.setDone(true);
+        ToDoItem item2 = new ToDoItem();
+        item2.setID(2);
+        item2.setTitle("Sprint Task 2");
+        item2.setDone(true);
 
-    ToDoItem item2 = new ToDoItem();
-    item2.setID(2);
-    item2.setTitle("Sprint Task 2");
-    item2.setDone(true);
+        List<ToDoItem> expectedItems = Arrays.asList(item1, item2);
 
-    List<ToDoItem> expectedItems = Arrays.asList(item1, item2);
+        when(toDoItemService.getToDoItemsSummary(null, null, null, sprintIds, done))
+                .thenReturn(expectedItems);
 
-    when(toDoItemService.getToDoItemsSummary(null, null, null, sprintIds, done))
-            .thenReturn(expectedItems);
+        // Act
+        ResponseEntity<List<ToDoItem>> response = toDoItemController.getToDoItemsSummary(null, null, null, sprintIds, done);
 
-    // Act
-    ResponseEntity<List<ToDoItem>> response = toDoItemController.getToDoItemsSummary(null, null, null, sprintIds, done);
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedItems, response.getBody());
+        verify(toDoItemService, times(1)).getToDoItemsSummary(null, null, null, sprintIds, done);
+    }
 
-    // Assert
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(expectedItems, response.getBody());
-    verify(toDoItemService, times(1)).getToDoItemsSummary(null, null, null, sprintIds, done);
-}
+    @Test
+    public void testGetToDoItemsSummary_SpecificSprintAndUser_DoneItems() {
+        // Arrange
+        Integer userId = 1;
+        Integer sprintId = 3;
+        Boolean done = true;
+        
+        // Convert to List<Integer>
+        List<Integer> userIds = userId != null ? Collections.singletonList(userId) : null;
+        List<Integer> sprintIds = sprintId != null ? Collections.singletonList(sprintId) : null;
 
-@Test
-public void testGetToDoItemsSummary_SpecificSprintAndUser_DoneItems() {
-    // Arrange
-    Integer userId = 1;
-    Integer sprintId = 3;
-    Boolean done = true;
-    
-    // Convert to List<Integer>
-    List<Integer> userIds = userId != null ? Collections.singletonList(userId) : null;
-    List<Integer> sprintIds = sprintId != null ? Collections.singletonList(sprintId) : null;
+        ToDoItem item1 = new ToDoItem();
+        item1.setID(1);
+        item1.setTitle("Completed Sprint Task");
+        item1.setDone(true);
 
-    ToDoItem item1 = new ToDoItem();
-    item1.setID(1);
-    item1.setTitle("Completed Sprint Task");
-    item1.setDone(true);
+        List<ToDoItem> expectedItems = Arrays.asList(item1);
 
-    List<ToDoItem> expectedItems = Arrays.asList(item1);
+        when(toDoItemService.getToDoItemsSummary(userIds, null, null, sprintIds, done))
+                .thenReturn(expectedItems);
 
-    when(toDoItemService.getToDoItemsSummary(userIds, null, null, sprintIds, done))
-            .thenReturn(expectedItems);
+        // Act
+        ResponseEntity<List<ToDoItem>> response = toDoItemController.getToDoItemsSummary(userIds, null, null, sprintIds, done);
 
-    // Act
-    ResponseEntity<List<ToDoItem>> response = toDoItemController.getToDoItemsSummary(userIds, null, null, sprintIds, done);
-
-    // Assert
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(expectedItems, response.getBody());
-    verify(toDoItemService, times(1)).getToDoItemsSummary(userIds, null, null, sprintIds, done);
-}
-
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedItems, response.getBody());
+        verify(toDoItemService, times(1)).getToDoItemsSummary(userIds, null, null, sprintIds, done);
+    }
 }
