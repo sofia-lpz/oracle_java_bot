@@ -25,7 +25,7 @@ public interface KpiRepository extends JpaRepository<Kpi,Integer> {
            "(coalesce(:teamIds, null) IS NULL OR t.user.team.id IN :teamIds) AND " +
            "(coalesce(:projectIds, null) IS NULL OR t.project.id IN :projectIds) AND " +
            "(coalesce(:sprintIds, null) IS NULL OR t.sprint.id IN :sprintIds)")
-    Optional<List<Kpi>> getKpiSummary(
+    List<Kpi> getKpiSummary(
             @Param("userIds") List<Integer> userIds,
             @Param("teamIds") List<Integer> teamIds,
             @Param("projectIds") List<Integer> projectIds,
