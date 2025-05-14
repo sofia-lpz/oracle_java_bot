@@ -6,7 +6,7 @@ import {
   MessageOutlined,
   ProjectOutlined,
   UserOutlined,
-  MenuOutlined,
+  BarChartOutlined,
   LogoutOutlined
 } from '@ant-design/icons';
 
@@ -110,6 +110,12 @@ const SideBar = () => {
             <Link to="/dashboard">
               <HomeOutlined />
               <span>Dashboard</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/charts">
+            <Link to="/charts">
+              <BarChartOutlined />
+              <span>Charts</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="/chatbot">

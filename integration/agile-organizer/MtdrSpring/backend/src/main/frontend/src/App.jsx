@@ -8,6 +8,7 @@ import Users from './pages/Users';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import Charts from './pages/Charts'
 import { isAuthenticated } from './utils/authUtils';
 import './App.css';
 
@@ -61,6 +62,7 @@ function App() {
               } />
               <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+              <Route path="/charts" element={<PrivateRoute><Charts /></PrivateRoute>} />
               <Route path="/task" element={<PrivateRoute><Task /></PrivateRoute>} />
               <Route path="/chatbot" element={<PrivateRoute><ChatBot /></PrivateRoute>} />
               <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />

@@ -4,7 +4,6 @@ import { FilterOutlined } from '@ant-design/icons';
 import { API_KPI, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS, API_LIST } from '../API';
 
 import { authenticatedFetch } from '../utils/authUtils';
-import ComparisonChart from '../components/ComparisonChart';
 
 import '../App.css';
 
@@ -340,14 +339,6 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row>
-      
-      {users && sprints && items && (
-        <ComparisonChart 
-          users={users} 
-          sprints={sprints} 
-          items={items} 
-        />
-      )}
 
       <h2 style={{ color: 'white', margin: '40px 0 20px' }}>User Performance Metrics</h2>
       <Table
