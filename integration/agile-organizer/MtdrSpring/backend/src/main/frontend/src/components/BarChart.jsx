@@ -106,6 +106,9 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
     Math.round(value)
   ).reverse();
 
+  // Calcular el stepSize para que la grid coincida con los valores fijos
+  const stepSize = (maxValue - 0) / (yAxisValues.length - 1);
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -135,16 +138,24 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
       },
       y: {
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
+          color: 'rgba(255, 255, 255, 0.3)',
+          drawOnChartArea: true,
         },
         ticks: {
           color: '#FFFFFF',
           display: false,
+          stepSize: stepSize,
         },
-        beginAtZero: true,
         min: 0,
         max: maxValue,
-        display: false,
+        display: true,
+        border: {
+          display: false,
+        },
+        beginAtZero: true,
+        suggestedMin: 0,
+        suggestedMax: maxValue,
+        stepSize: stepSize,
       },
     },
   };
@@ -176,51 +187,24 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
         </div>
       </div>
       <div style={{ 
-        height: '400px', 
+        height: '400px',
         background: '#2d2d2d', 
         padding: '20px', 
         borderRadius: '8px',
-        position: 'relative'
+        position: 'relative',
+        minHeight: 200,
+        maxHeight: 500,
+        boxSizing: 'border-box',
       }}>
         <div style={{ 
-          display: 'flex',
-          height: '100%'
+           display: 'flex',
+           height: '100%'
         }}>
-          <div style={{
-            position: 'sticky',
-            left: 0,
-            zIndex: 1,
-            background: '#2d2d2d',
-            paddingRight: '20px',
-            width: '60px'
-          }}>
-            <div style={{ 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              padding: '20px 0'
-            }}>
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                height: '100%',
-                color: '#FFFFFF',
-                fontSize: '12px'
-              }}>
-                {yAxisValues.map((value, index) => (
-                  <div key={index} style={{ textAlign: 'right' }}>
-                    {value}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
           <div style={{ 
             overflowX: 'auto',
             overflowY: 'hidden',
-            flex: 1
+            flex: 1,
+            height: '100%'
           }}>
             <div style={{ 
               minWidth: '800px',
@@ -228,7 +212,22 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
             }}>
               <Bar 
                 data={chartData} 
-                options={options}
+                options={{
+                  ...options,
+                  scales: {
+                    ...options.scales,
+                    y: {
+                      ...options.scales.y,
+                      ticks: {
+                        ...options.scales.y.ticks,
+                        display: true,
+                        color: '#FFFFFF',
+                        font: { size: 12 },
+                      },
+                      display: true,
+                    }
+                  }
+                }}
               />
             </div>
           </div>
