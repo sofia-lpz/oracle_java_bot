@@ -909,3 +909,88 @@ input::placeholder {
 .custom-dark-table .ant-empty-description {
   color: #999;
 }
+
+/* Estilos para las gráficas */
+.g2-tooltip {
+  background-color: #2d2d2d !important;
+  color: white !important;
+}
+
+.g2-tooltip-title {
+  color: white !important;
+  fill: white !important;
+}
+
+.g2-tooltip-list-item {
+  color: white !important;
+}
+
+.g2-tooltip-marker {
+  background-color: white !important;
+}
+
+.g2-axis-label {
+  fill: white !important;
+}
+
+.g2-axis-line {
+  stroke: white !important;
+}
+
+.g2-axis-grid {
+  stroke: white !important;
+  opacity: 0.2 !important;
+}
+
+.g2-legend-item-text {
+  fill: white !important;
+}
+
+.g2-legend-item-marker {
+  stroke: white !important;
+}
+
+.g2-chart-label {
+  fill: white !important;
+}
+
+/* Forzar color blanco en todos los textos de las gráficas */
+.g2-tooltip * {
+  color: white !important;
+}
+
+/* Colores personalizados para las barras */
+.g2-bar {
+  fill: #c6624b !important;
+}
+
+.g2-bar:nth-child(2n) {
+  fill: #2FC25B !important;
+}
+
+.g2-bar:nth-child(3n) {
+  fill: #8543E0 !important;
+}
+
+.g2-bar:nth-child(4n) {
+  fill: #13C2C2 !important;
+}
+
+.g2-bar:nth-child(5n) {
+  fill: #FACC14 !important;
+}
+
+/* Forzar el color blanco en el título del tooltip incluso con estilos inline */
+.g2-tooltip-title[style*="color"] {
+  color: white !important;
+}
+
+/* Sobrescribir cualquier estilo inline en el título */
+div[class*="g2-tooltip-title"] {
+  color: white !important;
+}
+
+/* Asegurar que el texto del título sea blanco */
+div[class*="g2-tooltip-title"][style*="color"] {
+  color: white !important;
+}

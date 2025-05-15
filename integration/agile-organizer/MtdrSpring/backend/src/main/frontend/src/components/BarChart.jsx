@@ -1,111 +1,151 @@
-import React, { useEffect, useState } from 'react';
-import { Bar } from '@ant-design/plots';
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { Spin } from 'antd';
-import { API_ITEM_LIST } from '../API';
-import { authenticatedFetch } from '../utils/authUtils';
 
+// Registrar los componentes necesarios de Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-const BarChart = ({ title, xField, yField, seriesField, dataKey }) => {
-  const [summaryData, setSummaryData] = useState([]);
-  const [processedData, setProcessedData] = useState([]);
-  const [loading, setLoading] = useState(true);
+const BarChart = ({ title, xField, yField, seriesField, data }) => {
+  if (!data || data.length === 0) {
+    return (
+      <div style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Spin />
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    const fetchSummary = async () => {
-      try {
-        const res = await authenticatedFetch(API_ITEM_LIST);
-        if (!res.ok) throw new Error('Error fetching summary');
-        const json = await res.json();
-        setSummaryData(json);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Definir colores según el título de la gráfica
+  const getColors = () => {
+    // Paleta para todas las gráficas con transparencia 0.8
+    return [
+      'rgba(148, 215, 105, 0.7)', // #94d769
+      'rgba(108, 191, 237, 0.7)', // #6cbfed
+      'rgba(233, 169, 68, 0.7)',  // #e9a944
+      'rgba(247, 86, 124, 0.7)'   // #f7567c
+    ];
+  };
 
-    fetchSummary();
-  }, []);
+  // Preparar los datos para Chart.js
+  const prepareChartData = () => {
+    const colors = getColors();
+    if (seriesField) {
+      // Agrupar datos por sprint y usuario
+      const groupedData = data.reduce((acc, item) => {
+        if (!acc[item[xField]]) {
+          acc[item[xField]] = {};
+        }
+        acc[item[xField]][item[seriesField]] = item[yField];
+        return acc;
+      }, {});
 
-  useEffect(() => {
-    if (!summaryData.length) return;
+      // Obtener todos los sprints y usuarios únicos
+      const sprints = [...new Set(data.map(item => item[xField]))];
+      const users = [...new Set(data.map(item => item[seriesField]))];
 
-    const computeData = () => {
-      switch (dataKey) {
-        case 'completedTasks':
-          const completed = summaryData
-            .filter(item => item.done)
-            .map(item => ({
-              sprint: `Sprint ${item.sprintId}`,
-              user: item.assignedUser?.name || 'Sin usuario',
-              value: 1,
-            }))
-            .reduce((acc, curr) => {
-              const key = `${curr.user}-${curr.sprint}`;
-              acc[key] = acc[key] ? acc[key] + 1 : 1;
-              return acc;
-            }, {});
-          return Object.entries(completed).map(([key, value]) => {
-            const [user, sprint] = key.split('-');
-            return { sprint, user, value };
-          });
+      // Crear datasets para cada usuario
+      const datasets = users.map((user, index) => ({
+        label: user,
+        data: sprints.map(sprint => groupedData[sprint]?.[user] || 0),
+        backgroundColor: colors[index % colors.length],
+        borderColor: colors[index % colors.length],
+        borderWidth: 1,
+      }));
 
-        case 'hoursPerDev':
-          const hours = summaryData
-            .map(item => ({
-              sprint: `Sprint ${item.sprintId}`,
-              user: item.assignedUser?.name || 'Sin usuario',
-              value: item.hoursWorked || 0,
-            }))
-            .reduce((acc, curr) => {
-              const key = `${curr.user}-${curr.sprint}`;
-              acc[key] = (acc[key] || 0) + curr.value;
-              return acc;
-            }, {});
-          return Object.entries(hours).map(([key, value]) => {
-            const [user, sprint] = key.split('-');
-            return { sprint, user, value };
-          });
+      return {
+        labels: sprints,
+        datasets,
+      };
+    } else {
+      // Datos simples sin agrupación
+      return {
+        labels: data.map(item => item[xField]),
+        datasets: [{
+          label: title,
+          data: data.map(item => item[yField]),
+          backgroundColor: data.map((_, i) => colors[i % colors.length]),
+          borderColor: data.map((_, i) => colors[i % colors.length]),
+          borderWidth: 1,
+        }],
+      };
+    }
+  };
 
-        case 'totalHoursPerSprint':
-          const total = summaryData
-            .map(item => ({
-              sprint: `Sprint ${item.sprintId}`,
-              value: item.hoursWorked || 0,
-            }))
-            .reduce((acc, curr) => {
-              acc[curr.sprint] = (acc[curr.sprint] || 0) + curr.value;
-              return acc;
-            }, {});
-          return Object.entries(total).map(([sprint, value]) => ({
-            sprint,
-            value,
-          }));
+  const chartData = prepareChartData();
 
-        default:
-          return [];
-      }
-    };
-
-    setProcessedData(computeData());
-  }, [summaryData, dataKey]);
-
-  if (loading) return <Spin />;
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: '#FFFFFF',
+          font: {
+            size: 12,
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: title,
+        color: '#FFFFFF',
+        font: {
+          size: 16,
+          weight: 'bold',
+        },
+      },
+      tooltip: {
+        backgroundColor: '#2d2d2d',
+        titleColor: '#FFFFFF',
+        bodyColor: '#FFFFFF',
+        borderColor: '#444',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: '#FFFFFF',
+        },
+      },
+      y: {
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: '#FFFFFF',
+        },
+      },
+    },
+  };
 
   return (
     <div style={{ marginBottom: 50 }}>
-      <h2 style={{ color: 'white' }}>{title}</h2>
-      <Bar
-        data={processedData}
-        isGroup={!!seriesField}
-        xField={yField}
-        yField={xField}
-        seriesField={seriesField}
-        barStyle={{ radius: [2, 2, 0, 0] }}
-        tooltip={{ fields: [xField, seriesField, yField].filter(Boolean) }}
-      />
+      <h2 style={{ color: 'white', marginBottom: '20px' }}>{title}</h2>
+      <div style={{ height: '400px', background: '#2d2d2d', padding: '20px', borderRadius: '8px' }}>
+        <Bar data={chartData} options={options} />
+      </div>
     </div>
   );
 };
 
-export default BarChart;
+export default BarChart; 
