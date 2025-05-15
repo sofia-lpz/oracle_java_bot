@@ -90,7 +90,14 @@ const Charts = () => {
   }
 
   return (
-    <div style={{ padding: '40px', background: '#1d1d1d', minHeight: '100vh', color: 'white' }}>
+    <div style={{ 
+      padding: '40px', 
+      background: '#1d1d1d', 
+      minHeight: '100vh', 
+      color: 'white',
+      overflowY: 'auto',
+      maxHeight: '100vh'
+    }}>
       <h1 style={{ color: 'white', marginBottom: '30px' }}>Charts</h1>
       <Row gutter={[32, 32]}>
         <Col xs={24} lg={12}>
