@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Spin } from 'antd';
+import { Spin, Tag } from 'antd';
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(
@@ -88,27 +88,33 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
 
   const chartData = prepareChartData();
 
+  // Calcular el valor máximo y redondearlo a un número más amigable
+  const calculateMaxValue = () => {
+    const maxValue = Math.max(...chartData.datasets.map(dataset => 
+      Math.max(...dataset.data)
+    ));
+    
+    // Redondear a un número más amigable
+    const magnitude = Math.pow(10, Math.floor(Math.log10(maxValue)));
+    const roundedMax = Math.ceil(maxValue / magnitude) * magnitude;
+    
+    return roundedMax;
+  };
+
+  const maxValue = calculateMaxValue();
+  const yAxisValues = [0, maxValue * 0.25, maxValue * 0.5, maxValue * 0.75, maxValue].map(value => 
+    Math.round(value)
+  ).reverse();
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top',
-        labels: {
-          color: '#FFFFFF',
-          font: {
-            size: 12,
-          },
-        },
+        display: false,
       },
       title: {
-        display: true,
-        text: title,
-        color: '#FFFFFF',
-        font: {
-          size: 16,
-          weight: 'bold',
-        },
+        display: false,
       },
       tooltip: {
         backgroundColor: '#2d2d2d',
@@ -133,16 +139,100 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
         },
         ticks: {
           color: '#FFFFFF',
+          display: false,
         },
+        beginAtZero: true,
+        min: 0,
+        max: maxValue,
+        display: false,
       },
     },
   };
 
+  // Obtener las etiquetas únicas para mostrar
+  const uniqueLabels = seriesField 
+    ? [...new Set(data.map(item => item[seriesField]))]
+    : [title];
+
   return (
     <div style={{ marginBottom: 50 }}>
-      <h2 style={{ color: 'white', marginBottom: '20px' }}>{title}</h2>
-      <div style={{ height: '400px', background: '#2d2d2d', padding: '20px', borderRadius: '8px' }}>
-        <Bar data={chartData} options={options} />
+      <div style={{ marginBottom: '20px' }}>
+        <h2 style={{ color: 'white', marginBottom: '10px' }}>{title}</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {uniqueLabels.map((label, index) => (
+            <Tag 
+              key={index}
+              color={getColors()[index % getColors().length].replace('0.7', '1')}
+              style={{ 
+                color: 'white',
+                border: 'none',
+                padding: '4px 8px',
+                fontSize: '12px'
+              }}
+            >
+              {label}
+            </Tag>
+          ))}
+        </div>
+      </div>
+      <div style={{ 
+        height: '400px', 
+        background: '#2d2d2d', 
+        padding: '20px', 
+        borderRadius: '8px',
+        position: 'relative'
+      }}>
+        <div style={{ 
+          display: 'flex',
+          height: '100%'
+        }}>
+          <div style={{
+            position: 'sticky',
+            left: 0,
+            zIndex: 1,
+            background: '#2d2d2d',
+            paddingRight: '20px',
+            width: '60px'
+          }}>
+            <div style={{ 
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: '20px 0'
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100%',
+                color: '#FFFFFF',
+                fontSize: '12px'
+              }}>
+                {yAxisValues.map((value, index) => (
+                  <div key={index} style={{ textAlign: 'right' }}>
+                    {value}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div style={{ 
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            flex: 1
+          }}>
+            <div style={{ 
+              minWidth: '800px',
+              height: '100%'
+            }}>
+              <Bar 
+                data={chartData} 
+                options={options}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
