@@ -30,11 +30,12 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Add this line
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/login", "/static/**", "/auth/**", "/*.js", "/*.css",
-                                "/*.ico", "/manifest.json", "/*.png", "/favicon.ico", "/fonts/**", "/images/**")
+                                "/*.ico", "/manifest.json", "/*.png", "/favicon.ico", "/fonts/**", "/images/**", "/users", "/",
+                                "/dashboard", "/task", "/Task", "/users", "/Users", "/chatbot", "/Chatbot", "/home")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

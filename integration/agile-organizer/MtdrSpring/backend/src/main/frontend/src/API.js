@@ -16,15 +16,15 @@
 // Copy from the endpoint from the API Gateway Deployment
 // Example: const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.<region>.oci.customer-oci.com/todolist';
 // const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.eu-frankfurt-1.oci.customer-oci.com/todolist';
-const API_LIST = '/todolist';
-const API_STATES = '/states';
+const API_LIST = '/api/todolist';
+const API_STATES = '/api/states';
 const API_LOGIN = '/auth/login'
 const API_LOGOUT = '/auth/logout';
 const API_SIGNUP = '/auth/signup';
-const API_KPI = '/kpi/summary';
-const API_USERS = '/users';
-const API_PROJECTS = '/projects';
-const API_SPRINTS = '/sprints';
-const API_TEAMS = '/teams';
+const API_KPI = '/api/kpi/summary';
+const API_USERS = '/api/users';
+const API_PROJECTS = '/api/projects';
+const API_SPRINTS = '/api/sprints';
+const API_TEAMS = '/api/teams';
 
 export { API_LIST, API_STATES, API_KPI , API_LOGIN, API_LOGOUT, API_SIGNUP, API_USERS, API_PROJECTS, API_SPRINTS, API_TEAMS };

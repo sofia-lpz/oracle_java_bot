@@ -1,5 +1,7 @@
 package com.springboot.MyTodoList.controller;
+import com.springboot.MyTodoList.mapper.UserMapper;
 import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.model.dto.UserDto;
 import com.springboot.MyTodoList.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@RequestMapping("/api")
 @RestController
 public class UserController {
     @Autowired
@@ -18,23 +21,30 @@ public class UserController {
 
     //@CrossOrigin
     @GetMapping(value = "/users")
-    public List<User> getAllUsers(){
-        return userService.findAll();
+    public ResponseEntity<List<UserDto>> getAllUsers(){
+        List<User> users = userService.findAll();
+
+        List<UserDto> userDtos = users.stream()
+                .map(UserMapper::toDto)
+                .toList();
+        return new ResponseEntity<List<UserDto>>(userDtos, HttpStatus.OK);
     }
 
     //@CrossOrigin
     @GetMapping(value = "/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id){
+    public ResponseEntity<UserDto> getUserById(@PathVariable int id){
         try{
             User user = userService.getUserById(id);
-            return new ResponseEntity<User>(user, HttpStatus.OK);
+            
+            return new ResponseEntity<UserDto>(UserMapper.toDto(user), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
     //@CrossOrigin
     @PostMapping(value = "/adduser")
-    public ResponseEntity addUser(@RequestBody User newUser) throws Exception{
+    public ResponseEntity<?> addUser(@RequestBody User newUser) throws Exception{
         User dbUser = userService.addUser(newUser);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location",""+dbUser.getID());
@@ -44,17 +54,19 @@ public class UserController {
         return ResponseEntity.ok()
                 .headers(responseHeaders).build();
     }
+
     //@CrossOrigin
     @PutMapping(value = "updateUser/{id}")
-    public ResponseEntity updateUser(@RequestBody User user, @PathVariable int id){
+    public ResponseEntity<UserDto> updateUser(@RequestBody User user, @PathVariable int id){
         try{
             User dbUser = userService.updateUser(id, user);
             
-            return new ResponseEntity<>(dbUser,HttpStatus.OK);
+            return new ResponseEntity<>(UserMapper.toDto(dbUser),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+    
     //@CrossOrigin
     @DeleteMapping(value = "deleteUser/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable("id") int id){
@@ -66,7 +78,4 @@ public class UserController {
             return new ResponseEntity<>(flag,HttpStatus.NOT_FOUND);
         }
     }
-
-
-
 }
