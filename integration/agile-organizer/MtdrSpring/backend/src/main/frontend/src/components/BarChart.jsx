@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Spin, Tag } from 'antd';
+import { label } from 'framer-motion/client';
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(
@@ -21,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-const BarChart = ({ title, xField, yField, seriesField, data }) => {
+const BarChart = ({ title, xField, yField, seriesField, data, unit = 'units' , singleColor = false}) => {
   if (!data || data.length === 0) {
     return (
       <div style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -34,57 +35,58 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
   const getColors = () => {
     // Paleta para todas las gráficas con transparencia 0.8
     return [
-      'rgba(148, 215, 105, 0.7)', // #94d769
-      'rgba(108, 191, 237, 0.7)', // #6cbfed
-      'rgba(233, 169, 68, 0.7)',  // #e9a944
-      'rgba(247, 86, 124, 0.7)'   // #f7567c
+      'rgba(148, 215, 105, 0.8)', // #94d769
+      'rgba(108, 191, 237, 0.8)', // #6cbfed
+      'rgba(233, 169, 68, 0.8)',  // #e9a944
+      'rgba(247, 86, 124, 0.8)'   // #f7567c
     ];
   };
 
   // Preparar los datos para Chart.js
-  const prepareChartData = () => {
-    const colors = getColors();
-    if (seriesField) {
-      // Agrupar datos por sprint y usuario
-      const groupedData = data.reduce((acc, item) => {
-        if (!acc[item[xField]]) {
-          acc[item[xField]] = {};
-        }
-        acc[item[xField]][item[seriesField]] = item[yField];
-        return acc;
-      }, {});
+// Preparar los datos para Chart.js
+const prepareChartData = () => {
+  const colors = getColors();
+  if (seriesField) {
+    // Agrupar datos por sprint y usuario
+    const groupedData = data.reduce((acc, item) => {
+      if (!acc[item[xField]]) {
+        acc[item[xField]] = {};
+      }
+      acc[item[xField]][item[seriesField]] = item[yField];
+      return acc;
+    }, {});
 
-      // Obtener todos los sprints y usuarios únicos
-      const sprints = [...new Set(data.map(item => item[xField]))];
-      const users = [...new Set(data.map(item => item[seriesField]))];
+    // Obtener todos los sprints y usuarios únicos
+    const sprints = [...new Set(data.map(item => item[xField]))];
+    const users = [...new Set(data.map(item => item[seriesField]))];
 
-      // Crear datasets para cada usuario
-      const datasets = users.map((user, index) => ({
-        label: user,
-        data: sprints.map(sprint => groupedData[sprint]?.[user] || 0),
-        backgroundColor: colors[index % colors.length],
-        borderColor: colors[index % colors.length],
+    // Crear datasets para cada usuario
+    const datasets = users.map((user, index) => ({
+      label: user,
+      data: sprints.map(sprint => groupedData[sprint]?.[user] || 0),
+      backgroundColor: singleColor ? colors[0] : colors[index % colors.length],
+      borderColor: singleColor ? colors[0] : colors[index % colors.length],
+      borderWidth: 1,
+    }));
+
+    return {
+      labels: sprints,
+      datasets,
+    };
+  } else {
+    // Datos simples sin agrupación
+    return {
+      labels: data.map(item => item[xField]),
+      datasets: [{
+        label: title,
+        data: data.map(item => item[yField]),
+        backgroundColor: singleColor ? colors[0] : data.map((_, i) => colors[i % colors.length]),
+        borderColor: singleColor ? colors[0] : data.map((_, i) => colors[i % colors.length]),
         borderWidth: 1,
-      }));
-
-      return {
-        labels: sprints,
-        datasets,
-      };
-    } else {
-      // Datos simples sin agrupación
-      return {
-        labels: data.map(item => item[xField]),
-        datasets: [{
-          label: title,
-          data: data.map(item => item[yField]),
-          backgroundColor: data.map((_, i) => colors[i % colors.length]),
-          borderColor: data.map((_, i) => colors[i % colors.length]),
-          borderWidth: 1,
-        }],
-      };
-    }
-  };
+      }],
+    };
+  }
+};
 
   const chartData = prepareChartData();
 
@@ -125,6 +127,21 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
         bodyColor: '#FFFFFF',
         borderColor: '#444',
         borderWidth: 1,
+        callbacks:{
+          label: function (context) {
+            let label = context.dataset.label || '';
+
+            if (label) {
+              label += ': ';
+            }
+
+            if (context.parsed.y !== null) {
+              label += context.parsed.y + ' ' + unit;
+            }
+
+            return label;
+          }
+        }
       },
     },
     scales: {
@@ -136,7 +153,7 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
           color: '#FFFFFF',
         },
       },
-      y: {
+y: {
         grid: {
           color: 'rgba(255, 255, 255, 0.3)',
           drawOnChartArea: true,
@@ -156,6 +173,19 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
         suggestedMin: 0,
         suggestedMax: maxValue,
         stepSize: stepSize,
+        title: {
+          display: true,
+          text: unit.charAt(0).toUpperCase() + unit.slice(1),
+          color: '#FFFFFF',
+          font: {
+            size: 14,
+            weight: 'bold'
+          },
+          padding: {
+            top: 0,
+            bottom: 10
+          }
+        }
       },
     },
   };
@@ -170,20 +200,21 @@ const BarChart = ({ title, xField, yField, seriesField, data }) => {
       <div style={{ marginBottom: '20px' }}>
         <h2 style={{ color: 'white', marginBottom: '10px' }}>{title}</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {uniqueLabels.map((label, index) => (
-            <Tag 
-              key={index}
-              color={getColors()[index % getColors().length].replace('0.7', '1')}
-              style={{ 
-                color: 'white',
-                border: 'none',
-                padding: '4px 8px',
-                fontSize: '12px'
-              }}
-            >
-              {label}
-            </Tag>
-          ))}
+{uniqueLabels.map((label, index) => (
+  <Tag 
+    key={index}
+    color={getColors()[index % getColors().length].replace('0.7', '1')}
+    style={{ 
+      color: '#1d1d1d',  // Changed from 'white' to dark color for better readability
+      fontWeight: 'bold', // Added bold to improve contrast
+      border: 'none',
+      padding: '4px 8px',
+      fontSize: '12px'
+    }}
+  >
+    {label}
+  </Tag>
+))}
         </div>
       </div>
       <div style={{ 
