@@ -33,8 +33,11 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Add this line
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // Just keep this one line for all auth endpoints
-                        .anyRequest().authenticated())
+                        .requestMatchers("/", "/index.html", "/login", "/static/**", "/auth/**", "/*.js", "/*.css",
+                                "/*.ico", "/manifest.json", "/*.png", "/favicon.ico", "/fonts/**", "/images/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
