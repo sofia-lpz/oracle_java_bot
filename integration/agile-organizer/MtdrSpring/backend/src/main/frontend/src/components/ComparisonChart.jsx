@@ -1,165 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer
-} from 'recharts';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { Card, Select, Row, Col, Radio } from 'antd';
 
-const ComparisonChart = ({ users, sprints, items }) => {
-  const [comparisonType, setComparisonType] = useState('users'); // 'users' or 'sprints'
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+const ComparisonChart = ({ users = [], sprints = [], items = [] }) => {
+  const [comparisonType, setComparisonType] = useState('users');
   const [selectedEntities, setSelectedEntities] = useState([]);
   const [metricType, setMetricType] = useState('tasksCompleted');
-  const [chartData, setChartData] = useState([]);
-  
-  // Handle entity selection (users or sprints)
-  const handleEntityChange = (selectedValues) => {
-    setSelectedEntities(selectedValues);
-  };
-  
-  // Handle comparison type change (users vs sprints)
+  const [chartData, setChartData] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const handleEntityChange = (values) => setSelectedEntities(values);
+
   const handleComparisonTypeChange = (e) => {
     setComparisonType(e.target.value);
-    setSelectedEntities([]); // Reset selection when changing comparison type
-  };
-  
-  // Handle metric type change
-  const handleMetricTypeChange = (e) => {
-    setMetricType(e.target.value);
-  };
-  
-  // Generate chart data when selections change
-  useEffect(() => {
-    if (selectedEntities.length === 0) {
-      setChartData([]);
-      return;
-    }
-    
-    if (comparisonType === 'users') {
-      generateUserComparisonData();
-    } else {
-      generateSprintComparisonData();
-    }
-  }, [selectedEntities, metricType, comparisonType]);
-  
-  // Generate data for user comparison
-  const generateUserComparisonData = () => {
-    // Initialize data structure
-    const data = [];
-    
-    // For each selected user, calculate metrics
-    selectedEntities.forEach(userId => {
-      const user = users.find(u => u.id === userId);
-      if (!user) return;
-      
-      // Filter tasks by user
-      const userTasks = items.filter(item => 
-        item.done && 
-        !item.deleted && 
-        item.user && 
-        item.user.id === userId
-      );
-      
-      // Calculate metrics
-      const tasksCompleted = userTasks.length;
-      const storyPointsCompleted = userTasks.reduce(
-        (sum, task) => sum + (task.storyPoints || 0), 0
-      );
-      const hoursCompleted = userTasks.reduce(
-        (sum, task) => sum + (task.real_hours || 0), 0
-      );
-      
-      // Add to chart data
-      data.push({
-        name: user.name,
-        tasksCompleted,
-        storyPointsCompleted,
-        hoursCompleted
-      });
-    });
-    
-    setChartData(data);
-  };
-  
-  // Generate data for sprint comparison
-  const generateSprintComparisonData = () => {
-    // Initialize data structure
-    const data = [];
-    
-    // For each selected sprint, calculate metrics
-    selectedEntities.forEach(sprintId => {
-      const sprint = sprints.find(s => s.id === sprintId);
-      if (!sprint) return;
-      
-      // Filter tasks by sprint
-      const sprintTasks = items.filter(item => 
-        item.done && 
-        !item.deleted && 
-        item.sprint && 
-        item.sprint.id === sprintId
-      );
-      
-      // Calculate metrics
-      const tasksCompleted = sprintTasks.length;
-      const storyPointsCompleted = sprintTasks.reduce(
-        (sum, task) => sum + (task.storyPoints || 0), 0
-      );
-      const hoursCompleted = sprintTasks.reduce(
-        (sum, task) => sum + (task.real_hours || 0), 0
-      );
-      
-      // Add to chart data
-      data.push({
-        name: sprint.name,
-        tasksCompleted,
-        storyPointsCompleted,
-        hoursCompleted
-      });
-    });
-    
-    setChartData(data);
+    setSelectedEntities([]);
   };
 
-  // Define colors for different metrics
-  const colors = {
-    tasksCompleted: '#49c2f2',  // Visibility blue
-    storyPointsCompleted: '#f5a623',  // Accountability orange
-    hoursCompleted: '#7ed957'  // Productivity green
+  const handleMetricTypeChange = (e) => setMetricType(e.target.value);
+
+  const generateData = () => {
+    const data = [];
+    const labels = [];
+
+    const entities = comparisonType === 'users' ? users : sprints;
+
+    selectedEntities.forEach(id => {
+      const entity = entities.find(e => e?.id === id);
+      if (!entity) return;
+
+      const filteredItems = items.filter(item =>
+        item?.done &&
+        !item.deleted &&
+        ((comparisonType === 'users' && item?.user?.id === id) ||
+         (comparisonType === 'sprints' && item?.sprint?.id === id))
+      );
+
+      const tasksCompleted = filteredItems.length;
+      const storyPointsCompleted = filteredItems.reduce((sum, t) => sum + (t.storyPoints || 0), 0);
+      const hoursCompleted = filteredItems.reduce((sum, t) => sum + (t.real_hours || 0), 0);
+
+      labels.push(entity.name);
+      data.push(
+        metricType === 'tasksCompleted' ? tasksCompleted :
+        metricType === 'storyPointsCompleted' ? storyPointsCompleted :
+        hoursCompleted
+      );
+    });
+
+    const backgroundColors = {
+      tasksCompleted: '#49c2f2',
+      storyPointsCompleted: '#f5a623',
+      hoursCompleted: '#7ed957',
+    };
+
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: metricLabels[metricType],
+          data,
+          backgroundColor: backgroundColors[metricType],
+        },
+      ],
+    });
   };
-  
-  // Map metric types to display names
+
+  useEffect(() => {
+    if (selectedEntities.length) generateData();
+    else setChartData({});
+  }, [selectedEntities, metricType, comparisonType, items]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const metricLabels = {
     tasksCompleted: 'Tasks Completed',
     storyPointsCompleted: 'Story Points',
-    hoursCompleted: 'Hours Completed'
+    hoursCompleted: 'Hours Completed',
   };
-  
+
+  const hasData = users.length > 0 && sprints.length > 0;
+  const hasChart = chartData?.labels?.length > 0;
+
   return (
     <Card className="card-dashboard" style={{ marginTop: '20px' }}>
       <h2 style={{ color: 'white', textAlign: 'center', marginBottom: '20px' }}>
         Performance Comparison
       </h2>
-      
+
       <Row gutter={16} style={{ marginBottom: '20px' }}>
         <Col span={8}>
           <div style={{ marginBottom: '10px', color: 'white' }}>Compare by:</div>
-          <Radio.Group 
-            value={comparisonType} 
+          <Radio.Group
+            value={comparisonType}
             onChange={handleComparisonTypeChange}
             buttonStyle="solid"
+            disabled={!hasData || loading}
           >
             <Radio.Button value="users">Users</Radio.Button>
             <Radio.Button value="sprints">Sprints</Radio.Button>
           </Radio.Group>
         </Col>
-        
+
         <Col span={8}>
-          <div style={{ marginBottom: '10px', color: 'white' }}>Select {comparisonType === 'users' ? 'Users' : 'Sprints'} to Compare:</div>
+          <div style={{ marginBottom: '10px', color: 'white' }}>
+            Select {comparisonType === 'users' ? 'Users' : 'Sprints'} to Compare:
+          </div>
           <Select
             mode="multiple"
             className="white-select"
@@ -167,20 +120,22 @@ const ComparisonChart = ({ users, sprints, items }) => {
             style={{ width: '100%' }}
             onChange={handleEntityChange}
             value={selectedEntities}
+            disabled={!hasData || loading}
             options={
-              comparisonType === 'users' 
-                ? users.map(user => ({ label: user.name, value: user.id }))
-                : sprints.map(sprint => ({ label: sprint.name, value: sprint.id }))
+              comparisonType === 'users'
+                ? users.map(user => user && ({ label: user.name, value: user.id })).filter(Boolean)
+                : sprints.map(sprint => sprint && ({ label: sprint.name, value: sprint.id })).filter(Boolean)
             }
           />
         </Col>
-        
+
         <Col span={8}>
           <div style={{ marginBottom: '10px', color: 'white' }}>Metric:</div>
-          <Radio.Group 
-            value={metricType} 
+          <Radio.Group
+            value={metricType}
             onChange={handleMetricTypeChange}
             buttonStyle="solid"
+            disabled={!hasData || loading}
           >
             <Radio.Button value="tasksCompleted">Tasks</Radio.Button>
             <Radio.Button value="storyPointsCompleted">Story Points</Radio.Button>
@@ -188,38 +143,43 @@ const ComparisonChart = ({ users, sprints, items }) => {
           </Radio.Group>
         </Col>
       </Row>
-      
-      {chartData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart
+
+      {loading ? (
+        <div style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#888' }}>
+          Loading chart data...
+        </div>
+      ) : hasChart ? (
+        <div style={{ height: '400px' }}>
+          <Bar
             data={chartData}
-            margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-            <XAxis 
-              dataKey="name" 
-              tick={{ fill: 'white' }}
-              angle={-45}
-              textAnchor="end"
-              height={70}
-            />
-            <YAxis tick={{ fill: 'white' }} />
-            <Tooltip 
-              contentStyle={{ backgroundColor: '#272727', border: '1px solid #444', color: 'white' }}
-              formatter={(value) => [`${value}`, `${metricLabels[metricType]}`]}
-            />
-            <Legend wrapperStyle={{ color: 'white' }} />
-            <Bar 
-              dataKey={metricType} 
-              name={metricLabels[metricType]} 
-              fill={colors[metricType]} 
-              animationDuration={1000} 
-            />
-          </BarChart>
-        </ResponsiveContainer>
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { labels: { color: 'white' } },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.dataset.label}: ${context.parsed.y}`,
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  ticks: { color: 'white' },
+                  title: { color: 'white' },
+                },
+                y: {
+                  ticks: { color: 'white' },
+                  title: { color: 'white' },
+                },
+              },
+            }}
+          />
+        </div>
       ) : (
         <div style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#888' }}>
-          Select {comparisonType === 'users' ? 'users' : 'sprints'} to view comparison
+          {!hasData
+            ? "No data available"
+            : `Select ${comparisonType === 'users' ? 'users' : 'sprints'} to view comparison`}
         </div>
       )}
     </Card>
