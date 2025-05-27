@@ -34,7 +34,6 @@ public class KpiControllerTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
-    /*
 
     @Test
     public void testGetAllKpis() {
@@ -99,49 +98,6 @@ public class KpiControllerTest {
         verify(kpiService, times(1)).getKpiById(kpiId);
     }
 
-    @Test
-    public void testGetKpiSummary_Success() {
-        // Arrange
-        Integer userId = 1;
-        Integer teamId = 2;
-        Integer projectId = 3;
-        Integer sprintId = 4;
-
-        Kpi kpi1 = new Kpi();
-        kpi1.setID(1);
-        kpi1.setType("VISIBILITY");
-
-        Kpi kpi2 = new Kpi();
-        kpi2.setID(2);
-        kpi2.setType("ACCOUNTABILITY");
-
-        List<Kpi> expectedKpis = Arrays.asList(kpi1, kpi2);
-
-        when(kpiService.getKpiSummary(userId, teamId, projectId, sprintId)).thenReturn(expectedKpis);
-
-        // Act
-        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userId, teamId, projectId, sprintId);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedKpis, response.getBody());
-        verify(kpiService, times(1)).getKpiSummary(userId, teamId, projectId, sprintId);
-    }
-
-    @Test
-    public void testGetKpiSummary_Error() {
-        // Arrange
-        Integer userId = 1;
-        when(kpiService.getKpiSummary(userId, null, null, null))
-                .thenThrow(new RuntimeException("Error retrieving KPI summary"));
-
-        // Act
-        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userId, null, null, null);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(kpiService, times(1)).getKpiSummary(userId, null, null, null);
-    }
 
     @Test
     public void testAddKpi_Success() throws Exception {
@@ -263,5 +219,5 @@ public class KpiControllerTest {
         assertEquals(false, response.getBody());
         verify(kpiService, times(1)).deleteKpi(kpiId);
     }
-        */
+    
 }
