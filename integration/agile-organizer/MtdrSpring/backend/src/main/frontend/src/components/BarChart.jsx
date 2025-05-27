@@ -10,7 +10,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Spin, Tag } from 'antd';
-import { label } from 'framer-motion/client';
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(
