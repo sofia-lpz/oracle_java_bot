@@ -1,6 +1,5 @@
 FROM openjdk:21
 
-
 # Set working directory inside the container
 WORKDIR /app
 
@@ -43,9 +42,9 @@ RUN mvn clean install
 RUN mvn verify
 
 # RUN java -jar target/MyTodoList-0.0.1-SNAPSHOT.jar mytodo.jar >> output
-ENV db_user="TODOUSER"
+ENV db_user="ADMIN"
 ENV dbpassword="None00010001"
-ENV db_url="jdbc:oracle:thin:@rreacttodosfnfo_tp?TNS_ADMIN=/Wallet"
+ENV db_url="jdbc:oracle:thin:@reacttodox774w_tp?TNS_ADMIN=/Wallet"
 ENV driver_class_name="oracle.jdbc.OracleDriver"
 
 
@@ -56,7 +55,6 @@ EXPOSE 9898
 EXPOSE 9090 
 EXPOSE 5173
 EXPOSE 3306
-EXPOSE 80
 
 # CMD ["java", "-jar", "/app/myapp.jar"]
 ENTRYPOINT ["mvn","spring-boot:run"]
