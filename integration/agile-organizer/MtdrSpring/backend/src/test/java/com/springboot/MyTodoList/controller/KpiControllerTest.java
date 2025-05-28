@@ -38,6 +38,7 @@ public class KpiControllerTest {
 
     hola
 
+    JSKHDFHKSAGVH
     hola hola HOLA HIOALM HAII SJAHDJAVHJKDK SVQHJFK VDSGAJ IJGDSUIH
 
     @Test
