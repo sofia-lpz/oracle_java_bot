@@ -38,6 +38,13 @@ steps:
         ./Deploy_Creds/login_docker.sh
 
   - type: Command
+    name: "Build Docker Image"
+    command: |
+        cd /workspace/git/integration/agile-organizer/MtdrSpring/backend
+        docker build -t mx-queretaro-1.ocir.io/axpaqk4pamrb/reacttodo/uzi5a/todolistapp-springboot:0.1 .
+        echo "Docker image built successfully"
+
+  - type: Command
     name: "Push Docker Image"
     command: |
         docker push mx-queretaro-1.ocir.io/axpaqk4pamrb/reacttodo/uzi5a/todolistapp-springboot:0.1
