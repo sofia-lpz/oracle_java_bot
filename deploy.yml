@@ -54,5 +54,11 @@ steps:
   - type: Command
     name: "undeploy"
     command: |
-        cd /workspace/git/integration/agile-organizer/MtdrSpring/backend
-        source ./undeploy.sh
+      export PATH=$PATH:$HOME/k8s;kubectl version;
+      export KUBECONFIG=$HOME/.kube/config;
+      cd /workspace/git/integration/agile-organizer/MtdrSpring/
+      source env.sh;
+      cd backend;
+      ls -l;
+      kubectl config view;
+      source undeploy.sh;
