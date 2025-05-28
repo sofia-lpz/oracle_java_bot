@@ -140,7 +140,7 @@ useEffect(() => {
       <Col xs={24} lg={24}>
         <div style={{ background: '#2d2d2d', padding: '20px', borderRadius: '8px', height: '100%' }}>
           <BarChart
-            title="Tareas completadas por usuario y sprint"
+            title="Error de etiqueta"
             xField="sprint"
             yField="value"
             seriesField="user"
