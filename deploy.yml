@@ -46,7 +46,7 @@ steps:
     name: "check final"
     command: |
       echo yeah finish
-- type: Command
+  - type: Command
     name: "Install K8s"
     command: mkdir -p $HOME/.kube;
       cd $HOME;
