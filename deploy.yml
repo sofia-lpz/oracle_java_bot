@@ -15,7 +15,7 @@ steps:
     name: "Move Wallet to Backend Source"
     command: |
       if [ -d "Wallet" ]; then
-        cp -r Wallet integration/agile-organizer/MtdrSpring/backend/src/
+        cp -r ./Deploy_Creds/Wallet integration/agile-organizer/MtdrSpring/backend/src/
         echo "Wallet copied to integration/agile-organizer/MtdrSpring/backend/src/"
       else
         echo "Wallet directory not found"
@@ -25,7 +25,7 @@ steps:
     name: "Copy Application Properties"
     command: |
       if [ -f "application.properties" ]; then
-        cp application.properties integration/agile-organizer/MtdrSpring/backend/src/main/resources/
+        cp ./Deploy_Creds/application.properties integration/agile-organizer/MtdrSpring/backend/src/main/resources/
         echo "Application properties copied to integration/agile-organizer/MtdrSpring/backend/src/main/resources/"
       else
         echo "application.properties not found"
@@ -35,9 +35,9 @@ steps:
     name: "Extract and Move Maven"
     command: |
       if [ -f "maven.tar.gz" ]; then
-        tar -xzvf maven.tar.gz
-        if [ -d "maven" ]; then
-          cp -r maven integration/agile-organizer/MtdrSpring/backend/
+        
+       
+          cp -r ./Deploy_Creds/maven.tar.gz integration/agile-organizer/MtdrSpring/backend/
           echo "Maven copied to integration/agile-organizer/MtdrSpring/backend/"
         else
           echo "Maven directory not found after extraction"
@@ -52,7 +52,7 @@ steps:
     command: |
       if [ -f "login_docker.sh" ]; then
         chmod +x login_docker.sh
-        ./login_docker.sh
+        ./Deploy_Creds/login_docker.sh
       else
         echo "login_docker.sh not found"
         exit 1
