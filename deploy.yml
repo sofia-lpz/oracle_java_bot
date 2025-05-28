@@ -1,0 +1,53 @@
+version: 0.1 
+component: build
+timeoutInSeconds: 600
+shell: bash
+env:
+  exportedVariables:
+    - BuildServiceDemoVersion
+steps:
+  - type: Command
+    name: "Download and Extract CI Credentials"
+    command: |
+      oci os object get --bucket-name ci_creds --name Deploy_Creds.tar --file Deploy_Creds.tar
+      tar -xvf Deploy_Creds.tar
+      ls
+      pwd
+  - type: Command
+    name: "Move Wallet to Backend Source"
+    command: |
+        cp -r ./Deploy_Creds/Wallet /workspace/git/integration/agile-organizer/MtdrSpring/backend/src/
+        echo "Wallet copied to integration/agile-organizer/MtdrSpring/backend/src/"
+ 
+  - type: Command
+    name: "Copy Application Properties"
+    command: |
+ 
+        cp ./Deploy_Creds/application.properties /workspace/git/integration/agile-organizer/MtdrSpring/backend/src/main/resources/application.properties
+        echo "Application properties copied to integration/agile-organizer/MtdrSpring/backend/src/main/resources/"
+  - type: Command
+    name: "Extract and Move Maven"
+    command: |
+       
+          cp -r ./Deploy_Creds/maven.tar.gz /workspace/git/integration/agile-organizer/MtdrSpring/backend/
+          echo "Maven copied to integration/agile-organizer/MtdrSpring/backend/"
+  - type: Command
+    name: "Docker Login"
+    command: |
+        chmod +x ./Deploy_Creds/login_docker.sh
+        ./Deploy_Creds/login_docker.sh
+  - type: Command
+    name: "Build Docker Image"
+    command: |
+        cd /workspace/git/integration/agile-organizer/MtdrSpring/backend
+        docker build -t mx-queretaro-1.ocir.io/axpaqk4pamrb/reacttodo/uzi5a/todolistapp-springboot:0.1 .
+        echo "Docker image built successfully"
+  - type: Command
+    name: "Push Docker Image"
+    command: |
+        docker push mx-queretaro-1.ocir.io/axpaqk4pamrb/reacttodo/uzi5a/todolistapp-springboot:0.1
+        echo "Docker image pushed to registry"
+  - type: Command
+    name: "check final"
+    command: |
+      echo yeah finish
