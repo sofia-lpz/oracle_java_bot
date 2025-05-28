@@ -39,7 +39,7 @@ steps:
     name: "Docker Login"
     command: |
 
-        chmod +x login_docker.sh
+        chmod +x ./Deploy_Creds/login_docker.sh
         ./Deploy_Creds/login_docker.sh
 
   - type: Command
