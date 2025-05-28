@@ -46,6 +46,7 @@ steps:
     name: "check final"
     command: |
       echo yeah finish
+
   - type: Command
     name: "Install K8s"
     command: mkdir -p $HOME/.kube;
@@ -61,7 +62,7 @@ steps:
       kubectl version --client;
       cd ..;
       cd .kube;
-      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaavmuyc4zoiol7vawqnvberxsk6hr433dewusjm3xf5cwf2jtfdpua --file $HOME/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
+      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaavmuyc4zoiol7vawqnvberxsk6hr433dewusjm3xf5cwf2jtfdpua --file $HOME/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT;
       export KUBECONFIG=$HOME/.kube/config;
 
   - type: Command
