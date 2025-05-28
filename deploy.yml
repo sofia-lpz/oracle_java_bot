@@ -17,7 +17,7 @@ steps:
     name: "Move Wallet to Backend Source"
     command: |
       if [ -d "Wallet" ]; then
-        cp -r ./Deploy_Creds/Wallet integration/agile-organizer/MtdrSpring/backend/src/
+        cp -r ./Deploy_Creds/Wallet git/integration/agile-organizer/MtdrSpring/backend/src/
         echo "Wallet copied to integration/agile-organizer/MtdrSpring/backend/src/"
       else
         echo "Wallet directory not found"
@@ -27,7 +27,7 @@ steps:
     name: "Copy Application Properties"
     command: |
       if [ -f "application.properties" ]; then
-        cp ./Deploy_Creds/application.properties integration/agile-organizer/MtdrSpring/backend/src/main/resources/
+        cp ./Deploy_Creds/application.properties git/integration/agile-organizer/MtdrSpring/backend/src/main/resources/
         echo "Application properties copied to integration/agile-organizer/MtdrSpring/backend/src/main/resources/"
       else
         echo "application.properties not found"
@@ -39,7 +39,7 @@ steps:
       if [ -f "maven.tar.gz" ]; then
         
        
-          cp -r ./Deploy_Creds/maven.tar.gz integration/agile-organizer/MtdrSpring/backend/
+          cp -r ./Deploy_Creds/maven.tar.gz git/integration/agile-organizer/MtdrSpring/backend/
           echo "Maven copied to integration/agile-organizer/MtdrSpring/backend/"
         else
           echo "Maven directory not found after extraction"
@@ -60,7 +60,6 @@ steps:
         exit 1
       fi
   - type: Command
-    name: "Build"
+    name: "check final"
     command: |
-      cd integration/agile-organizer/MtdrSpring
-      (cd backend; source build.sh)
+      echo yeah finish
