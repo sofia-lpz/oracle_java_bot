@@ -16,20 +16,20 @@ steps:
   - type: Command
     name: "Move Wallet to Backend Source"
     command: |
-        cp -r ./Deploy_Creds/Wallet git/integration/agile-organizer/MtdrSpring/backend/src/
+        cp -r ./Deploy_Creds/Wallet ./git/integration/agile-organizer/MtdrSpring/backend/src/
         echo "Wallet copied to integration/agile-organizer/MtdrSpring/backend/src/"
   
   - type: Command
     name: "Copy Application Properties"
     command: |
   
-        cp ./Deploy_Creds/application.properties git/integration/agile-organizer/MtdrSpring/backend/src/main/resources/
+        cp ./Deploy_Creds/application.properties ./git/integration/agile-organizer/MtdrSpring/backend/src/main/resources/application.properties
         echo "Application properties copied to integration/agile-organizer/MtdrSpring/backend/src/main/resources/"
   - type: Command
     name: "Extract and Move Maven"
     command: |
        
-          cp -r ./Deploy_Creds/maven.tar.gz git/integration/agile-organizer/MtdrSpring/backend/
+          cp -r ./Deploy_Creds/maven.tar.gz ./git/integration/agile-organizer/MtdrSpring/backend/
           echo "Maven copied to integration/agile-organizer/MtdrSpring/backend/"
   - type: Command
     name: "Docker Login"
@@ -39,7 +39,7 @@ steps:
   - type: Command
     name: "Build Docker Image"
     command: |
-        cd git/integration/agile-organizer/MtdrSpring/backend
+        cd ./git/integration/agile-organizer/MtdrSpring/backend
         docker build -t mx-queretaro-1.ocir.io/axpaqk4pamrb/reacttodo/uzi5a/todolistapp-springboot:0.1 .
         echo "Docker image built successfully"
   - type: Command
