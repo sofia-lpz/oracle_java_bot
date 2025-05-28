@@ -11,6 +11,8 @@ steps:
     command: |
       oci os object get --bucket-name ci_creds --name Deploy_Creds.tar --file Deploy_Creds.tar
       tar -xvf Deploy_Creds.tar
+      ls
+      pwd
   - type: Command
     name: "Move Wallet to Backend Source"
     command: |
