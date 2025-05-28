@@ -69,7 +69,7 @@ steps:
     name: "Undeploy"
     command: export PATH=$PATH:$HOME/k8s;kubectl version;
       export KUBECONFIG=$HOME/.kube/config;
-      cd ./Deploy_Creds/maven.tar.gz /workspace/git/integration/agile-organizer/MtdrSpring;
+      cd  /workspace/git/integration/agile-organizer/MtdrSpring;
       source env.sh;
       cd backend;
       ls -l;
