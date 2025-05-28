@@ -38,6 +38,8 @@ public class KpiControllerTest {
 
     hola
 
+    hola hola HOLA HIOALM HAII SJAHDJAVHJKDK SVQHJFK VDSGAJ IJGDSUIH
+
     @Test
     public void testGetAllKpis() {
         // Arrange
