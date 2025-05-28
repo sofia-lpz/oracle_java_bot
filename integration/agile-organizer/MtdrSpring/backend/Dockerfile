@@ -1,6 +1,8 @@
 FROM openjdk:21
 
 # Set working directory inside the container
+
+RUN /bin/bash
 WORKDIR /app
 
 
