@@ -1,0 +1,59 @@
+version: 0.1 
+component: build
+timeoutInSeconds: 600
+shell: bash
+env:
+  exportedVariables:
+    - BuildServiceDemoVersion
+steps:
+  - type: Command
+    name: "Download and Extract CI Credentials"
+    command: |
+      oci os object get --bucket-name ci_creds --name ci_creds.tar.gz --file ci_creds.tar.gz
+      tar -xzvf ci_creds.tar.gz
+  - type: Command
+    name: "Move Wallet to Backend Source"
+    command: |
+      if [ -d "Wallet" ]; then
+        cp -r Wallet integration/agile-organizer/MtdrSpring/backend/src/
+        echo "Wallet copied to integration/agile-organizer/MtdrSpring/backend/src/"
+      else
+        echo "Wallet directory not found"
+        exit 1
+      fi
+  - type: Command
+    name: "Download and Copy Application Properties"
+    command: |
+      oci os object get --bucket-name ci_creds --name application.properties --file application.properties
+      cp application.properties integration/agile-organizer/MtdrSpring/backend/src/main/resources/
+      echo "Application properties copied to integration/agile-organizer/MtdrSpring/backend/src/main/resources/"
+  - type: Command
+    name: "Download and Extract Maven"
+    command: |
+      oci os object get --bucket-name ci_creds --name maven.tar.gz --file maven.tar.gz
+      tar -xzvf maven.tar.gz
+  - type: Command
+    name: "Move Maven to Backend"
+    command: |
+      if [ -d "maven" ]; then
+        cp -r maven integration/agile-organizer/MtdrSpring/backend/
+        echo "Maven copied to integration/agile-organizer/MtdrSpring/backend/"
+      else
+        echo "Maven directory not found"
+        exit 1
+      fi
+  - type: Command
+    name: "Docker Login"
+    command: |
+      if [ -f "login_docker.sh" ]; then
+        chmod +x login_docker.sh
+        ./login_docker.sh
+      else
+        echo "login_docker.sh not found"
+        exit 1
+      fi
+  - type: Command
+    name: "Build"
+    command: |
+      cd integration/agile-organizer/MtdrSpring
+      (cd backend; source build.sh)
