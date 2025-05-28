@@ -51,7 +51,7 @@ steps:
     name: "check final"
     command: |
       echo yeah finish
-  - type: command
+  - type: Command
     name: "undeploy"
     command: |
         cd /workspace/git/integration/agile-organizer/MtdrSpring/backend
