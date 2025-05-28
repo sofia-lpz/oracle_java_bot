@@ -36,6 +36,8 @@ public class KpiControllerTest {
     }
     /*
 
+    hola
+
     @Test
     public void testGetAllKpis() {
         // Arrange
