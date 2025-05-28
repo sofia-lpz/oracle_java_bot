@@ -36,12 +36,7 @@ steps:
     command: |
         chmod +x ./Deploy_Creds/login_docker.sh
         ./Deploy_Creds/login_docker.sh
-  - type: Command
-    name: "Build Docker Image"
-    command: |
-        cd /workspace/git/integration/agile-organizer/MtdrSpring/backend
-        docker build -t mx-queretaro-1.ocir.io/axpaqk4pamrb/reacttodo/uzi5a/todolistapp-springboot:0.1 .
-        echo "Docker image built successfully"
+
   - type: Command
     name: "Push Docker Image"
     command: |
@@ -51,14 +46,33 @@ steps:
     name: "check final"
     command: |
       echo yeah finish
-  - type: Command
-    name: "undeploy"
-    command: |
-      export PATH=$PATH:$HOME/k8s;kubectl version;
+- type: Command
+    name: "Install K8s"
+    command: mkdir -p $HOME/.kube;
+      cd $HOME;
+      ls -la;
+      mkdir k8s;
+      ls -la;
+      cd k8s;
+      wget https://dl.k8s.io/v1.31.2/bin/linux/amd64/kubectl;
+      ls -la;
+      chmod +x kubectl;
+      export PATH=$PATH:$HOME/k8s;
+      kubectl version --client;
+      cd ..;
+      cd .kube;
+      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaavmuyc4zoiol7vawqnvberxsk6hr433dewusjm3xf5cwf2jtfdpua --file $HOME/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
       export KUBECONFIG=$HOME/.kube/config;
-      cd /workspace/git/integration/agile-organizer/MtdrSpring/
+
+  - type: Command
+    name: "Undeploy"
+    command: export PATH=$PATH:$HOME/k8s;kubectl version;
+      export KUBECONFIG=$HOME/.kube/config;
+      cd MtdrSpring;
       source env.sh;
       cd backend;
       ls -l;
       kubectl config view;
       source undeploy.sh;
+
+      
