@@ -28,7 +28,6 @@ RUN /bin/bash -c 'echo "export M2_HOME=$M2_HOME" >> ~/.bashrc && \
     echo "export M2=$M2" >> ~/.bashrc && \
     echo "export MAVEN_OPTS=\"$MAVEN_OPTS\"" >> ~/.bashrc && \
     echo "export PATH=$M2:\$PATH" >> ~/.bashrc'
-RUN
  
 # Verify Maven installation
 RUN mvn -version
