@@ -1,6 +1,8 @@
-FROM openjdk
+FROM openjdk:21
 
 # Set working directory inside the container
+
+RUN /bin/bash
 WORKDIR /app
 
 
@@ -22,12 +24,10 @@ ENV M2_HOME=/usr/local/apache-maven-3.9.9 \
 ENV PATH="$M2:$PATH"
 
 # Reload environment variables (simulating source ~/.bashrc)
-RUN echo "export M2_HOME=$M2_HOME" >> ~/.bashrc && \
+RUN /bin/bash -c 'echo "export M2_HOME=$M2_HOME" >> ~/.bashrc && \
     echo "export M2=$M2" >> ~/.bashrc && \
-    echo "export MAVEN_OPTS=$MAVEN_OPTS" >> ~/.bashrc && \
-    echo "export PATH=$M2:\$PATH" >> ~/.bashrc && \
-    source ~/.bashrc
-RUN
+    echo "export MAVEN_OPTS=\"$MAVEN_OPTS\"" >> ~/.bashrc && \
+    echo "export PATH=$M2:\$PATH" >> ~/.bashrc'
  
 # Verify Maven installation
 RUN mvn -version

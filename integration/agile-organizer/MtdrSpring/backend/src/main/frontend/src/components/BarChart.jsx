@@ -11,7 +11,7 @@ import {
 } from 'chart.js';
 import { Spin, Tag } from 'antd';
 
-// Registrar los componentes necesarios de Chart.js
+// Registrar los componentes necesarios de Chart.js hola trigger hola tirgger 2
 ChartJS.register(
   CategoryScale,
   LinearScale,
