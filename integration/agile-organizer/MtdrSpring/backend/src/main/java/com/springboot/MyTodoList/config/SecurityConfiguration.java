@@ -33,9 +33,7 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/login", "/static/**", "/auth/**", "/*.js", "/*.css",
-                                "/*.ico", "/manifest.json", "/*.png", "/favicon.ico", "/fonts/**", "/images/**", "/users", "/",
-                                "/dashboard", "/task", "/Task", "/users", "/Users", "/chatbot", "/Chatbot", "/home")
+                        .requestMatchers("/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
