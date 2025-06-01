@@ -35,11 +35,6 @@ public class KpiControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    hola
-
-    JSKHDFHKSAGVH
-    hola hola HOLA HIOALM HAII SJAHDJAVHJKDK SVQHJFK VDSGAJ IJGDSUIH
-
     @Test
     public void testGetAllKpis() {
         // Arrange
