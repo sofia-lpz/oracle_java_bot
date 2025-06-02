@@ -63,6 +63,7 @@ const Users = () => {
       key: 'teamDescription',
       render: (teamDescription, record) => (record.team?.teamDescription || 'No role')
     }
+
   ];
 
   if (loading) return <div>Cargando...</div>;

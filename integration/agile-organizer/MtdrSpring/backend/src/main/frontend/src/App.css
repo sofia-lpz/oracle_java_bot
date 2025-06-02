@@ -994,3 +994,28 @@ div[class*="g2-tooltip-title"] {
 div[class*="g2-tooltip-title"][style*="color"] {
   color: white !important;
 }
+
+/* Estilos personalizados para los scrolls */
+::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c6624b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a84832;
+}
+
+/* Ocultar scrollbar en Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c6624b transparent;
+}

@@ -1,8 +1,9 @@
 // src/components/KanbanColumn.jsx
 import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Card, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import TaskCard from './TaskCard';
+import { useDroppable } from '@dnd-kit/core';
 
 const KanbanColumn = ({ state, tasks, getStateColor, formatDate, deleteTask }) => {
   const { setNodeRef } = useDroppable({ id: state.id.toString() });
@@ -14,7 +15,7 @@ const KanbanColumn = ({ state, tasks, getStateColor, formatDate, deleteTask }) =
         backgroundColor: '#1d1d1d',
         padding: '8px',
         borderRadius: '8px',
-        height: 'calc(100vh - 250px)',
+        height: '100%',
         minWidth: '300px',
         maxWidth: '300px',
         transition: 'background-color 0.2s ease',
@@ -30,29 +31,23 @@ const KanbanColumn = ({ state, tasks, getStateColor, formatDate, deleteTask }) =
           {state.name}
         </h2>
       </div>
-
-      <SortableContext
-        items={tasks.map(task => task.id.toString())}
-        strategy={verticalListSortingStrategy}
-      >
-        <div style={{ flex: 1, overflowY: 'auto', width: '100%', padding: '0 8px' }}>
-          {tasks.map(task => (
-            <TaskCard
-              key={task.id.toString()}
-              id={task.id.toString()}
-              title={task.title}
-              description={task.description}
-              dueDate={formatDate(task.dueDate)}
-              storyPoints={task.storyPoints}
-              avatarUrl={task.assignee?.avatarUrl}
-              username={task.user.name}
-              estimatedHours={task.estimated_hours}
-              realHours={task.real_hours}
-              onDelete={() => deleteTask(task.id)}
-            />
-          ))}
-        </div>
-      </SortableContext>
+      <div style={{ flex: 1, overflowY: 'auto', width: '100%', padding: '0 8px' }}>
+        {tasks.map(task => (
+          <TaskCard
+            key={task.id.toString()}
+            id={task.id.toString()}
+            title={task.title}
+            description={task.description}
+            dueDate={formatDate(task.dueDate)}
+            storyPoints={task.storyPoints}
+            avatarUrl={task.assignee?.avatarUrl}
+            username={task.user?.name}
+            estimatedHours={task.estimated_hours}
+            realHours={task.real_hours}
+            onDelete={() => deleteTask(task.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
