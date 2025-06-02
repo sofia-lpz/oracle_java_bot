@@ -62,7 +62,7 @@ const Users = () => {
     },
     {
       title: 'Authority',
-      dataIndex: ['authorities', 0, 'authority'],
+      dataIndex: 'authoritiesString',
       key: 'authority',
     },
   ];

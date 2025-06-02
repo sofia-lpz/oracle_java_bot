@@ -1,6 +1,4 @@
 import React from 'react';
-import { DndContext, closestCenter } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Card, Avatar, Button, Modal } from 'antd';
 import { UserOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useSortable } from '@dnd-kit/sortable';
@@ -27,6 +25,18 @@ const TaskCard = ({
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 1050 : 10,
+    opacity: isDragging ? 0.5 : 1,
+    touchAction: 'none',
+  };
+
   const showDeleteModal = () => {
     setIsModalOpen(true);
   };
@@ -48,54 +58,48 @@ const TaskCard = ({
     setIsEditModalOpen(false);
   };
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    borderRadius: '8px',
-    marginTop: '4px',
-    marginBottom: '4px',
-    // boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', //Shadow area drag and drop
-    background: '#1d1d1d',
-    border: '2px solid #1d1d1d',
-    userSelect: 'none',
-    zIndex: transform ? 1050 : 10,
-  };
-
   return (
-    <Card
-      className="custom-task-card"
-      style={style}
-      actions={[
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', backgroundColor: '#1d1d1d' }}>
-          <p style={{fontWeight: 'bold', color: '#c6624b'}}>
-          Story Points <br /> {storyPoints ?? 'N/A'}
-          </p>
-          <p style={{fontWeight: 'bold', color: '#c6624b'}}>Estimated <br /> {estimatedHours}</p>
-          <p style={{fontWeight: 'bold', color: '#c6624b'}}>Real <br />{realHours}</p>
-        </div>
-      ]}
-    >
-      <Button
-        type="text"
-        icon={<EditOutlined style={{ color: 'white' }} />}
-        onClick={(e) => {
-          e.stopPropagation();
-          showEditModal();
-        }}
-        aria-label="Edit task"
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <Card
+        className="custom-task-card"
         style={{
-          position: 'absolute',
-          top: '8px',
-          right: '40px',
-          backgroundColor: 'transparent',
-          border: 'none',
-          color: '#c6624b',
-          zIndex: 1,
+          borderRadius: '8px',
+          marginTop: '4px',
+          marginBottom: '4px',
+          background: '#1d1d1d',
+          border: '2px solid #1d1d1d',
+          userSelect: 'none',
+          cursor: 'grab',
+          width: '280px',
         }}
-      />
-      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+        actions={[
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', backgroundColor: '#1d1d1d' }}>
+            <p style={{fontWeight: 'bold', color: '#c6624b'}}>
+            Story Points <br /> {storyPoints ?? 'N/A'}
+            </p>
+            <p style={{fontWeight: 'bold', color: '#c6624b'}}>Estimated <br /> {estimatedHours}</p>
+            <p style={{fontWeight: 'bold', color: '#c6624b'}}>Real <br />{realHours}</p>
+          </div>
+        ]}
+      >
+        <Button
+          type="text"
+          icon={<EditOutlined style={{ color: 'white' }} />}
+          onClick={(e) => {
+            e.stopPropagation();
+            showEditModal();
+          }}
+          aria-label="Edit task"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            right: '40px',
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: '#c6624b',
+            zIndex: 2,
+          }}
+        />
         <Meta
           avatar={<Avatar src={avatarUrl} icon={<UserOutlined />} />}
           title={<span style={{color: '#ffffff'}}>{title}</span>}
@@ -105,7 +109,7 @@ const TaskCard = ({
             </>
           }
         />
-      </div>
+      </Card>
 
       <Modal
         title="Confirm Deletion"
@@ -184,7 +188,7 @@ const TaskCard = ({
           <div style={{ color: '#fff' }}>{username || 'Not set'}</div>
         </div>
       </Modal>
-    </Card>
+    </div>
   );
 };
 
