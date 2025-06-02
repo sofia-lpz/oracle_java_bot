@@ -33,6 +33,10 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input) {
+
+        if (userRepository.findByPhoneNumber(input.getPhoneNumber()).isPresent()) {
+            throw new IllegalArgumentException("User with this phone number already exists");
+        }
         User user = new User()
                 .setName(input.getName())
                 .setPhoneNumber(input.getPhoneNumber())
