@@ -65,7 +65,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	private void sendLongMessage(Long chatId, String longText, ReplyKeyboard replyMarkup) {
 		// Telegram message limit is 4096 characters
 		final int MAX_MESSAGE_LENGTH = 4000; // Using slightly less to be safe
-		
+
 		try {
 			if (longText.length() <= MAX_MESSAGE_LENGTH) {
 				// Message is short enough, send it normally
@@ -83,21 +83,21 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					int startIndex = i * MAX_MESSAGE_LENGTH;
 					int endIndex = Math.min((i + 1) * MAX_MESSAGE_LENGTH, longText.length());
 					String chunk = longText.substring(startIndex, endIndex);
-					
+
 					// Add chunk indicator if splitting into multiple messages
 					if (totalChunks > 1) {
 						chunk = "Part " + (i + 1) + "/" + totalChunks + ":\n\n" + chunk;
 					}
-					
+
 					SendMessage message = new SendMessage();
 					message.setChatId(chatId);
 					message.setText(chunk);
-					
+
 					// Only add the reply markup to the last chunk
 					if (i == totalChunks - 1 && replyMarkup != null) {
 						message.setReplyMarkup(replyMarkup);
 					}
-					
+
 					execute(message);
 				}
 			}
@@ -105,7 +105,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			logger.error("Error sending message: " + e.getMessage(), e);
 		}
 	}
-	
+
 	// Constructor
 	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService,
 			StateService stateService, UserService userService, ProjectService projectService,
@@ -279,23 +279,23 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		List<ToDoItem> allItems = getAllToDoItems();
 		ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 		List<KeyboardRow> keyboard = new ArrayList<>();
-	
+
 		// command back to main screen
 		KeyboardRow mainScreenRowTop = new KeyboardRow();
 		mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 		keyboard.add(mainScreenRowTop);
-	
+
 		KeyboardRow firstRow = new KeyboardRow();
 		firstRow.add(BotLabels.ADD_NEW_ITEM.getLabel());
 		keyboard.add(firstRow);
-	
+
 		KeyboardRow myTodoListTitleRow = new KeyboardRow();
 		myTodoListTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
 		keyboard.add(myTodoListTitleRow);
-	
+
 		List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false)
 				.collect(Collectors.toList());
-	
+
 		for (ToDoItem item : activeItems) {
 			KeyboardRow currentRow = new KeyboardRow();
 			currentRow.add(item.getTitle());
@@ -303,10 +303,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UPDATE_ITEM.getLabel());
 			keyboard.add(currentRow);
 		}
-	
+
 		List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
 				.collect(Collectors.toList());
-	
+
 		for (ToDoItem item : doneItems) {
 			KeyboardRow currentRow = new KeyboardRow();
 			currentRow.add(item.getTitle());
@@ -315,21 +315,21 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UPDATE_ITEM.getLabel());
 			keyboard.add(currentRow);
 		}
-	
+
 		// command back to main screen
 		KeyboardRow mainScreenRowBottom = new KeyboardRow();
 		mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 		keyboard.add(mainScreenRowBottom);
-	
+
 		keyboardMarkup.setKeyboard(keyboard);
-	
+
 		// Format the todo list
 		String formattedList = formatTodoList(allItems);
-		
+
 		// Use sendLongMessage instead of direct execution
 		sendLongMessage(chatId, formattedList, keyboardMarkup);
 	}
-	
+
 	private void addItem(String messageTextFromTelegram, Long chatId) {
 		try {
 			SendMessage messageToTelegram = new SendMessage();
@@ -417,12 +417,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			Integer sprintId = latestSprint.getID();
 
 			// Fetch KPI data for this user
-			List<Kpi> userKpis = kpiService.getKpiSummary(List.of(userId), Collections.emptyList(), Collections.emptyList(), List.of(sprintId));
+			List<Kpi> userKpis = kpiService.getKpiSummary(List.of(userId), Collections.emptyList(),
+					Collections.emptyList(), List.of(sprintId));
 
 			// Format KPI data
 			StringBuilder sb = new StringBuilder();
 
-			//show sprint
+			// show sprint
 			sb.append(String.format("📊 *KPI Summary for %s*\n\n", user.getName()))
 					.append(String.format("Sprint: %s\n", latestSprint.getName()))
 					.append("\n");
@@ -461,12 +462,12 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			List<User> allUsers = userService.findAll();
 			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 			List<KeyboardRow> keyboard = new ArrayList<>();
-	
+
 			// command back to main screen
 			KeyboardRow mainScreenRowTop = new KeyboardRow();
 			mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 			keyboard.add(mainScreenRowTop);
-	
+
 			for (User u : allUsers) {
 				// First row: User name
 				KeyboardRow row = new KeyboardRow();
@@ -475,7 +476,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				row.add(u.getID() + BotLabels.DASH.getLabel() + "TASKS");
 				keyboard.add(row);
 			}
-	
+
 			// Set the keyboard
 			keyboardMarkup.setKeyboard(keyboard);
 			messageToTelegram.setReplyMarkup(keyboardMarkup);
@@ -496,25 +497,25 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 			// Get user details
 			User user = userService.getUserById(userId);
-	
+
 			List<ToDoItem> userTasks = toDoItemService.getToDoItemsByUserId(userId);
-			
+
 			// Format task data
 			StringBuilder sb = new StringBuilder();
 			sb.append(String.format("📋 *Tasks for %s*\n\n", user.getName()));
-			
+
 			if (userTasks.isEmpty()) {
 				sb.append("No tasks found for this user.");
 			} else {
 				// Group by active/done tasks
 				List<ToDoItem> activeTasks = userTasks.stream()
-					.filter(item -> !item.isDone())
-					.collect(Collectors.toList());
-					
+						.filter(item -> !item.isDone())
+						.collect(Collectors.toList());
+
 				List<ToDoItem> completedTasks = userTasks.stream()
-					.filter(ToDoItem::isDone)
-					.collect(Collectors.toList());
-				
+						.filter(ToDoItem::isDone)
+						.collect(Collectors.toList());
+
 				// Add active tasks section
 				sb.append("*Active Tasks:*\n");
 				if (activeTasks.isEmpty()) {
@@ -522,15 +523,20 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				} else {
 					for (ToDoItem task : activeTasks) {
 						sb.append(String.format("📌 %s\n", task.getTitle() != null ? task.getTitle() : "No title"))
-						  .append(String.format("  Description: %s\n", task.getDescription() != null ? task.getDescription() : "No description"))
-						  .append(String.format("  State: %s\n", task.getState() != null ? task.getState().getName() : "Not set"))
-						  .append(String.format("  Story Points: %s\n", task.getStoryPoints() != null ? task.getStoryPoints() : "Not set"))
-						  .append(String.format("  Estimated Hours: %s\n", task.getEstimatedHours() != null ? task.getEstimatedHours() : "Not set"))
-						  .append(String.format("  Real Hours: %s\n", task.getRealHours() != null ? task.getRealHours() : "Not set"))
-						  .append("\n");
+								.append(String.format("  Description: %s\n",
+										task.getDescription() != null ? task.getDescription() : "No description"))
+								.append(String.format("  State: %s\n",
+										task.getState() != null ? task.getState().getName() : "Not set"))
+								.append(String.format("  Story Points: %s\n",
+										task.getStoryPoints() != null ? task.getStoryPoints() : "Not set"))
+								.append(String.format("  Estimated Hours: %s\n",
+										task.getEstimatedHours() != null ? task.getEstimatedHours() : "Not set"))
+								.append(String.format("  Real Hours: %s\n",
+										task.getRealHours() != null ? task.getRealHours() : "Not set"))
+								.append("\n");
 					}
 				}
-				
+
 				// Add completed tasks section
 				sb.append("\n*Completed Tasks:*\n");
 				if (completedTasks.isEmpty()) {
@@ -538,27 +544,27 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				} else {
 					for (ToDoItem task : completedTasks) {
 						sb.append(String.format("✅ %s\n", task.getTitle() != null ? task.getTitle() : "No title"))
-						  .append("\n");
+								.append("\n");
 					}
 				}
 			}
-	
+
 			// Create and send message with back button
 			SendMessage messageToTelegram = new SendMessage();
 			messageToTelegram.setChatId(chatId);
 			messageToTelegram.setText(sb.toString());
 			messageToTelegram.enableMarkdown(true);
-	
+
 			// Add keyboard with back button and other users
 			List<User> allUsers = userService.findAll();
 			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 			List<KeyboardRow> keyboard = new ArrayList<>();
-	
+
 			// Command back to main screen
 			KeyboardRow mainScreenRowTop = new KeyboardRow();
 			mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 			keyboard.add(mainScreenRowTop);
-	
+
 			for (User u : allUsers) {
 				// First row: User name
 				KeyboardRow row = new KeyboardRow();
@@ -567,11 +573,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				row.add(u.getID() + BotLabels.DASH.getLabel() + "TASKS");
 				keyboard.add(row);
 			}
-	
+
 			// Set the keyboard
 			keyboardMarkup.setKeyboard(keyboard);
 			messageToTelegram.setReplyMarkup(keyboardMarkup);
-	
+
 			execute(messageToTelegram);
 		} catch (Exception e) {
 			logger.error("Error displaying user tasks: " + e.getMessage(), e);
@@ -590,21 +596,21 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			if (userUpdatingItemMap.containsKey(chatId)) {
 				try {
 					Integer itemId = userUpdatingItemMap.get(chatId);
-					
+
 					// Get the existing item
 					ResponseEntity<ToDoItem> response = getToDoItemById(itemId);
 					if (response.getStatusCode() == HttpStatus.OK) {
 						ToDoItem existingItem = response.getBody();
-						
+
 						// Parse the update message and apply changes to the existing item
 						updateItemFromMessage(existingItem, messageTextFromTelegram);
-						
+
 						// Update the item in the database
 						ResponseEntity updateResponse = updateToDoItem(existingItem, itemId);
-						
+
 						// Clear the updating state
 						userUpdatingItemMap.remove(chatId);
-						
+
 						// Inform the user that the update was successful
 						SendMessage messageToTelegram = new SendMessage();
 						messageToTelegram.setChatId(chatId);
@@ -620,14 +626,14 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					return; // Exit method after handling update
 				} catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
-					
+
 					// Inform the user of the error
 					try {
 						SendMessage errorMessage = new SendMessage();
 						errorMessage.setChatId(chatId);
 						errorMessage.setText("An error occurred: " + e.getMessage());
 						execute(errorMessage);
-						
+
 						// Clear any updating state on error
 						userUpdatingItemMap.remove(chatId);
 					} catch (TelegramApiException telegramException) {
@@ -637,7 +643,8 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				}
 			}
 
-			if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand()) || messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
+			if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
+					|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
 
 				start(chatId);
 			} else if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
@@ -652,29 +659,36 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				delete(messageTextFromTelegram, chatId);
 
 			} else if (messageTextFromTelegram.indexOf(BotLabels.UPDATE_ITEM.getLabel()) != -1) {
-				
+
 				update(messageTextFromTelegram, chatId);
-			
-			} else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand()) || messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
+
+			} else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
+					|| messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
 
 				BotHelper.sendMessageToTelegram(chatId, BotMessages.BYE.getMessage(), this);
 
-			} else if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand()) || messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())) {
+			} else if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
+					|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
+					|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())) {
 
 				allItems(messageTextFromTelegram, chatId);
 
-			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand()) || messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
-				
+			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
+					|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
+
 				addItem(messageTextFromTelegram, chatId);
 
-			} else if (messageTextFromTelegram.equals(BotCommands.USER_LIST.getCommand()) || messageTextFromTelegram.equals(BotLabels.LIST_ALL_USERS.getLabel())) {
+			} else if (messageTextFromTelegram.equals(BotCommands.USER_LIST.getCommand())
+					|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_USERS.getLabel())) {
 
 				allUsers(messageTextFromTelegram, chatId);
 
-			} else if (messageTextFromTelegram.indexOf("KPI") != -1 && messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1) {
+			} else if (messageTextFromTelegram.indexOf("KPI") != -1
+					&& messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1) {
 
-	 			seeKpi(messageTextFromTelegram, chatId);
-			} else if (messageTextFromTelegram.indexOf("TASKS") != -1 && messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1) {
+				seeKpi(messageTextFromTelegram, chatId);
+			} else if (messageTextFromTelegram.indexOf("TASKS") != -1
+					&& messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1) {
 				seeUserSummary(messageTextFromTelegram, chatId);
 			}
 
@@ -683,15 +697,15 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				try {
 					ToDoItem newItem = parseToDoItem(messageTextFromTelegram);
 					ResponseEntity entity = addToDoItem(newItem);
-					
+
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
 					messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
-					
+
 					execute(messageToTelegram);
 				} catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
-					
+
 					// Inform the user of the error
 					try {
 						SendMessage errorMessage = new SendMessage();
@@ -701,7 +715,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					} catch (TelegramApiException telegramException) {
 						logger.error("Failed to send error message", telegramException);
 					}
-				
+
 				}
 			}
 		}
