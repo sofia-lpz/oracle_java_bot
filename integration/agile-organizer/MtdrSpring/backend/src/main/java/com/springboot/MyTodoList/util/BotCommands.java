@@ -10,7 +10,9 @@ public enum BotCommands {
 	USER_LIST("/userlist"),
 
 	USER_SUMMARY("/usersummary"),
-	KPI("/kpi");
+	KPI("/kpi"),
+	LOGIN("/login"),
+	LOGOUT_COMMAND("/logout");
 
 	private String command;
 

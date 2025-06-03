@@ -22,6 +22,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 	private String botName;
 	private Map<Long, Integer> userUpdatingItemMap = new HashMap<>();
+	private Map<Long, Boolean> userLoginStatus = new HashMap<>();
 
 	private TodoItemBotService todoItemBotService;
 
@@ -39,62 +40,87 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		return noKeyboardMessage;
 	}
 
-	private SendMessage messageResponse(String messageTextFromTelegram) {
+	private boolean LoggedIn(Long chatId) {
+		return userLoginStatus.getOrDefault(chatId, false);
+	}
+
+	private SendMessage messageResponse(String messageTextFromTelegram, Long chatId) {
 		SendMessage messageResponse = new SendMessage();
 
-		if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
-				|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
+		if (!LoggedIn(chatId) && (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
+				|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel()))) {
+			return todoItemBotService.startLogin();
+		}
+
+		else if (LoggedIn(chatId) && messageTextFromTelegram.equals(BotCommands.LOGOUT_COMMAND.getCommand())) {
+			userLoginStatus.put(chatId, false);
+			return todoItemBotService.logout(chatId);
+		}
+
+		else if (LoggedIn(chatId) && (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
+				|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel()))) {
 			return todoItemBotService.start();
 
-		} else if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
+		}
+
+		else if (LoggedIn(chatId) && messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
 			return todoItemBotService.done(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.indexOf(BotLabels.UNDO.getLabel()) != -1) {
+		}
+
+		else if (LoggedIn(chatId) && messageTextFromTelegram.indexOf(BotLabels.UNDO.getLabel()) != -1) {
 
 			return todoItemBotService.undo(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.indexOf(BotLabels.DELETE.getLabel()) != -1) {
+		} else if (LoggedIn(chatId) && messageTextFromTelegram.indexOf(BotLabels.DELETE.getLabel()) != -1) {
 
 			return todoItemBotService.delete(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.indexOf(BotLabels.UPDATE_ITEM.getLabel()) != -1) {
+		} else if (LoggedIn(chatId) && messageTextFromTelegram.indexOf(BotLabels.UPDATE_ITEM.getLabel()) != -1) {
 
 			return todoItemBotService.update(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
-				|| messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
+		} else if (LoggedIn(chatId) && (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
+				|| messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel()))) {
 
 			messageResponse = removeKeyboard(messageResponse);
 			messageResponse.setText(BotMessages.BYE.getMessage());
 			return messageResponse;
 
-		} else if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
+		} else if (LoggedIn(chatId) && (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
 				|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
-				|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())) {
+				|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel()))) {
 
 			return todoItemBotService.allItems(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
-				|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
+		} else if (LoggedIn(chatId) && (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
+				|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel()))) {
 
 			return todoItemBotService.addItem(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.equals(BotCommands.USER_LIST.getCommand())
-				|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_USERS.getLabel())) {
+		} else if (LoggedIn(chatId) && (messageTextFromTelegram.equals(BotCommands.USER_LIST.getCommand())
+				|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_USERS.getLabel()))) {
 
 			return todoItemBotService.allUsers(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.indexOf("KPI") != -1
-				&& messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1) {
+		} else if (LoggedIn(chatId) && (messageTextFromTelegram.indexOf("KPI") != -1
+				&& messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1)) {
 
 			return todoItemBotService.seeKpi(messageTextFromTelegram);
 
-		} else if (messageTextFromTelegram.indexOf("TASKS") != -1
-				&& messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1) {
+		} else if (LoggedIn(chatId) && (messageTextFromTelegram.indexOf("TASKS") != -1
+				&& messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()) != -1)) {
 
 			return todoItemBotService.seeUserSummary(messageTextFromTelegram);
-		} else {
+		} else if (LoggedIn(chatId)) {
+
 			return todoItemBotService.createItemFromMessage(messageTextFromTelegram);
+		} else {
+			SendMessage loginResponse = todoItemBotService.loginFromMessage(messageTextFromTelegram, chatId);
+			if (loginResponse.getText().equals(BotMessages.LOGIN_SUCCESS.getMessage())) {
+				userLoginStatus.put(chatId, true);
+			}
+			return loginResponse;
 		}
 	}
 
@@ -109,13 +135,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		if (update.hasMessage() && update.getMessage().hasText()) {
 
 			String messageTextFromTelegram = update.getMessage().getText();
-			long chatId = update.getMessage().getChatId();
+			Long chatId = update.getMessage().getChatId();
 
 			if (userUpdatingItemMap.containsKey(chatId)) {
 				todoItemBotService.updateItemFromMessage(
 						userUpdatingItemMap.get(chatId), messageTextFromTelegram);
 			} else {
-				SendMessage messageResponse = messageResponse(messageTextFromTelegram);
+				SendMessage messageResponse = messageResponse(messageTextFromTelegram, chatId);
 				messageResponse.setChatId(String.valueOf(chatId));
 				try {
 					BotHelper.executeMessage(chatId, messageResponse, this);

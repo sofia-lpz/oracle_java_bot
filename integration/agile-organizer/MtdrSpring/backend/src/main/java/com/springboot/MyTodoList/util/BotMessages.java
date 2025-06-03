@@ -15,6 +15,13 @@ public enum BotMessages {
 	BYE("Bye! Select /start to resume!"),
 	ERROR("Error, sorry! this bot is in development"),
 
+	LOGIN("Please login to use the bot. Type your phone number and password in the format: PhoneNumber, Password."),
+	REMEMBER("Would you like me to remember your phone number and password? [yes/no]"),
+	LOGIN_SUCCESS("Login successful! Select /todolist to return to the list of todo items, or /start to go to the main screen."),
+	LOGIN_FAILED("Login failed! Please try again."),
+	LOGOUT_SUCCESS("You have been logged out! Select /start to go to the main screen."),
+	LOGOUT_FAILED("Logout failed! Please try again."),
+
 	TYPE_USER_KPI("Type the name of the user you want to see this sprint's KPI.");
 
 	private String message;

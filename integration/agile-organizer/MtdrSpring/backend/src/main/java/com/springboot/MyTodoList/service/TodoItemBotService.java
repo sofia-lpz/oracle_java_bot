@@ -22,6 +22,7 @@ import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.State;
 import com.springboot.MyTodoList.model.ToDoItem;
 import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.model.dto.LoginUserDto;
 import com.springboot.MyTodoList.service.util.TelegramFormaterUtil;
 import com.springboot.MyTodoList.util.BotLabels;
 import com.springboot.MyTodoList.util.BotMessages;
@@ -42,16 +43,28 @@ public class TodoItemBotService {
     private StateService stateService;
     private SprintService sprintService;
     private ProjectService projectService;
+    private AuthenticationService authService;
 
     @Autowired
     public TodoItemBotService(ToDoItemService toDoItemService, UserService userService, KpiService kpiService,
-                              StateService stateService, SprintService sprintService, ProjectService projectService) {
+            StateService stateService, SprintService sprintService, ProjectService projectService, AuthenticationService authService) {
         this.toDoItemService = toDoItemService;
         this.userService = userService;
         this.kpiService = kpiService;
         this.stateService = stateService;
         this.sprintService = sprintService;
         this.projectService = projectService;
+        this.authService = authService;
+    }
+
+    public SendMessage startLogin() {
+        SendMessage messageToTelegram = new SendMessage();
+        messageToTelegram.setText(BotMessages.LOGIN.getMessage());
+
+        ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
+        messageToTelegram.setReplyMarkup(keyboardMarkup);
+
+        return messageToTelegram;
     }
 
     public SendMessage start() {
@@ -600,6 +613,38 @@ public class TodoItemBotService {
         }
     }
 
+    public SendMessage loginFromMessage(String messageTextFromTelegram, Long telegramChatId) {
+        SendMessage messageToTelegram = new SendMessage();
+        try {
+            LoginUserDto loginUserDto = parseLoginUserDto(messageTextFromTelegram, telegramChatId);
+
+            User authenticaUser = authService.authenticate(loginUserDto);
+
+            if (authenticaUser != null) {
+                messageToTelegram.setText(BotMessages.LOGIN_SUCCESS.getMessage());
+            } else {
+                messageToTelegram.setText(BotMessages.LOGIN_FAILED.getMessage());
+            }
+        } catch (Exception e) {
+            logger.error("Error during login: ", e);
+            messageToTelegram.setText(BotMessages.LOGIN_FAILED.getMessage());
+        }
+
+        return messageToTelegram;
+    }
+
+    public SendMessage logout(Long telegramChatId) {
+        SendMessage messageToTelegram = new SendMessage();
+        try {
+            authService.telegramLogout(telegramChatId);
+            messageToTelegram.setText(BotMessages.LOGOUT_SUCCESS.getMessage());
+        } catch (Exception e) {
+            logger.error("Error during logout: ", e);
+            messageToTelegram.setText(BotMessages.LOGOUT_FAILED.getMessage());
+        }
+        return messageToTelegram;
+    }
+    
     private ToDoItem parseToDoItem(String message) {
         ToDoItem newItem = new ToDoItem();
         newItem.setCreation_ts(OffsetDateTime.now()); // Keep existing creation timestamp
@@ -716,5 +761,21 @@ public class TodoItemBotService {
         }
 
         return newItem;
+    }
+
+    private LoginUserDto parseLoginUserDto(String message, Long telegramChatId) {
+        String[] parts = message.split(",");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid login format. Use: PhoneNumber, Password, RememberMe(0/1)");
+        }
+        String phoneNumber = parts[0].trim();
+        String password = parts[1].trim();
+        Integer rememberMeValue = Integer.parseInt(parts[2].trim());
+        Long chatID = null;
+        if (rememberMeValue == 1){
+            chatID = telegramChatId;
+        }
+
+        return new LoginUserDto(phoneNumber, password, chatID);
     }
 }
