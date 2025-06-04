@@ -1,16 +1,17 @@
 import React from 'react';
 import {Droppable} from 'react-beautiful-dnd';
 import styled from 'styled-components';
+import Task from '../components/Taskv';
 
     const Container = styled.div`
-    background-color: #f4f5f7;
-    border-radius: 2.5px;
-    width: 300px;
-    height: 475px;
-    overflow-y: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    border: 1px solid gray;
+        background-color: #f4f5f7;
+        border-radius: 2.5px;
+        width: 300px;
+        height: 475px;
+        overflow-y: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        border: 1px solid gray;
     `;
 
     const Title = styled.h3`
@@ -40,6 +41,23 @@ export default function Column({title, tasks, id}){
         </Title>
 
           <Droppable droppableId = {id}>
+            {(provided, snapshot) => {
+                <TaskList
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    isDraggingOver={snapshot.isDraggingOver}
+                >
+                    {/* Provide your tasks */}
+
+
+                    <Task
+                        task={{ id: 123, title: 'Make a progress board application'}}
+                        index={1}
+                    />
+
+                    {provided.placeholder}
+                </TaskList>;
+            }} 
           </Droppable>
 
     </Container>
