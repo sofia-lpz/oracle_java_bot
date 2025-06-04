@@ -3,7 +3,7 @@ integration/agile-organizer/MtdrSpring/backend/output
 integration/agile-organizer/MtdrSpring/backend/test
 integration/agile-organizer/MtdrSpring/backend/.vscode
 integration/agile-organizer/MtdrSpring/backend/src/Wallet.zip
-
+integration/agile-organizer/MtdrSpring/backend/src/main/resources/application.properties
 /frontend_integration/node_modules
 /apache-jmeter-5.6.3
 /jmeter

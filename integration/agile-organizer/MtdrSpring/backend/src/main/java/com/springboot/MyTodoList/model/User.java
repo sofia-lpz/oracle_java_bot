@@ -24,6 +24,9 @@ public class User implements UserDetails {
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
+    @Column(name = "TELEGRAMCHATID")
+    private Long telegramChatId;
+
     @Column(name = "NAME")
     private String name;
 
@@ -127,6 +130,15 @@ public class User implements UserDetails {
 
     public User setTeam(Team team) {
         this.team = team;
+        return this;
+    }
+
+    public Long getTelegramChatId() {
+        return telegramChatId;
+    }
+
+    public User setTelegramChatId(Long telegramChatId) {
+        this.telegramChatId = telegramChatId;
         return this;
     }
 }
