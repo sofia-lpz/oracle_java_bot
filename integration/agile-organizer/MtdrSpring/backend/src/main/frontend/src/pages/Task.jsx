@@ -7,9 +7,10 @@ import '../App.css';
 import {  authenticatedFetch} from '../utils/authUtils';
 
 import { API_LIST, API_STATES } from '../API';
-import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
+import { DndContext, closestCenter, DragOverlay, useSensors, useSensor, PointerSensor, KeyboardSensor } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import TaskCard from '../components/TaskCard';
+import { arrayMove } from '@dnd-kit/sortable';
 
 const Task = () => {
   const [tasks, setTasks] = useState([]);
@@ -25,6 +26,11 @@ const Task = () => {
   const [selectedStateToDelete, setSelectedStateToDelete] = useState(null);
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
+  );
 
   useEffect(() => {
     const fetchTasksAndStates = async () => {
@@ -193,34 +199,41 @@ const Task = () => {
     setActiveId(event.active.id);
   };
 
-  const handleDragOver = (event) => {
-    setOverId(event.over?.id || null);
-  };
-
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
     setOverId(null);
-    if (!over || active.id === over.id) return;
+    if (!over) return;
 
     const activeTask = tasks.find(task => task.id.toString() === active.id);
     const overColumn = states.find(state => state.id.toString() === over.id);
+    const overTask = tasks.find(task => task.id.toString() === over.id);
 
-    if (!activeTask || !overColumn || activeTask.state?.id === overColumn.id) return;
-
-    const updatedTask = { ...activeTask, state: overColumn };
-
-    authenticatedFetch(`${API_LIST}/${active.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedTask)
-    })
-      .then(() => {
-        setTasks(prev =>
-          prev.map(task => task.id === updatedTask.id ? updatedTask : task)
-        );
+    if (overColumn && activeTask && (!activeTask.state || activeTask.state.id !== overColumn.id)) {
+      const updatedTask = { ...activeTask, state: overColumn };
+      authenticatedFetch(`${API_LIST}/${active.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTask)
       })
-      .catch(error => console.error('Error updating task state:', error));
+        .then(() => {
+          setTasks(prev =>
+            prev.map(task => task.id === updatedTask.id ? updatedTask : task)
+          );
+        })
+        .catch(error => console.error('Error updating task state:', error));
+      return;
+    }
+
+    if (overTask && active.id !== over.id) {
+      if (!activeTask || !overTask) return;
+      if (activeTask.state?.id !== overTask.state?.id) return;
+      setTasks(items => {
+        const oldIndex = items.findIndex(item => item.id.toString() === active.id);
+        const newIndex = items.findIndex(item => item.id.toString() === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
   };
 
   const tasksByState = states.reduce((acc, state) => {
@@ -455,51 +468,34 @@ const Task = () => {
         </Modal>
 
         <DndContext
+          sensors={sensors}
           collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragCancel={() => {
-            document.body.style.cursor = 'default';
-          }}
+          onDragEnd={handleDragEnd}
         >
-          <SortableContext
-            items={states.flatMap(state => tasksByState[state.id.toString()] || []).map(task => task.id.toString())}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="ant-layout css-dev-only-do-not-override-1d4w9r2" style={{ 
-              overflowX: 'auto', 
-              display: 'flex', 
-              flexWrap: 'nowrap', 
-              height: '100%',
-              width: '100%',
-              minWidth: '100%',
-              padding: '8px',
-              gap: '1px',
-              backgroundColor: '#1f1f1f',
-              borderRadius: '8px',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
-            }}>
-              {states.map((state) => (
-                <SortableContext key={state.id} items={tasksByState[state.id.toString()].map(task => task.id.toString())} strategy={verticalListSortingStrategy}>
-                  <div style={{ border: state.id.toString() === overId ? '2px solid #c6624b' : 'none', borderRadius: '8px', padding: '8px', height: '76%' }}>
-                    <KanbanColumn
-                      state={state}
-                      tasks={tasksByState[state.id.toString()].map(task => ({
-                        ...task,
-                        style: task.id === activeId ? { border: '2px dashed #ccc', padding: '8px', visibility: 'hidden' } : {},
-                      }))}
-                      getStateColor={getStateColor}
-                      formatDate={formatDate}
-                      deleteTask={deleteTask}
-                    />
-                  </div>
+          <div className="kanban">
+            {states.map((state) => (
+              <KanbanColumn
+                key={state.id}
+                state={state}
+                tasks={tasksByState[state.id.toString()]}
+                getStateColor={getStateColor}
+                formatDate={formatDate}
+                deleteTask={deleteTask}
+              >
+                <SortableContext
+                  items={tasksByState[state.id.toString()].map(task => task.id.toString())}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {tasksByState[state.id.toString()].map(task => (
+                    <TaskCard key={task.id} task={task} />
+                  ))}
                 </SortableContext>
-              ))}
-            </div>
-          </SortableContext>
+              </KanbanColumn>
+            ))}
+          </div>
           <DragOverlay>
-            {activeTask ? <TaskCard {...activeTask} /> : null}
+            {activeId ? <TaskCard {...tasks.find(task => task.id.toString() === activeId)} /> : null}
           </DragOverlay>
         </DndContext>
       </div>

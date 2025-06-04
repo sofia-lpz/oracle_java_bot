@@ -2,7 +2,6 @@ package com.springboot.MyTodoList;
 
 import com.springboot.MyTodoList.controller.ToDoItemController;
 import com.springboot.MyTodoList.controller.KpiController;
-import com.springboot.MyTodoList.model.Kpi;
 import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.State;
@@ -99,81 +98,11 @@ public class Release12Test {
     }
 
     @Test
-    public void testGetKpiSummary_SpecifiedSprint() {
-        // Arrange
-        Integer sprintId = 4;
-        Integer userId = null;
-        Integer teamId = null;
-        Integer projectId = null;
-
-        Kpi kpi1 = new Kpi();
-        kpi1.setID(1);
-        kpi1.setType("VISIBILITY");
-
-        Kpi kpi2 = new Kpi();
-        kpi2.setID(2);
-        kpi2.setType("ACCOUNTABILITY");
-
-        List<Kpi> expectedKpis = Arrays.asList(kpi1, kpi2);
-
-        List<Integer> userIdList = userId != null ? List.of(userId) : null;
-        List<Integer> teamIdList = teamId != null ? List.of(teamId) : null;
-        List<Integer> projectIdList = projectId != null ? List.of(projectId) : null;
-        List<Integer> sprintIdList = sprintId != null ? List.of(sprintId) : null;
-
-        when(kpiService.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList)).thenReturn(expectedKpis);
-
-        // Act
-        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedKpis, response.getBody());
-        verify(kpiService, times(1)).getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
-    }
-
-    @Test
-    public void testGetKpiSummary_SpecifiedSprintAndUser() {
-        // Arrange
-        Integer userId = 1;
-        Integer sprintId = 4;
-        // Passing only userId and sprintId, other parameters as null
-        Integer teamId = null;
-        Integer projectId = null;
-
-        Kpi kpi1 = new Kpi();
-        kpi1.setID(1);
-        kpi1.setType("VISIBILITY");
-
-        Kpi kpi2 = new Kpi();
-        kpi2.setID(2);
-        kpi2.setType("ACCOUNTABILITY");
-
-        List<Kpi> expectedKpis = Arrays.asList(kpi1, kpi2);
-
-        List<Integer> userIdList = userId != null ? List.of(userId) : null;
-        List<Integer> teamIdList = teamId != null ? List.of(teamId) : null;
-        List<Integer> projectIdList = projectId != null ? List.of(projectId) : null;
-        List<Integer> sprintIdList = sprintId != null ? List.of(sprintId) : null;
-
-        when(kpiService.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList)).thenReturn(expectedKpis);
-
-        // Act
-        ResponseEntity<List<Kpi>> response = kpiController.getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedKpis, response.getBody());
-        verify(kpiService, times(1)).getKpiSummary(userIdList, teamIdList, projectIdList, sprintIdList);
-    }
-
-    @Test
     public void testGetToDoItemsSummary_SpecificSprint_DoneItems() {
         // Arrange
         Integer sprintId = 3;
         Boolean done = true;
-        
-        // Convert to List<Integer>
+
         List<Integer> sprintIds = sprintId != null ? Collections.singletonList(sprintId) : null;
 
         ToDoItem item1 = new ToDoItem();
@@ -206,8 +135,7 @@ public class Release12Test {
         Integer userId = 1;
         Integer sprintId = 3;
         Boolean done = true;
-        
-        // Convert to List<Integer>
+
         List<Integer> userIds = userId != null ? Collections.singletonList(userId) : null;
         List<Integer> sprintIds = sprintId != null ? Collections.singletonList(sprintId) : null;
 

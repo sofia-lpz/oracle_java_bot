@@ -49,22 +49,21 @@ const Users = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      render: (name) => name || 'No name provided'
     },
     {
       title: 'Team',
       dataIndex: ['team', 'teamName'],
       key: 'teamName',
+      render: (teamName, record) => (record.team?.teamName || 'No team')
     },
     {
       title: 'Role',
       dataIndex: ['team', 'teamDescription'],
       key: 'teamDescription',
-    },
-    {
-      title: 'Authority',
-      dataIndex: ['authorities', 0, 'authority'],
-      key: 'authority',
-    },
+      render: (teamDescription, record) => (record.team?.teamDescription || 'No role')
+    }
+
   ];
 
   if (loading) return <div>Cargando...</div>;
