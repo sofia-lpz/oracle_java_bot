@@ -14,7 +14,8 @@ public class FrontendController {
         "/users", "/Users",  
         "/chatbot", "/Chatbot",
         "/home",
-        "/charts"
+        "/charts",
+        "/kanban"
     })
     public String forward() {
         return "forward:/index.html";
