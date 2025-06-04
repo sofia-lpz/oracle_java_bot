@@ -47,7 +47,8 @@ public class TodoItemBotService {
 
     @Autowired
     public TodoItemBotService(ToDoItemService toDoItemService, UserService userService, KpiService kpiService,
-            StateService stateService, SprintService sprintService, ProjectService projectService, AuthenticationService authService) {
+            StateService stateService, SprintService sprintService, ProjectService projectService,
+            AuthenticationService authService) {
         this.toDoItemService = toDoItemService;
         this.userService = userService;
         this.kpiService = kpiService;
@@ -627,6 +628,7 @@ public class TodoItemBotService {
             }
         } catch (Exception e) {
             logger.error("Error during login: ", e);
+            messageToTelegram.setReplyMarkup(loginKeyboard());
             messageToTelegram.setText(BotMessages.LOGIN_FAILED.getMessage());
         }
 
@@ -644,7 +646,7 @@ public class TodoItemBotService {
         }
         return messageToTelegram;
     }
-    
+
     private ToDoItem parseToDoItem(String message) {
         ToDoItem newItem = new ToDoItem();
         newItem.setCreation_ts(OffsetDateTime.now()); // Keep existing creation timestamp
@@ -772,10 +774,21 @@ public class TodoItemBotService {
         String password = parts[1].trim();
         Integer rememberMeValue = Integer.parseInt(parts[2].trim());
         Long chatID = null;
-        if (rememberMeValue == 1){
+        if (rememberMeValue == 1) {
             chatID = telegramChatId;
         }
 
         return new LoginUserDto(phoneNumber, password, chatID);
+    }
+
+    private ReplyKeyboardMarkup loginKeyboard() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row = new KeyboardRow();
+        row.add(BotLabels.LOGIN.getLabel());
+        keyboard.add(row);
+        keyboardMarkup.setKeyboard(keyboard);
+        return keyboardMarkup;
     }
 }
