@@ -10,6 +10,8 @@ const { Meta } = Card;
 //Gray #272727
 //Oracle #c6624b
 
+/* Cambios */
+
 const TaskCard = ({ 
   id,
   title, 

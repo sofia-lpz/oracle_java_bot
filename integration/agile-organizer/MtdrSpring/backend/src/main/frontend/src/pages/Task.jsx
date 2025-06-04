@@ -12,6 +12,8 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import TaskCard from '../components/TaskCard';
 import { arrayMove } from '@dnd-kit/sortable';
 
+//cambios
+
 const Task = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);

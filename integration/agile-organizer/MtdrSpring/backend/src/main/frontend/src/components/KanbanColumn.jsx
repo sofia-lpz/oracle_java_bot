@@ -5,6 +5,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import TaskCard from './TaskCard';
 import { useDroppable } from '@dnd-kit/core';
 
+//cambios
 const KanbanColumn = ({ state, tasks, getStateColor, formatDate, deleteTask }) => {
   const { setNodeRef } = useDroppable({ id: state.id.toString() });
 
