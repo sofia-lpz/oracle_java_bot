@@ -9,7 +9,7 @@ html, body, #root {
   margin: 0;
   padding: 0;
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .ant-layout {
@@ -20,6 +20,7 @@ html, body, #root {
   width: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .ant-layout-sider {
@@ -93,10 +94,13 @@ html, body, #root {
 }
 
 .ant-layout-content {
-  margin: 0 !important;
-  flex: 1 1;
+  margin-left: 10px !important;
+  flex: 1;
   background: #1d1d1d !important;
   padding: 0 !important;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 /* Estilos para los modales */

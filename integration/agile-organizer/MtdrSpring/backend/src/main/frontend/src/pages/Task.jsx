@@ -343,16 +343,15 @@ const Task = () => {
           overflowY: 'hidden',
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
-          minWidth: '100%',
-          paddingRight: '48px',
-          paddingLeft: '48px',
+          width: '100%',
+          boxSizing: 'border-box',
+          position: 'relative',
           '&::-webkit-scrollbar': {
             height: '12px',
           },
           '&::-webkit-scrollbar-track': {
             background: '#1d1d1d',
             borderRadius: '6px',
-            margin: '0 24px',
           },
           '&::-webkit-scrollbar-thumb': {
             background: '#c6624b',
@@ -374,8 +373,9 @@ const Task = () => {
               style={{
                 flexShrink: 0,
                 width: '350px',
-                marginRight: '24px',
-                marginLeft: '24px'
+                minWidth: '350px',
+                maxWidth: '350px',
+                marginRight: '12px'
               }}
             >
               <SortableContext
