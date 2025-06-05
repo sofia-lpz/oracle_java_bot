@@ -628,7 +628,6 @@ public class TodoItemBotService {
             }
         } catch (Exception e) {
             logger.error("Error during login: ", e);
-            messageToTelegram.setReplyMarkup(loginKeyboard());
             messageToTelegram.setText(BotMessages.LOGIN_FAILED.getMessage());
         }
 
