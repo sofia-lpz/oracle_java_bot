@@ -4,15 +4,12 @@ import { PlusOutlined, DeleteOutlined, LoadingOutlined, AppstoreAddOutlined } fr
 import KanbanColumn from '../components/KanbanColumn';
 import NewItem from '../NewItem';
 import '../App.css';
-import {  authenticatedFetch} from '../utils/authUtils';
-
+import { authenticatedFetch } from '../utils/authUtils';
 import { API_LIST, API_STATES } from '../API';
 import { DndContext, closestCenter, DragOverlay, useSensors, useSensor, PointerSensor, KeyboardSensor } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import TaskCard from '../components/TaskCard';
 import { arrayMove } from '@dnd-kit/sortable';
-
-//cambios
 
 const Task = () => {
   const [tasks, setTasks] = useState([]);
@@ -30,43 +27,47 @@ const Task = () => {
   const [overId, setOverId] = useState(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
     useSensor(KeyboardSensor)
   );
 
   useEffect(() => {
-    const fetchTasksAndStates = async () => {
-      try {
-        setLoading(true);
-        const [tasksResponse, statesResponse] = await Promise.all([
-          authenticatedFetch(API_LIST),
-          authenticatedFetch(API_STATES)
-        ]);
-
-        if (!tasksResponse.ok || !statesResponse.ok) {
-          throw new Error(`Error del servidor: ${tasksResponse.status}`);
-        }
-
-        const tasksData = await tasksResponse.json();
-        const statesData = await statesResponse.json();
-        
-        if (!Array.isArray(tasksData) || !Array.isArray(statesData)) {
-          throw new Error('Datos inválidos recibidos del servidor');
-        }
-
-        setTasks(tasksData);
-        setStates(statesData);
-        setError(null);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError(new Error('No se pudo conectar al servidor. Por favor, asegúrate de que el servidor backend esté corriendo en http://localhost:9898'));
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchTasksAndStates();
   }, []);
+
+  const fetchTasksAndStates = async () => {
+    try {
+      setLoading(true);
+      const [tasksResponse, statesResponse] = await Promise.all([
+        authenticatedFetch(API_LIST),
+        authenticatedFetch(API_STATES)
+      ]);
+
+      if (!tasksResponse.ok || !statesResponse.ok) {
+        throw new Error(`Error del servidor: ${tasksResponse.status}`);
+      }
+
+      const tasksData = await tasksResponse.json();
+      const statesData = await statesResponse.json();
+      
+      if (!Array.isArray(tasksData) || !Array.isArray(statesData)) {
+        throw new Error('Datos inválidos recibidos del servidor');
+      }
+
+      setTasks(tasksData);
+      setStates(statesData);
+      setError(null);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(new Error('No se pudo conectar al servidor. Por favor, asegúrate de que el servidor backend esté corriendo en http://localhost:9898'));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addTask = async (newTask) => {
     try {
@@ -88,21 +89,7 @@ const Task = () => {
         throw new Error(errorText || 'Error al crear la tarea');
       }
 
-      const [tasksResponse, statesResponse] = await Promise.all([
-        authenticatedFetch(API_LIST),
-        authenticatedFetch(API_STATES)
-      ]);
-
-      if (tasksResponse.ok) {
-        const tasksData = await tasksResponse.json();
-        setTasks(tasksData);
-      }
-
-      if (statesResponse.ok) {
-        const statesData = await statesResponse.json();
-        setStates(statesData);
-      }
-
+      await fetchTasksAndStates();
       setIsModalVisible(false);
       messageApi.success('Tarea creada exitosamente');
     } catch (err) {
@@ -136,26 +123,13 @@ const Task = () => {
         throw new Error(errorText || 'Error al crear el estado');
       }
 
-      const newState = {
-        id: Date.now(),
-        name: newStateName,
-        workflow_priority: maxPriority + 1
-      };
-
-      setStates(prevStates => [...prevStates, newState]);
+      await fetchTasksAndStates();
       setNewStateName('');
       setIsStateModalVisible(false);
       messageApi.success('Estado creado exitosamente');
-
-      const statesResponse = await authenticatedFetch(API_STATES);
-      if (statesResponse.ok) {
-        const statesData = await statesResponse.json();
-        setStates(statesData);
-      }
     } catch (err) {
       console.error('Error creating state:', err);
       messageApi.error(err.message || 'Error al crear el estado');
-      setStates(prevStates => prevStates.filter(state => state.id !== Date.now()));
     }
   };
 
@@ -169,7 +143,7 @@ const Task = () => {
         throw new Error('Error al eliminar la tarea');
       }
 
-      setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+      await fetchTasksAndStates();
       messageApi.success('Tarea eliminada exitosamente');
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -187,7 +161,7 @@ const Task = () => {
         throw new Error('Error al eliminar el estado');
       }
 
-      setStates(prevStates => prevStates.filter(state => state.id !== stateId));
+      await fetchTasksAndStates();
       messageApi.success('Estado eliminado exitosamente');
       setIsDeleteStateModalVisible(false);
       setSelectedStateToDelete(null);
@@ -198,44 +172,75 @@ const Task = () => {
   };
 
   const handleDragStart = (event) => {
-    setActiveId(event.active.id);
+    const { active } = event;
+    setActiveId(active.id);
   };
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    setActiveId(null);
-    setOverId(null);
+  const handleDragOver = (event) => {
+    const { over } = event;
     if (!over) return;
+    setOverId(over.id);
+  };
 
-    const activeTask = tasks.find(task => task.id.toString() === active.id);
-    const overColumn = states.find(state => state.id.toString() === over.id);
-    const overTask = tasks.find(task => task.id.toString() === over.id);
-
-    if (overColumn && activeTask && (!activeTask.state || activeTask.state.id !== overColumn.id)) {
-      const updatedTask = { ...activeTask, state: overColumn };
-      authenticatedFetch(`${API_LIST}/${active.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedTask)
-      })
-        .then(() => {
-          setTasks(prev =>
-            prev.map(task => task.id === updatedTask.id ? updatedTask : task)
-          );
-        })
-        .catch(error => console.error('Error updating task state:', error));
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+    
+    if (!over) {
+      setActiveId(null);
+      setOverId(null);
       return;
     }
 
-    if (overTask && active.id !== over.id) {
-      if (!activeTask || !overTask) return;
-      if (activeTask.state?.id !== overTask.state?.id) return;
-      setTasks(items => {
-        const oldIndex = items.findIndex(item => item.id.toString() === active.id);
-        const newIndex = items.findIndex(item => item.id.toString() === over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
+    const activeTask = tasks.find(task => task.id.toString() === active.id);
+    const overColumn = states.find(state => state.id.toString() === over.id);
+
+    if (overColumn && activeTask) {
+      try {
+        const taskUpdateData = {
+          id: activeTask.id,
+          title: activeTask.title,
+          description: activeTask.description,
+          state: {
+            id: overColumn.id,
+            name: overColumn.name
+          },
+          user: activeTask.user,
+          project: activeTask.project,
+          sprint: activeTask.sprint,
+          dueDate: activeTask.dueDate,
+          estimatedHours: activeTask.estimated_hours,
+          realHours: activeTask.real_hours,
+          storyPoints: activeTask.storyPoints,
+          priority: activeTask.priority,
+          done: activeTask.done,
+          deleted: activeTask.deleted,
+          creationDate: activeTask.creationDate
+        };
+
+        const response = await authenticatedFetch(`${API_LIST}/${active.id}`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(taskUpdateData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al actualizar el estado de la tarea');
+        }
+
+        await fetchTasksAndStates();
+        messageApi.success('Tarea actualizada exitosamente');
+      } catch (error) {
+        console.error('Error updating task state:', error);
+        messageApi.error('Error al actualizar el estado de la tarea');
+        await fetchTasksAndStates();
+      }
     }
+
+    setActiveId(null);
+    setOverId(null);
   };
 
   const tasksByState = states.reduce((acc, state) => {
@@ -252,23 +257,11 @@ const Task = () => {
       'COMPLETED': '#2ecc71',
     };
 
-    if (colors[stateName]) {
-      return colors[stateName];
-    }
-
-    const randomColor = () => {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    };
-
-    return randomColor();
+    return colors[stateName] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'No date set';
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
@@ -285,223 +278,211 @@ const Task = () => {
       <Flex align="center" gap="middle">
         <Spin indicator={<LoadingOutlined style={{ fontSize: 48, color: '#c6624b' }} spin />} />
       </Flex>
-      <p style={{ marginTop: '20px', fontSize: '16px' }}>Loading tasks...</p>
+      <p style={{ marginTop: '20px', fontSize: '16px' }}>Cargando tareas...</p>
     </div>
   );
-  if (error) return <div>Error loading tasks: {error.message || 'An error occurred'}</div>;
+
+  if (error) return <div>Error al cargar las tareas: {error.message}</div>;
 
   return (
-    <>
-      <style>{`
-        .delete-state-select .ant-select-item {
-          color: white !important;
-          background-color: #272727;
-        }
-        .delete-state-select .ant-select-item-option-selected {
-          background-color: #1d1d1d !important;
-        }
-        .delete-state-select .ant-select-item-option-active {
-          background-color: #c6624b !important;
-        }
-        .delete-state-select .ant-select-selection-placeholder {
-          color: #666 !important;
-        }
-        .add-state-input::placeholder {
-          color: #666 !important;
-        }
-        .kanban {
-          flex-direction: column;
-          overflow-x: hidden;
-        }
-
-        .kanban-column {
-          width: 100%;
-          margin-bottom: 16px;
-        }
-
-        @media (min-width: 1440px) {
-          .kanban {
-            flex-direction: row;
-            overflow-x: auto;
-          }
-
-          .kanban-column {
-            width: 330px;
-            margin: 0;
-          }
-        }
-
-        @media (max-width: 1440px) {
-          .menu-bar {
-            flex-direction: column;
-            align-items: center;
-          }
-          .menu-bar .ant-btn {
-            width: 100%;
-            margin-bottom: 10px;
-          }
-        }
-
-        @media (max-width: 545px) {
-          .menu-bar {
-            flex-direction: column !important;
-            align-items: center !important;
-            overflow-x: hidden !important;
-          }
-          .menu-bar .ant-btn {
-            width: 100% !important;
-            margin-bottom: 10px !important;
-          }
-          .menu-bar .ant-btn > span:not(.ant-btn-icon) {
-            display: none !important;
-          }
-        }
-      `}</style>
-      <div ref={containerRef} style={{ 
-        maxWidth: '1200px', 
-        margin: '0 auto', 
-        padding: '20px 20px 20px 0',
-        height: 'calc(100vh - 40px)',
-        overflow: 'hidden'
+    <div ref={containerRef} style={{ height: '100vh', overflow: 'hidden', backgroundColor: '#1d1d1d' }}>
+      <div style={{ 
+        padding: '16px 24px', 
+        borderBottom: '1px solid #333',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: '12px'
       }}>
-        <h1 style={{ textAlign: 'left', color: 'white' }}>Tasks</h1>
-        {contextHolder}
-        <div className="menu-bar" style={{ 
-          display: 'flex', 
-          justifyContent: 'flex-end',
-          marginBottom: '20px' 
-        }}>
-          <Space>
-            <Button type="primary" style={{ backgroundColor: '#c6624b', color: 'white' }} icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
-              Add task
-            </Button>
-            <Button type="default" style={{ backgroundColor: '#c6624b', color: 'white' }} icon={<AppstoreAddOutlined />} onClick={() => setIsStateModalVisible(true)}>
-              Add State
-            </Button>
-            <Button 
-              type="default" 
-              style={{ backgroundColor: '#c6624b', color: 'white' }} 
-              icon={<DeleteOutlined />}
-              onClick={() => setIsDeleteStateModalVisible(true)}
-            >
-              Delete State
-            </Button>
-          </Space>
-        </div>
-        <Modal title="Add Task" open={isModalVisible} onCancel={() => setIsModalVisible(false)} footer={null}>
-          <NewItem addItem={addTask} states={states} />
-        </Modal>
-        <Modal title="Add New State" open={isStateModalVisible} onCancel={() => setIsStateModalVisible(false)} footer={null}>
-          <Input 
-            id="stateName" 
-            placeholder="State Name" 
-            value={newStateName} 
-            onChange={(e) => setNewStateName(e.target.value)}
-            onPressEnter={addState}
-            className="add-state-input"
-            style={{
-              backgroundColor: '#272727',
-              color: 'white',
-              borderColor: '#333'
-            }}
-          />
-          <Button type="primary" onClick={addState} style={{ marginTop: '16px' }}>
-            Add State
+        <Space>
+          <Button 
+            type="primary" 
+            icon={<PlusOutlined />} 
+            onClick={() => setIsModalVisible(true)}
+            style={{ backgroundColor: '#c6624b' }}
+          >
+            Agregar Tarea
           </Button>
-        </Modal>
+          <Button 
+            type="default" 
+            icon={<AppstoreAddOutlined />} 
+            onClick={() => setIsStateModalVisible(true)}
+            style={{ backgroundColor: '#c6624b', color: 'white' }}
+          >
+            Agregar Estado
+          </Button>
+          <Button 
+            type="default" 
+            icon={<DeleteOutlined />}
+            onClick={() => setIsDeleteStateModalVisible(true)}
+            style={{ backgroundColor: '#c6624b', color: 'white' }}
+          >
+            Eliminar Estado
+          </Button>
+        </Space>
+      </div>
 
-        <Modal 
-          title="Delete State" 
-          open={isDeleteStateModalVisible} 
-          onCancel={() => {
-            setIsDeleteStateModalVisible(false);
-            setSelectedStateToDelete(null);
-          }}
-          footer={[
-            <Button key="cancel" onClick={() => {
+      {contextHolder}
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <div style={{ 
+          display: 'flex', 
+          gap: '24px', 
+          padding: '24px',
+          height: 'calc(100vh - 80px)',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+          minWidth: '100%',
+          paddingRight: '48px',
+          paddingLeft: '48px',
+          '&::-webkit-scrollbar': {
+            height: '12px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: '#1d1d1d',
+            borderRadius: '6px',
+            margin: '0 24px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#c6624b',
+            borderRadius: '6px',
+            border: '2px solid #1d1d1d',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: '#a84832',
+          }
+        }}>
+          {states.map((state) => (
+            <KanbanColumn
+              key={state.id}
+              state={state}
+              tasks={tasksByState[state.id.toString()] || []}
+              getStateColor={getStateColor}
+              formatDate={formatDate}
+              deleteTask={deleteTask}
+              style={{
+                flexShrink: 0,
+                width: '350px',
+                marginRight: '24px',
+                marginLeft: '24px'
+              }}
+            >
+              <SortableContext
+                items={tasksByState[state.id.toString()]?.map(task => task.id.toString()) || []}
+                strategy={verticalListSortingStrategy}
+              >
+                {tasksByState[state.id.toString()]?.map(task => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onDelete={() => deleteTask(task.id)}
+                  />
+                ))}
+              </SortableContext>
+            </KanbanColumn>
+          ))}
+        </div>
+
+        <DragOverlay>
+          {activeId && activeTask ? (
+            <TaskCard
+              task={activeTask}
+              onDelete={() => deleteTask(activeTask.id)}
+            />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+
+      <Modal
+        title="Agregar Tarea"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+      >
+        <NewItem addItem={addTask} states={states} />
+      </Modal>
+
+      <Modal
+        title="Agregar Estado"
+        open={isStateModalVisible}
+        onCancel={() => setIsStateModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsStateModalVisible(false)}>
+            Cancelar
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={addState}
+            style={{ backgroundColor: '#c6624b' }}
+          >
+            Agregar
+          </Button>
+        ]}
+      >
+        <Input
+          placeholder="Nombre del estado"
+          value={newStateName}
+          onChange={(e) => setNewStateName(e.target.value)}
+          onPressEnter={addState}
+        />
+      </Modal>
+
+      <Modal
+        title="Eliminar Estado"
+        open={isDeleteStateModalVisible}
+        onCancel={() => {
+          setIsDeleteStateModalVisible(false);
+          setSelectedStateToDelete(null);
+        }}
+        footer={[
+          <Button
+            key="cancel"
+            onClick={() => {
               setIsDeleteStateModalVisible(false);
               setSelectedStateToDelete(null);
-            }}>
-              Cancel
-            </Button>,
-            <Button 
-              key="delete" 
-              type="primary" 
-              danger 
-              onClick={() => deleteState(selectedStateToDelete)}
-              disabled={!selectedStateToDelete}
-            >
-              Delete
-            </Button>
-          ]}
-        >
-          <Select
-            style={{ 
-              width: '100%',
-              backgroundColor: '#272727',
-              color: 'white'
             }}
-            placeholder="Select a state to delete"
-            onChange={(value) => setSelectedStateToDelete(value)}
-            value={selectedStateToDelete}
-            dropdownStyle={{
-              backgroundColor: '#272727'
-            }}
-            className="delete-state-select"
           >
-            {states.map(state => (
-              <Select.Option 
-                key={state.id} 
-                value={state.id}
-                style={{
-                  color: 'white',
-                  backgroundColor: '#272727'
-                }}
-              >
-                {state.name}
-              </Select.Option>
-            ))}
-          </Select>
-          {selectedStateToDelete && (
-            <p style={{ color: 'red', marginTop: '16px' }}>
-              Warning: Deleting this state will remove all tasks associated with it.
-            </p>
-          )}
-        </Modal>
-
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
+            Cancelar
+          </Button>,
+          <Button
+            key="delete"
+            type="primary"
+            danger
+            onClick={() => deleteState(selectedStateToDelete)}
+            disabled={!selectedStateToDelete}
+          >
+            Eliminar
+          </Button>
+        ]}
+      >
+        <Select
+          style={{ width: '100%' }}
+          placeholder="Selecciona un estado para eliminar"
+          onChange={(value) => setSelectedStateToDelete(value)}
+          value={selectedStateToDelete}
         >
-          <div className="kanban">
-            {states.map((state) => (
-              <KanbanColumn
-                key={state.id}
-                state={state}
-                tasks={tasksByState[state.id.toString()]}
-                getStateColor={getStateColor}
-                formatDate={formatDate}
-                deleteTask={deleteTask}
-              >
-                <SortableContext
-                  items={tasksByState[state.id.toString()].map(task => task.id.toString())}
-                  strategy={verticalListSortingStrategy}
-                >
-                  {tasksByState[state.id.toString()].map(task => (
-                    <TaskCard key={task.id} task={task} />
-                  ))}
-                </SortableContext>
-              </KanbanColumn>
-            ))}
-          </div>
-          <DragOverlay>
-            {activeId ? <TaskCard {...tasks.find(task => task.id.toString() === activeId)} /> : null}
-          </DragOverlay>
-        </DndContext>
-      </div>
-    </>
+          {states.map(state => (
+            <Select.Option key={state.id} value={state.id}>
+              {state.name}
+            </Select.Option>
+          ))}
+        </Select>
+        {selectedStateToDelete && (
+          <p style={{ color: 'red', marginTop: '16px' }}>
+            Advertencia: Al eliminar este estado, se eliminarán todas las tareas asociadas.
+          </p>
+        )}
+      </Modal>
+    </div>
   );
 };
 
