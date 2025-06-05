@@ -90,6 +90,10 @@ function NewItem({ addItem, states }) {
     
     const selectedState = states.find(state => state.id === values.state_id);
     
+    if (!selectedState) {
+      return;
+    }
+    
     const newTask = {
       title: values.title,
       description: values.description,
@@ -97,7 +101,7 @@ function NewItem({ addItem, states }) {
       estimated_hours: values.estimated_hours || 0,
       real_hours: 0,
       storyPoints: values.storyPoints || 0,
-      state: selectedState,
+      state: { id: selectedState.id },
       done: false,
       deleted: false
     };

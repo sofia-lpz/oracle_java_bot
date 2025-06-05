@@ -71,10 +71,17 @@ const Task = () => {
 
   const addTask = async (newTask) => {
     try {
+      if (!newTask.state || !newTask.state.id) {
+        messageApi.error('Debes seleccionar un estado para la tarea');
+        return;
+      }
+
       if (newTask.dueDate) {
         const dateObj = new Date(newTask.dueDate);
         newTask.dueDate = dateObj.toISOString();
       }
+
+      console.log('Enviando tarea al servidor:', newTask);
 
       const response = await authenticatedFetch(API_LIST, {
         method: 'POST',
@@ -86,12 +93,50 @@ const Task = () => {
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('Error response:', errorText);
         throw new Error(errorText || 'Error al crear la tarea');
       }
 
-      await fetchTasksAndStates();
-      setIsModalVisible(false);
-      messageApi.success('Tarea creada exitosamente');
+      // Intentar leer la respuesta como texto primero
+      const responseText = await response.text();
+      console.log('Respuesta del servidor:', responseText);
+
+      // Si la respuesta está vacía pero la tarea se creó correctamente
+      if (responseText.trim() === '') {
+        // Actualizar el estado local con la nueva tarea
+        const tempId = Date.now(); // ID temporal para la tarea
+        const newTaskWithId = {
+          ...newTask,
+          id: tempId,
+          state: {
+            id: newTask.state.id,
+            name: states.find(s => s.id === newTask.state.id)?.name || 'Nuevo'
+          }
+        };
+
+        setTasks(prevTasks => [...prevTasks, newTaskWithId]);
+        setIsModalVisible(false);
+        messageApi.success('Tarea creada exitosamente');
+        
+        // Actualizar con los datos del servidor
+        await fetchTasksAndStates();
+        return;
+      }
+
+      // Si hay respuesta, intentar parsear como JSON
+      try {
+        const createdTask = JSON.parse(responseText);
+        if (!createdTask || !createdTask.id) {
+          console.error('Tarea creada inválida:', createdTask);
+          throw new Error('La tarea no se creó correctamente');
+        }
+        await fetchTasksAndStates();
+        setIsModalVisible(false);
+        messageApi.success('Tarea creada exitosamente');
+      } catch (parseError) {
+        console.error('Error al parsear la respuesta:', parseError);
+        throw new Error('Error al procesar la respuesta del servidor');
+      }
     } catch (err) {
       console.error('Error creating task:', err);
       messageApi.error(err.message || 'Error al crear la tarea');
