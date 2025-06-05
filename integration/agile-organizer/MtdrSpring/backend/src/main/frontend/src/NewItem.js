@@ -88,13 +88,18 @@ function NewItem({ addItem, states }) {
       return;
     }
     
+    const selectedState = states.find(state => state.id === values.state_id);
+    
     const newTask = {
       title: values.title,
       description: values.description,
-      dueDate: values.dueDate,
-      state: {
-        id: values.state_id
-      }
+      dueDate: values.dueDate ? values.dueDate.toISOString() : null,
+      estimated_hours: values.estimated_hours || 0,
+      real_hours: 0,
+      storyPoints: values.storyPoints || 0,
+      state: selectedState,
+      done: false,
+      deleted: false
     };
     
     addItem(newTask);
@@ -155,6 +160,36 @@ function NewItem({ addItem, states }) {
             }}
             dropdownStyle={{
               backgroundColor: '#272727'
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Horas estimadas"
+          name="estimated_hours"
+        >
+          <Input
+            type="number"
+            placeholder="Ingresa las horas estimadas"
+            style={{
+              backgroundColor: '#272727',
+              color: 'white',
+              borderColor: '#333'
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Story Points"
+          name="storyPoints"
+        >
+          <Input
+            type="number"
+            placeholder="Ingresa los story points"
+            style={{
+              backgroundColor: '#272727',
+              color: 'white',
+              borderColor: '#333'
             }}
           />
         </Form.Item>

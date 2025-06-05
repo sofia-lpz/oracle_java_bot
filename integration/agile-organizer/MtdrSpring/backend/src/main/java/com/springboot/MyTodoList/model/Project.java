@@ -2,9 +2,11 @@ package com.springboot.MyTodoList.model;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "PROJECTS")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Project extends BaseEntity {
     private String name;
     private String description;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, Avatar, Button, Modal } from 'antd';
-import { UserOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Card, Avatar, Button, Modal, Space, Tag } from 'antd';
+import { UserOutlined, DeleteOutlined, EditOutlined, ClockCircleOutlined, FieldTimeOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -10,31 +10,34 @@ const { Meta } = Card;
 //Gray #272727
 //Oracle #c6624b
 
-const TaskCard = ({ 
-  id,
-  title, 
-  description, 
-  dueDate, 
-  avatarUrl,
-  username,
-  storyPoints, 
-  estimatedHours, 
-  realHours, 
-  onDelete
-}) => {
+/* Cambios */
+
+const TaskCard = ({ task, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: id,
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: task.id.toString(),
+    data: {
+      type: 'task',
+      task: task
+    }
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    zIndex: isDragging ? 1050 : 10,
     opacity: isDragging ? 0.5 : 1,
-    touchAction: 'none',
+    cursor: 'grab',
+    position: 'relative',
+    zIndex: isDragging ? 1000 : 1,
+    touchAction: 'none'
   };
 
   const showDeleteModal = () => {
@@ -50,142 +53,165 @@ const TaskCard = ({
     setIsModalOpen(false);
   };
 
-  const showEditModal = () => {
-    setIsEditModalOpen(true);
-  };
-
-  const handleEditCancel = () => {
-    setIsEditModalOpen(false);
-  };
-
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners}
+      onClick={(e) => {
+        if (!isDragging) {
+          setIsModalOpen(true);
+        }
+      }}
+    >
       <Card
-        className="custom-task-card"
+        className="task-card"
         style={{
-          borderRadius: '8px',
-          marginTop: '4px',
-          marginBottom: '4px',
           background: '#1d1d1d',
-          border: '2px solid #1d1d1d',
-          userSelect: 'none',
-          cursor: 'grab',
-          width: '280px',
+          border: 'none',
+          borderRadius: '8px',
+          marginBottom: '12px',
+          transition: 'all 0.2s ease',
+          userSelect: 'none'
         }}
-        actions={[
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', backgroundColor: '#1d1d1d' }}>
-            <p style={{fontWeight: 'bold', color: '#c6624b'}}>
-            Story Points <br /> {storyPoints ?? 'N/A'}
-            </p>
-            <p style={{fontWeight: 'bold', color: '#c6624b'}}>Estimated <br /> {estimatedHours}</p>
-            <p style={{fontWeight: 'bold', color: '#c6624b'}}>Real <br />{realHours}</p>
-          </div>
-        ]}
+        hoverable
       >
-        <Button
-          type="text"
-          icon={<EditOutlined style={{ color: 'white' }} />}
-          onClick={(e) => {
-            e.stopPropagation();
-            showEditModal();
-          }}
-          aria-label="Edit task"
-          style={{
-            position: 'absolute',
-            top: '8px',
-            right: '40px',
-            backgroundColor: 'transparent',
-            border: 'none',
-            color: '#c6624b',
-            zIndex: 2,
-          }}
-        />
         <Meta
-          avatar={<Avatar src={avatarUrl} icon={<UserOutlined />} />}
-          title={<span style={{color: '#ffffff'}}>{title}</span>}
+          avatar={
+            <Avatar 
+              src={task.assignee?.avatarUrl} 
+              icon={<UserOutlined />}
+              style={{ backgroundColor: '#c6624b' }}
+            />
+          }
+          title={
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '8px'
+            }}>
+              <span style={{ color: 'white', fontSize: '16px', fontWeight: '500' }}>
+                {task.title.length > 13 ? `${task.title.substring(0, 13)}...` : task.title}
+              </span>
+              <Button
+                type="text"
+                icon={<DeleteOutlined style={{ color: '#c6624b' }} />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  showDeleteModal();
+                }}
+                style={{ padding: '4px' }}
+              />
+            </div>
+          }
           description={
-            <>
-              <p style={{fontWeight: 'bold' ,color: '#c6624b' }}>Due on {dueDate}</p>
-            </>
+            <div style={{ color: '#8c8c8c' }}>
+              <p style={{ marginBottom: '8px' }}>{task.description}</p>
+              <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ClockCircleOutlined style={{ color: '#c6624b' }} />
+                  <span>Vence: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No definido'}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <FieldTimeOutlined style={{ color: '#c6624b' }} />
+                  <span>Estimado: {task.estimated_hours || 'No definido'} horas</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircleOutlined style={{ color: '#c6624b' }} />
+                  <span>Real: {task.real_hours || 'No definido'} horas</span>
+                </div>
+                {task.storyPoints && (
+                  <Tag color="#c6624b" style={{ marginTop: '8px' }}>
+                    {task.storyPoints} Story Points
+                  </Tag>
+                )}
+              </Space>
+            </div>
           }
         />
       </Card>
 
       <Modal
-        title="Confirm Deletion"
+        title={
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+            color: 'white'
+          }}>
+            <Avatar 
+              src={task.assignee?.avatarUrl} 
+              icon={<UserOutlined />}
+              style={{ backgroundColor: '#c6624b' }}
+            />
+            <span>{task.title}</span>
+          </div>
+        }
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
-        okText="Delete"
-        cancelText="Cancel"
-        okButtonProps={{ danger: true }}
-      >
-        <p style={{color: 'white'}}>Are you sure you want to delete this task?</p>
-      </Modal>
-
-      <Modal
-        title={<div style={{ fontSize: '20px', fontWeight: '600', color: '#fff' }}>{title}</div>}
-        open={isEditModalOpen}
-        onCancel={handleEditCancel}
-        centered
+        footer={[
+          <Button key="delete" type="primary" danger onClick={handleOk}>
+            Eliminar
+          </Button>,
+          <Button key="close" onClick={handleCancel}>
+            Cerrar
+          </Button>
+        ]}
         width={600}
+        style={{ top: 20 }}
         bodyStyle={{ 
           backgroundColor: '#1d1d1d',
           padding: '24px',
-          borderTop: '2px solid #333',
-          borderBottom: '2px solid #333'
+          borderRadius: '8px'
         }}
-        style={{
-          top: 20
-        }}
-        modalRender={(modal) => (
-          <div style={{ 
-            border: '3px solid #333',
-            borderRadius: '8px',
-            overflow: 'hidden'
-          }}>
-            {modal}
-          </div>
-        )}
-        footer={
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between',
-            padding: '12px 24px',
-            backgroundColor: '#1d1d1d',
-            borderTop: '2px solid #333'
-          }}>
-            <Button
-              type="primary"
-              danger
-              onClick={() => {
-                handleEditCancel();
-                showDeleteModal();
-              }}
-            >
-              Delete
-            </Button>
-          </div>
-        }
       >
-        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', rowGap: '16px' }}>
-          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Description:</div>
-          <div style={{ color: '#fff' }}>{description}</div>
-          
-          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Due Date:</div>
-          <div style={{ color: '#fff' }}>{dueDate}</div>
-          
-          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Story Points:</div>
-          <div style={{ color: '#fff' }}>{storyPoints || 'Not set'}</div>
-          
-          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Estimated Hours:</div>
-          <div style={{ color: '#fff' }}>{estimatedHours || 'Not set'}</div>
-          
-          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Real Hours:</div>
-          <div style={{ color: '#fff' }}>{realHours || 'Not set'}</div>
+        <div style={{ color: 'white' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <h3 style={{ color: '#c6624b', marginBottom: '8px' }}>Descripción</h3>
+            <p>{task.description || 'No hay descripción disponible'}</p>
+          </div>
 
-          <div style={{ color: '#8c8c8c', fontWeight: '500' }}>Assigned to:</div>
-          <div style={{ color: '#fff' }}>{username || 'Not set'}</div>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '16px',
+            marginBottom: '24px'
+          }}>
+            <div>
+              <h3 style={{ color: '#c6624b', marginBottom: '8px' }}>Fecha de vencimiento</h3>
+              <p>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No definido'}</p>
+            </div>
+            <div>
+              <h3 style={{ color: '#c6624b', marginBottom: '8px' }}>Story Points</h3>
+              <p>{task.storyPoints || 'No definido'}</p>
+            </div>
+            <div>
+              <h3 style={{ color: '#c6624b', marginBottom: '8px' }}>Horas estimadas</h3>
+              <p>{task.estimated_hours || 'No definido'}</p>
+            </div>
+            <div>
+              <h3 style={{ color: '#c6624b', marginBottom: '8px' }}>Horas reales</h3>
+              <p>{task.real_hours || 'No definido'}</p>
+            </div>
+          </div>
+
+          <div>
+            <h3 style={{ color: '#c6624b', marginBottom: '8px' }}>Asignado a</h3>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px'
+            }}>
+              <Avatar 
+                src={task.assignee?.avatarUrl} 
+                icon={<UserOutlined />}
+                style={{ backgroundColor: '#c6624b' }}
+              />
+              <span>{task.user?.name || 'No asignado'}</span>
+            </div>
+          </div>
         </div>
       </Modal>
     </div>
