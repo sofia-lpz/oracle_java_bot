@@ -66,4 +66,3 @@ EXPOSE 3306
 ENTRYPOINT ["mvn","spring-boot:run"]
 
 
-asd
