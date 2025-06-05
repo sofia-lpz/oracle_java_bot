@@ -15,7 +15,7 @@ public enum BotMessages {
 	BYE("Bye! Select /start to resume!"),
 	ERROR("Error, sorry! this bot is in development"),
 
-	LOGIN("Please login to use the bot. Type your phone number and password in the format: PhoneNumber, Password."),
+	LOGIN("Please login to use the bot. Type your phone number and password in the format: PhoneNumber, Password, Remember Me? [0/1]."),
 	REMEMBER("Would you like me to remember your phone number and password? [yes/no]"),
 	LOGIN_SUCCESS("Login successful! Select /todolist to return to the list of todo items, or /start to go to the main screen."),
 	LOGIN_FAILED("Login failed! Please try again."),
