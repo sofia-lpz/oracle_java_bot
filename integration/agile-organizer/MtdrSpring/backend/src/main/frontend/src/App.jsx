@@ -9,7 +9,6 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Charts from './pages/Charts';
-import Kanban from './pages/Kanban';
 import { isAuthenticated } from './utils/authUtils';
 import './App.css';
 
@@ -71,7 +70,6 @@ function App() {
               <Route path="/task" element={<PrivateRoute><Task /></PrivateRoute>} />
               <Route path="/chatbot" element={<PrivateRoute><ChatBot /></PrivateRoute>} />
               <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
-              <Route path="/kanban" element={<PrivateRoute><Kanban/></PrivateRoute>} />
             </Routes>
           </Content>
         </Layout>
