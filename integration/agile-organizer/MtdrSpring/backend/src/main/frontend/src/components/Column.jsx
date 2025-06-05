@@ -1,7 +1,7 @@
 import React from 'react';
 import {Droppable} from 'react-beautiful-dnd';
 import styled from 'styled-components';
-import Task from '../components/Taskv';
+import Task from './Taskv';
 
     const Container = styled.div`
         background-color: #f4f5f7;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import Column from '../components/Column'
+import Column from './Column'
 import {DragDropContext} from 'react-beautiful-dnd';
 
 export default function KanbanBoard(){
