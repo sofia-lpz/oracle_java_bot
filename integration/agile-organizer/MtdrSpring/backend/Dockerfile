@@ -12,28 +12,6 @@ COPY . /app
 RUN mkdir -p /app/src/main/java/com/springboot/MyTodoList/config
 RUN mkdir -p /app/src/main/resources
 
-# Create the .env file with the specified content
-RUN echo "db_url=jdbc:oracle:thin:@asd?TNS_ADMIN=/Wallet" > /app/src/main/java/com/springboot/MyTodoList/config/.env && \
-    echo "db_user=" >> /app/src/main/java/com/springboot/MyTodoList/config/.env && \
-    echo "dbpassword=" >> /app/src/main/java/com/springboot/MyTodoList/config/.env
-
-# Create the application.properties file
-RUN echo "spring.datasource.username=" > /app/src/main/resources/application.properties && \
-    echo "spring.application.name=MicroserviceDemo" >> /app/src/main/resources/application.properties && \
-    echo "server.port=8080" >> /app/src/main/resources/application.properties && \
-    echo "spring.datasource.driver-class-name=oracle.jdbc.OracleDriver" >> /app/src/main/resources/application.properties && \
-    echo "spring.datasource.url=jdbc:oracle:thin:@?TNS_ADMIN=/Wallet" >> /app/src/main/resources/application.properties && \
-    echo "spring.datasource.password=" >> /app/src/main/resources/application.properties && \
-    echo "spring.jpa.database-platform=org.hibernate.dialect.OracleDialect" >> /app/src/main/resources/application.properties && \
-    echo "spring.jpa.properties.hibernate.query.in_clause_parameter_padding=true" >> /app/src/main/resources/application.properties && \
-    echo "spring.jpa.properties.hibernate.query.default_join_style=ANSI" >> /app/src/main/resources/application.properties && \
-    echo "telegram.bot.token=" >> /app/src/main/resources/application.properties && \
-    echo "telegram.bot.name=JOES1_TELEGRAM_BOT" >> /app/src/main/resources/application.properties && \
-    echo "security.jwt.secret-key=" >> /app/src/main/resources/application.properties && \
-    echo "security.jwt.expiration-time=80000000" >> /app/src/main/resources/application.properties && \
-    echo "openai.api.key=" >> /app/src/main/resources/application.properties && \
-    echo "openai.model=gpt-3.5-turbo" >> /app/src/main/resources/application.properties && \
-    echo "openai.api.url=https://api.openai.com/v1/chat/completions "  >> /app/src/main/resources/application.properties
 
 # Copy Maven and extract it
 COPY maven.tar.gz /usr/local/
@@ -86,3 +64,6 @@ EXPOSE 3306
 
 # Start the application
 ENTRYPOINT ["mvn","spring-boot:run"]
+
+
+asd
