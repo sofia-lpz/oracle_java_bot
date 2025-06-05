@@ -99,8 +99,7 @@ function NewItem({ addItem, states }) {
       storyPoints: values.storyPoints || 0,
       state: selectedState,
       done: false,
-      deleted: false,
-      creation_date: new Date().toISOString()
+      deleted: false
     };
     
     addItem(newTask);

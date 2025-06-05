@@ -210,8 +210,7 @@ const Task = () => {
           storyPoints: activeTask.storyPoints,
           priority: activeTask.priority,
           done: activeTask.done,
-          deleted: activeTask.deleted,
-          creationDate: activeTask.creationDate
+          deleted: activeTask.deleted
         };
 
         const response = await authenticatedFetch(`${API_LIST}/${active.id}`, {
