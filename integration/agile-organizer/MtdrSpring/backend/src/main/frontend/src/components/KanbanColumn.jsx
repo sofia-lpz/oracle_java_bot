@@ -19,7 +19,7 @@ const KanbanColumn = ({ state, tasks, getStateColor, formatDate, deleteTask, chi
       style={{
         backgroundColor: '#272727',
         borderRadius: '12px',
-        padding: '16px',
+        padding: '12px',
         width: '350px',
         height: 'calc(100vh - 120px)',
         display: 'flex',
@@ -30,17 +30,22 @@ const KanbanColumn = ({ state, tasks, getStateColor, formatDate, deleteTask, chi
         transition: 'all 0.2s ease',
         position: 'relative',
         minHeight: '200px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        boxSizing: 'border-box'
       }}
     >
       <div className="kanban-column-header" style={{ 
-        padding: '12px',
-        marginBottom: '16px',
+        padding: '8px',
+        marginBottom: '12px',
         borderBottom: '2px solid #333',
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        flexShrink: 0
+        flexShrink: 0,
+        position: 'sticky',
+        top: 0,
+        backgroundColor: '#272727',
+        zIndex: 1
       }}>
         <div style={{ 
           width: '12px',
