@@ -200,16 +200,13 @@ const Task = () => {
           id: activeTask.id,
           title: activeTask.title,
           description: activeTask.description,
-          state: {
-            id: overColumn.id,
-            name: overColumn.name
-          },
-          user: activeTask.user,
-          project: activeTask.project,
+          state: { id: overColumn.id },
+          user: activeTask.user ? { id: activeTask.user.id } : null,
+          project: activeTask.project ? { id: activeTask.project.id } : null,
           sprint: activeTask.sprint,
           dueDate: activeTask.dueDate,
-          estimatedHours: activeTask.estimated_hours,
-          realHours: activeTask.real_hours,
+          estimated_hours: activeTask.estimatedHours ?? activeTask.estimated_hours,
+          real_hours: activeTask.realHours ?? activeTask.real_hours,
           storyPoints: activeTask.storyPoints,
           priority: activeTask.priority,
           done: activeTask.done,
@@ -230,7 +227,14 @@ const Task = () => {
           throw new Error('Error al actualizar el estado de la tarea');
         }
 
-        await fetchTasksAndStates();
+        setTasks(prevTasks => 
+          prevTasks.map(task => 
+            task.id === activeTask.id 
+              ? { ...task, state: { id: overColumn.id } }
+              : task
+          )
+        );
+
         messageApi.success('Tarea actualizada exitosamente');
       } catch (error) {
         console.error('Error updating task state:', error);
