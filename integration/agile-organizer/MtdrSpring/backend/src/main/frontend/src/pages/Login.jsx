@@ -75,7 +75,7 @@ const Login = ({ onLogin }) => {
       </div>
 
       <div className="login-right-panel">
-        <Title level={2} className="login-title">ERROR</Title>
+        <Title level={2} className="login-title">ERRORr</Title>
 
         <Form
           form={form}
