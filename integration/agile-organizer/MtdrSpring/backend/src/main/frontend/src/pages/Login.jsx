@@ -75,7 +75,7 @@ const Login = ({ onLogin }) => {
       </div>
 
       <div className="login-right-panel">
-        <Title level={2} className="login-title">Sign in to Oracle</Title>
+        <Title level={2} className="login-title">Login Into Oracle</Title>
 
         <Form
           form={form}

@@ -1,6 +1,6 @@
 version: 0.1 
 component: build
-timeoutInSeconds: 600
+timeoutInSeconds: 6000
 shell: bash
 env:
   exportedVariables:
@@ -26,6 +26,11 @@ steps:
         cp ./Deploy_Creds/application.properties /workspace/git/integration/agile-organizer/MtdrSpring/backend/src/main/resources/application.properties
         echo "Application properties copied to integration/agile-organizer/MtdrSpring/backend/src/main/resources/"
   - type: Command
+    name: "Copy Environment Configuration"
+    command: |
+        cp ./Deploy_Creds/.env /workspace/git/integration/agile-organizer/MtdrSpring/backend/src/main/java/com/springboot/MyTodoList/config/.env
+        echo "Environment configuration copied to integration/agile-organizer/MtdrSpring/backend/src/main/java/com/springboot/MyTodoList/config/"
+  - type: Command
     name: "Extract and Move Maven"
     command: |
        
@@ -36,14 +41,12 @@ steps:
     command: |
         chmod +x ./Deploy_Creds/login_docker.sh
         ./Deploy_Creds/login_docker.sh
-
   - type: Command
     name: "Build Docker Image"
     command: |
         cd /workspace/git/integration/agile-organizer/MtdrSpring/backend
         docker build -t mx-queretaro-1.ocir.io/axpaqk4pamrb/reacttodo/uzi5a/todolistapp-springboot:0.1 .
-        echo "Docker image built successfully"
-
+        echo "Docker image built successfully"
   - type: Command
     name: "Push Docker Image"
     command: |
@@ -53,7 +56,6 @@ steps:
     name: "check final"
     command: |
       echo yeah finish
-
   - type: Command
     name: "Install K8s"
     command: mkdir -p $HOME/.kube;
@@ -71,7 +73,6 @@ steps:
       cd .kube;
       oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaavmuyc4zoiol7vawqnvberxsk6hr433dewusjm3xf5cwf2jtfdpua --file $HOME/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT;
       export KUBECONFIG=$HOME/.kube/config;
-
   - type: Command
     name: "Undeploy"
     command: export PATH=$PATH:$HOME/k8s;kubectl version;
@@ -82,5 +83,3 @@ steps:
       ls -l;
       kubectl config view;
       source undeploy.sh;
-
-      
