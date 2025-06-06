@@ -84,14 +84,14 @@ const Users = () => {
             borderColor: '#444', 
             borderRadius: '8px',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-            transition: 'border-color 0.3s, box-shadow 0.3s',
+            transition: 'border-color 0.3s,
+             box-shadow 0.3s',
           }} 
           value={searchTerm}
           onChange={handleSearch}
           onFocus={(e) => e.target.style.borderColor = '#c6624b'}
           onBlur={(e) => e.target.style.borderColor = '#444'}
         />
-        <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: '#c6624b', borderColor: '#c6624b' }}>Invite</Button>
       </div>
       <Table columns={columns} dataSource={filteredUsers} rowKey="id" pagination={false} style={{ backgroundColor: '#272727', color: 'white' }} />
     </div>
