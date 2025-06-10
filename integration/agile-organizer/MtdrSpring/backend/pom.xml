@@ -17,7 +17,7 @@
 		<java.version>21</java.version>
 		<version.lib.ojdbc>21.1.0.0</version.lib.ojdbc>
 		<frontend-src-dir>${project.basedir}/src/main/react-admin</frontend-src-dir>
-		<node.version>v18.0.0</node.version>
+		<node.version>v20.0.0</node.version>
 		<npm.version>8.1.2</npm.version>
 	</properties>
 	<dependencies>
