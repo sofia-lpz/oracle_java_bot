@@ -14,9 +14,9 @@ const dataProvider: DataProvider = {
             range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
             filter: JSON.stringify(params.filter),
         };
-        
+
         const url = `${apiUrl}/${resource}`;
-        
+
         return httpClient(url).then(({ headers, json }) => {
             return {
                 data: json,
@@ -36,14 +36,14 @@ const dataProvider: DataProvider = {
             filter: JSON.stringify({ id: params.ids }),
         };
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
-        
+
         return httpClient(url).then(({ json }) => ({ data: json }));
     },
 
     getManyReference: (resource, params) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
-        
+
         const query = {
             sort: JSON.stringify([field, order]),
             range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
@@ -52,7 +52,7 @@ const dataProvider: DataProvider = {
                 [params.target]: params.id,
             }),
         };
-        
+
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
 
         return httpClient(url).then(({ headers, json }) => {
@@ -88,17 +88,17 @@ const dataProvider: DataProvider = {
     deleteMany: (resource, params) => {
         // This is not a native operation in many REST APIs
         // For simplicity, we'll make multiple DELETE requests
-        const promises = params.ids.map(id => 
+        const promises = params.ids.map(id =>
             httpClient(`${apiUrl}/${resource}/${id}`, {
                 method: 'DELETE',
             })
         );
         return Promise.all(promises).then(() => ({ data: params.ids }));
     },
-    
+
     updateMany: (resource, params) => {
         // Similar to deleteMany, we'll make multiple PUT requests
-        const promises = params.ids.map(id => 
+        const promises = params.ids.map(id =>
             httpClient(`${apiUrl}/${resource}/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(params.data),
@@ -106,6 +106,17 @@ const dataProvider: DataProvider = {
         );
         return Promise.all(promises).then(() => ({ data: params.ids }));
     },
+
+    getChat: (text: string) => {
+        const url = `${apiUrl}/chat`;
+
+        return httpClient(url, {
+            method: 'POST',
+            body: JSON.stringify(text)
+        }).then(({ json }) => ({
+            data: json
+        }));
+    }
 };
 
 export default dataProvider;

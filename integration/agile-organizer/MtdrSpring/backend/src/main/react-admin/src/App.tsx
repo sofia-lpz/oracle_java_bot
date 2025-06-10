@@ -14,10 +14,21 @@ import { SprintList, SprintEdit, SprintCreate, SprintShow } from "./resources/sp
 import { ToDoItemList, ToDoItemEdit, ToDoItemCreate, ToDoItemShow } from "./resources/todoitems";
 import { StateList, StateEdit, StateCreate, StateShow } from "./resources/states";
 
+import {charts } from "./pages/Charts";
+import { chatbot } from "./pages/Chatbot";
+import { dashboard } from "./pages/Dashboard";
+
+const ChatPage = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold mb-4">Support Chat</h1>
+  </div>
+);
+
 const App = () => (
   <Admin
     dataProvider={dataProvider}
     authProvider={authProvider}
+    // layout={ SolarLayout }
   >
     {permissions => (
       <>
@@ -32,7 +43,24 @@ const App = () => (
             options={{ label: 'Users' }}
           />
         )}
-        
+
+        <Resource
+          name="dashboard"
+          options={{ label: 'Dashboard' }}
+          list={dashboard}
+        />
+
+        <Resource
+          name="charts"
+          options={{ label: 'Charts' }}
+          list={charts}
+        />  
+
+        <Resource
+          name="chatbot"
+          options={{ label: 'Chatbot' }}
+          list={chatbot}
+        />    
         <Resource
           name="projects"
           list={ProjectList}
@@ -41,7 +69,7 @@ const App = () => (
           show={ProjectShow}
           options={{ label: 'Projects' }}
         />
-        
+
         <Resource
           name="teams"
           list={TeamList}
@@ -50,7 +78,7 @@ const App = () => (
           show={TeamShow}
           options={{ label: 'Teams' }}
         />
-        
+
         <Resource
           name="sprints"
           list={SprintList}
@@ -59,7 +87,7 @@ const App = () => (
           show={SprintShow}
           options={{ label: 'Sprints' }}
         />
-        
+
         <Resource
           name="todolist"
           list={ToDoItemList}
@@ -68,7 +96,7 @@ const App = () => (
           show={ToDoItemShow}
           options={{ label: 'Tasks' }}
         />
-        
+
         <Resource
           name="states"
           list={StateList}

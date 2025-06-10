@@ -35,11 +35,11 @@ public class TeamControllerTest {
         // Arrange
         Team team1 = new Team();
         team1.setID(1);
-        team1.setTeamName("Development Team");
+        team1.setName("Development Team");
         
         Team team2 = new Team();
         team2.setID(2);
-        team2.setTeamName("QA Team");
+        team2.setName("QA Team");
         
         List<Team> expectedTeams = Arrays.asList(team1, team2);
         
@@ -59,7 +59,7 @@ public class TeamControllerTest {
         int teamId = 1;
         Team expectedTeam = new Team();
         expectedTeam.setID(teamId);
-        expectedTeam.setTeamName("Development Team");
+        expectedTeam.setName("Development Team");
         
         when(teamService.getTeamById(teamId)).thenReturn(expectedTeam);
         
@@ -91,11 +91,11 @@ public class TeamControllerTest {
     public void testAddTeam_Success() throws Exception {
         // Arrange
         Team newTeam = new Team();
-        newTeam.setTeamName("New Team");
+        newTeam.setName("New Team");
         
         Team savedTeam = new Team();
         savedTeam.setID(3);
-        savedTeam.setTeamName("New Team");
+        savedTeam.setName("New Team");
         
         when(teamService.addTeam(newTeam)).thenReturn(savedTeam);
         
@@ -115,11 +115,11 @@ public class TeamControllerTest {
         int teamId = 1;
         Team teamToUpdate = new Team();
         teamToUpdate.setID(teamId);
-        teamToUpdate.setTeamName("Updated Team");
+        teamToUpdate.setName("Updated Team");
         
         Team updatedTeam = new Team();
         updatedTeam.setID(teamId);
-        updatedTeam.setTeamName("Updated Team");
+        updatedTeam.setName("Updated Team");
         
         when(teamService.updateTeam(teamId, teamToUpdate)).thenReturn(updatedTeam);
         
@@ -138,7 +138,7 @@ public class TeamControllerTest {
         int teamId = 99;
         Team teamToUpdate = new Team();
         teamToUpdate.setID(teamId);
-        teamToUpdate.setTeamName("Updated Team");
+        teamToUpdate.setName("Updated Team");
         
         when(teamService.updateTeam(teamId, teamToUpdate)).thenThrow(new RuntimeException("Team not found"));
         

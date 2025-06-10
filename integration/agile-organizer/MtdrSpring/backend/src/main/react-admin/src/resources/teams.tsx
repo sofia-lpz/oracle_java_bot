@@ -19,8 +19,8 @@ export const TeamList = () => (
     <List>
         <Datagrid rowClick="show">
             <TextField source="id" />
-            <TextField source="teamName" />
-            <TextField source="teamDescription" />
+            <TextField source="name" />
+            <TextField source="description" />
         </Datagrid>
     </List>
 );
@@ -29,8 +29,8 @@ export const TeamEdit = () => (
     <Edit>
         <SimpleForm>
             <TextInput source="id" disabled />
-            <TextInput source="teamName" validate={required()} />
-            <TextInput source="teamDescription" multiline />
+            <TextInput source="name" validate={required()} />
+            <TextInput source="description" multiline />
         </SimpleForm>
     </Edit>
 );
@@ -38,8 +38,8 @@ export const TeamEdit = () => (
 export const TeamCreate = () => (
     <Create>
         <SimpleForm>
-            <TextInput source="teamName" validate={required()} />
-            <TextInput source="teamDescription" multiline />
+            <TextInput source="name" validate={required()} />
+            <TextInput source="description" multiline />
         </SimpleForm>
     </Create>
 );
@@ -48,8 +48,8 @@ export const TeamShow = () => (
     <Show>
         <SimpleShowLayout>
             <TextField source="id" />
-            <TextField source="teamName" />
-            <TextField source="teamDescription" />
+            <TextField source="name" />
+            <TextField source="description" />
             <DateField source="creation_ts" label="Created At" />
             
             <ReferenceManyField label="Team Members" reference="users" target="team.id">

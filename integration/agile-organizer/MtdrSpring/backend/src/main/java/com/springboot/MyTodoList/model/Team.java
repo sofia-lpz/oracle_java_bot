@@ -14,10 +14,10 @@ public class Team extends BaseEntity {
     private String description;
 
     // Getters
-    public String getTeamName() { return name; }
-    public String getTeamDescription() { return description; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
 
     // Setters
-    public void setTeamName(String name) { this.name = name; }
-    public void setTeamDescription(String description) { this.description = description; }
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
 }

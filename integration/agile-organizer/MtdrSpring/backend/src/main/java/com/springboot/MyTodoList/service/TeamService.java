@@ -42,8 +42,8 @@ public class TeamService {
         if(teamData.isPresent()) {
             Team existingTeam = teamData.get();
             existingTeam.setID(id);
-            existingTeam.setTeamName(team.getTeamName());
-            existingTeam.setTeamDescription(team.getTeamDescription());
+            existingTeam.setName(team.getName());
+            existingTeam.setDescription(team.getDescription());
             return teamRepository.save(existingTeam);
         } else {
             return null;
