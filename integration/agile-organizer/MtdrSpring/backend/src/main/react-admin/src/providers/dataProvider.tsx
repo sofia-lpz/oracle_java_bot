@@ -116,7 +116,28 @@ const dataProvider: DataProvider = {
         }).then(({ json }) => ({
             data: json
         }));
+    },
+
+    updateTaskState: async (sourceTask, destinationStateId) => {
+    const updatedTask = {
+      ...sourceTask,
+      state: { id: destinationStateId }
+    };
+    
+    const response = await fetch(`/api/todolist/${sourceTask.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedTask),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to update task state');
     }
+    
+    return await response.json();
+  }
 };
 
 export default dataProvider;

@@ -31,16 +31,17 @@ public class TeamController {
         }
     }
 
-    @PostMapping(value = "/teams")
-    public ResponseEntity addTeam(@RequestBody Team team) throws Exception {
-        Team savedTeam = teamService.addTeam(team);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + savedTeam.getID());
-        responseHeaders.set("Access-Control-Expose-Headers", "location");
+@PostMapping(value = "/teams")
+public ResponseEntity<Team> addTeam(@RequestBody Team team) throws Exception {
+    Team savedTeam = teamService.addTeam(team);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("location", "" + savedTeam.getID());
+    responseHeaders.set("Access-Control-Expose-Headers", "location");
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders).build();
-    }
+    return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(savedTeam);
+}
 
     @PutMapping(value = "teams/{id}")
     public ResponseEntity updateTeam(@RequestBody Team team, @PathVariable int id) {

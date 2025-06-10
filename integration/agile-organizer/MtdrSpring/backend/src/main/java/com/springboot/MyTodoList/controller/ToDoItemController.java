@@ -64,17 +64,17 @@ public class ToDoItemController {
     }
 
     // @CrossOrigin
-    @PostMapping(value = "/todolist")
-    public ResponseEntity<Void> addToDoItem(@RequestBody ToDoItem todoItem) throws Exception {
-        ToDoItem td = toDoItemService.addToDoItem(todoItem);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + td.getID());
-        responseHeaders.set("Access-Control-Expose-Headers", "location");
-        // URI location = URI.create(""+td.getID())
+@PostMapping(value = "/todolist")
+public ResponseEntity<ToDoItem> addToDoItem(@RequestBody ToDoItem todoItem) throws Exception {
+    ToDoItem savedItem = toDoItemService.addToDoItem(todoItem);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("location", "" + savedItem.getID());
+    responseHeaders.set("Access-Control-Expose-Headers", "location");
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders).build();
-    }
+    return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(savedItem);
+}
 
     // @CrossOrigin
     @PutMapping(value = "todolist/{id}")

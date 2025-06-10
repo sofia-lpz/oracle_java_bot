@@ -48,16 +48,17 @@ public class KpiController {
         }
     }
 
-    @PostMapping(value = "/kpi")
-    public ResponseEntity addKpi(@RequestBody Kpi kpi) throws Exception {
-        Kpi savedKpi = kpiService.addKpi(kpi);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + savedKpi.getID());
-        responseHeaders.set("Access-Control-Expose-Headers", "location");
+@PostMapping(value = "/kpi")
+public ResponseEntity<Kpi> addKpi(@RequestBody Kpi kpi) throws Exception {
+    Kpi savedKpi = kpiService.addKpi(kpi);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("location", "" + savedKpi.getID());
+    responseHeaders.set("Access-Control-Expose-Headers", "location");
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders).build();
-    }
+    return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(savedKpi);
+}
 
     @PutMapping(value = "/kpi/{id}")
     public ResponseEntity updateKpi(@RequestBody Kpi kpi, @PathVariable Long id) {

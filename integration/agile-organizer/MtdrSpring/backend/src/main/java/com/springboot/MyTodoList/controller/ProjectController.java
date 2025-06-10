@@ -31,17 +31,17 @@ public class ProjectController {
         }
     }
 
-    @PostMapping(value = "/projects")
-    public ResponseEntity addProject(@RequestBody Project project) throws Exception {
-        Project savedProject = projectService.addProject(project);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + savedProject.getID());
-        responseHeaders.set("Access-Control-Expose-Headers", "location");
+@PostMapping(value = "/projects")
+public ResponseEntity<Project> addProject(@RequestBody Project project) throws Exception {
+    Project savedProject = projectService.addProject(project);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("location", "" + savedProject.getID());
+    responseHeaders.set("Access-Control-Expose-Headers", "location");
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders).build();
-    }
-
+    return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(savedProject);
+}
     @PutMapping(value = "projects/{id}")
     public ResponseEntity updateProject(@RequestBody Project project, @PathVariable int id) {
         try {

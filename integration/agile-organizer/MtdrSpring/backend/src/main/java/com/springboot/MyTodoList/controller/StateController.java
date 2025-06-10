@@ -37,17 +37,17 @@ public class StateController {
         }
     }
 
-    @PostMapping(value = "/states")
-    public ResponseEntity addState(@RequestBody State state) throws Exception{
-        State st = stateService.addState(state);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location",""+st.getID());
-        responseHeaders.set("Access-Control-Expose-Headers","location");
-        //URI location = URI.create(""+td.getID())
+@PostMapping(value = "/states")
+public ResponseEntity<State> addState(@RequestBody State state) throws Exception {
+    State savedState = stateService.addState(state);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("location", "" + savedState.getID());
+    responseHeaders.set("Access-Control-Expose-Headers", "location");
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders).build();
-    }
+    return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(savedState);
+}
 
     @PutMapping(value = "states/{id}")
     public ResponseEntity updateState(@RequestBody State state, @PathVariable int id){

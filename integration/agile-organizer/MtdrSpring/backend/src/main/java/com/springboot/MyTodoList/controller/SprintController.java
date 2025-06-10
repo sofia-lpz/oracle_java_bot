@@ -33,16 +33,17 @@ public class SprintController {
         }
     }
 
-    @PostMapping(value = "/sprints")
-    public ResponseEntity addSprint(@RequestBody Sprint sprint) throws Exception {
-        Sprint savedSprint = sprintService.addSprint(sprint);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + savedSprint.getID());
-        responseHeaders.set("Access-Control-Expose-Headers", "location");
+@PostMapping(value = "/sprints")
+public ResponseEntity<Sprint> addSprint(@RequestBody Sprint sprint) throws Exception {
+    Sprint savedSprint = sprintService.addSprint(sprint);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("location", "" + savedSprint.getID());
+    responseHeaders.set("Access-Control-Expose-Headers", "location");
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders).build();
-    }
+    return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(savedSprint);
+}
 
     @PutMapping(value = "sprints/{id}")
     public ResponseEntity updateSprint(@RequestBody Sprint sprint, @PathVariable int id) {

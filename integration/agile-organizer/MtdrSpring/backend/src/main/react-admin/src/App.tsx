@@ -14,9 +14,9 @@ import { SprintList, SprintEdit, SprintCreate, SprintShow } from "./resources/sp
 import { ToDoItemList, ToDoItemEdit, ToDoItemCreate, ToDoItemShow } from "./resources/todoitems";
 import { StateList, StateEdit, StateCreate, StateShow } from "./resources/states";
 
-import {charts } from "./pages/Charts";
-import { chatbot } from "./pages/Chatbot";
-import { dashboard } from "./pages/Dashboard";
+import Charts from "./pages/Charts";
+import Chatbot from "./pages/Chatbot";
+import Dashboard from "./pages/Dashboard";
 
 const ChatPage = () => (
   <div className="p-6">
@@ -47,19 +47,19 @@ const App = () => (
         <Resource
           name="dashboard"
           options={{ label: 'Dashboard' }}
-          list={dashboard}
+          list={Dashboard}
         />
 
         <Resource
           name="charts"
           options={{ label: 'Charts' }}
-          list={charts}
+          list={Charts}
         />  
 
         <Resource
           name="chatbot"
           options={{ label: 'Chatbot' }}
-          list={chatbot}
+          list={Chatbot}
         />    
         <Resource
           name="projects"

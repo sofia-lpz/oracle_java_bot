@@ -43,17 +43,17 @@ public class UserController {
     }
     
     //@CrossOrigin
-    @PostMapping(value = "/adduser")
-    public ResponseEntity<?> addUser(@RequestBody User newUser) throws Exception{
-        User dbUser = userService.addUser(newUser);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location",""+dbUser.getID());
-        responseHeaders.set("Access-Control-Expose-Headers","location");
-        //URI location = URI.create(""+td.getID())
+@PostMapping(value = "/adduser")
+public ResponseEntity<User> addUser(@RequestBody User newUser) throws Exception {
+    User savedUser = userService.addUser(newUser);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("location", "" + savedUser.getID());
+    responseHeaders.set("Access-Control-Expose-Headers", "location");
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders).build();
-    }
+    return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(savedUser);
+}
 
     //@CrossOrigin
     @PutMapping(value = "updateUser/{id}")
