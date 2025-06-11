@@ -84,8 +84,7 @@ const Users = () => {
             borderColor: '#444', 
             borderRadius: '8px',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-            transition: 'border-color 0.3s,
-             box-shadow 0.3s',
+transition: 'border-color 0.3s, box-shadow 0.3s',
           }} 
           value={searchTerm}
           onChange={handleSearch}
