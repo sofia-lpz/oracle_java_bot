@@ -59,11 +59,6 @@ const TaskCard = ({ task, onDelete }) => {
       style={style} 
       {...attributes} 
       {...listeners}
-      onClick={(e) => {
-        if (!isDragging) {
-          setIsModalOpen(true);
-        }
-      }}
     >
       <Card
         className="task-card"
@@ -76,6 +71,7 @@ const TaskCard = ({ task, onDelete }) => {
           userSelect: 'none'
         }}
         hoverable
+        onClick={() => setIsModalOpen(true)}
       >
         <Meta
           avatar={
@@ -151,6 +147,7 @@ const TaskCard = ({ task, onDelete }) => {
         }
         open={isModalOpen}
         onCancel={handleCancel}
+        onOk={handleCancel}
         footer={[
           <Button key="delete" type="primary" danger onClick={handleOk}>
             Eliminar
